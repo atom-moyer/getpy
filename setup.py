@@ -20,7 +20,7 @@ ext_modules = [
   Extension(
     "_sparsepy",
     glob.glob('src/_sparsepy.cpp'),
-    include_dirs = ['lib/sparsepp/sparsepp', 'lib/pybind11/include', 'lib/msgpack-c/include'],
+    include_dirs = ['lib/sparsepp/sparsepp', 'lib/pybind11/include', 'lib/typestring', 'lib/msgpack-c/include'],
     language = 'c++',
     extra_compile_args = extra_compile_args_dict[sys.platform],
     extra_link_args = ['-lz'],
