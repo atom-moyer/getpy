@@ -1,0 +1,133 @@
+import numpy as np
+
+from _sparsepy import _Dict_Uint8_Uint8
+from _sparsepy import _Dict_Uint8_Uint16
+from _sparsepy import _Dict_Uint8_Uint32
+from _sparsepy import _Dict_Uint8_Uint64
+from _sparsepy import _Dict_Uint8_Int8
+from _sparsepy import _Dict_Uint8_Int16
+from _sparsepy import _Dict_Uint8_Int32
+from _sparsepy import _Dict_Uint8_Int64
+from _sparsepy import _Dict_Uint16_Uint8
+from _sparsepy import _Dict_Uint16_Uint16
+from _sparsepy import _Dict_Uint16_Uint32
+from _sparsepy import _Dict_Uint16_Uint64
+from _sparsepy import _Dict_Uint16_Int8
+from _sparsepy import _Dict_Uint16_Int16
+from _sparsepy import _Dict_Uint16_Int32
+from _sparsepy import _Dict_Uint16_Int64
+from _sparsepy import _Dict_Uint32_Uint8
+from _sparsepy import _Dict_Uint32_Uint16
+from _sparsepy import _Dict_Uint32_Uint32
+from _sparsepy import _Dict_Uint32_Uint64
+from _sparsepy import _Dict_Uint32_Int8
+from _sparsepy import _Dict_Uint32_Int16
+from _sparsepy import _Dict_Uint32_Int32
+from _sparsepy import _Dict_Uint32_Int64
+from _sparsepy import _Dict_Uint64_Uint8
+from _sparsepy import _Dict_Uint64_Uint16
+from _sparsepy import _Dict_Uint64_Uint32
+from _sparsepy import _Dict_Uint64_Uint64
+from _sparsepy import _Dict_Uint64_Int8
+from _sparsepy import _Dict_Uint64_Int16
+from _sparsepy import _Dict_Uint64_Int32
+from _sparsepy import _Dict_Uint64_Int64
+from _sparsepy import _Dict_Int8_Uint8
+from _sparsepy import _Dict_Int8_Uint16
+from _sparsepy import _Dict_Int8_Uint32
+from _sparsepy import _Dict_Int8_Uint64
+from _sparsepy import _Dict_Int8_Int8
+from _sparsepy import _Dict_Int8_Int16
+from _sparsepy import _Dict_Int8_Int32
+from _sparsepy import _Dict_Int8_Int64
+from _sparsepy import _Dict_Int16_Uint8
+from _sparsepy import _Dict_Int16_Uint16
+from _sparsepy import _Dict_Int16_Uint32
+from _sparsepy import _Dict_Int16_Uint64
+from _sparsepy import _Dict_Int16_Int8
+from _sparsepy import _Dict_Int16_Int16
+from _sparsepy import _Dict_Int16_Int32
+from _sparsepy import _Dict_Int16_Int64
+from _sparsepy import _Dict_Int32_Uint8
+from _sparsepy import _Dict_Int32_Uint16
+from _sparsepy import _Dict_Int32_Uint32
+from _sparsepy import _Dict_Int32_Uint64
+from _sparsepy import _Dict_Int32_Int8
+from _sparsepy import _Dict_Int32_Int16
+from _sparsepy import _Dict_Int32_Int32
+from _sparsepy import _Dict_Int32_Int64
+from _sparsepy import _Dict_Int64_Uint8
+from _sparsepy import _Dict_Int64_Uint16
+from _sparsepy import _Dict_Int64_Uint32
+from _sparsepy import _Dict_Int64_Uint64
+from _sparsepy import _Dict_Int64_Int8
+from _sparsepy import _Dict_Int64_Int16
+from _sparsepy import _Dict_Int64_Int32
+from _sparsepy import _Dict_Int64_Int64
+
+types_dict = {
+    (np.uint8, np.uint8) : _Dict_Uint8_Uint8,
+    (np.uint8, np.uint16) : _Dict_Uint8_Uint16,
+    (np.uint8, np.uint32) : _Dict_Uint8_Uint32,
+    (np.uint8, np.uint64) : _Dict_Uint8_Uint64,
+    (np.uint8, np.int8) : _Dict_Uint8_Int8,
+    (np.uint8, np.int16) : _Dict_Uint8_Int16,
+    (np.uint8, np.int32) : _Dict_Uint8_Int32,
+    (np.uint8, np.int64) : _Dict_Uint8_Int64,
+    (np.uint16, np.uint8) : _Dict_Uint16_Uint8,
+    (np.uint16, np.uint16) : _Dict_Uint16_Uint16,
+    (np.uint16, np.uint32) : _Dict_Uint16_Uint32,
+    (np.uint16, np.uint64) : _Dict_Uint16_Uint64,
+    (np.uint16, np.int8) : _Dict_Uint16_Int8,
+    (np.uint16, np.int16) : _Dict_Uint16_Int16,
+    (np.uint16, np.int32) : _Dict_Uint16_Int32,
+    (np.uint16, np.int64) : _Dict_Uint16_Int64,
+    (np.uint32, np.uint8) : _Dict_Uint32_Uint8,
+    (np.uint32, np.uint16) : _Dict_Uint32_Uint16,
+    (np.uint32, np.uint32) : _Dict_Uint32_Uint32,
+    (np.uint32, np.uint64) : _Dict_Uint32_Uint64,
+    (np.uint32, np.int8) : _Dict_Uint32_Int8,
+    (np.uint32, np.int16) : _Dict_Uint32_Int16,
+    (np.uint32, np.int32) : _Dict_Uint32_Int32,
+    (np.uint32, np.int64) : _Dict_Uint32_Int64,
+    (np.uint64, np.uint8) : _Dict_Uint64_Uint8,
+    (np.uint64, np.uint16) : _Dict_Uint64_Uint16,
+    (np.uint64, np.uint32) : _Dict_Uint64_Uint32,
+    (np.uint64, np.uint64) : _Dict_Uint64_Uint64,
+    (np.uint64, np.int8) : _Dict_Uint64_Int8,
+    (np.uint64, np.int16) : _Dict_Uint64_Int16,
+    (np.uint64, np.int32) : _Dict_Uint64_Int32,
+    (np.uint64, np.int64) : _Dict_Uint64_Int64,
+    (np.int8, np.uint8) : _Dict_Int8_Uint8,
+    (np.int8, np.uint16) : _Dict_Int8_Uint16,
+    (np.int8, np.uint32) : _Dict_Int8_Uint32,
+    (np.int8, np.uint64) : _Dict_Int8_Uint64,
+    (np.int8, np.int8) : _Dict_Int8_Int8,
+    (np.int8, np.int16) : _Dict_Int8_Int16,
+    (np.int8, np.int32) : _Dict_Int8_Int32,
+    (np.int8, np.int64) : _Dict_Int8_Int64,
+    (np.int16, np.uint8) : _Dict_Int16_Uint8,
+    (np.int16, np.uint16) : _Dict_Int16_Uint16,
+    (np.int16, np.uint32) : _Dict_Int16_Uint32,
+    (np.int16, np.uint64) : _Dict_Int16_Uint64,
+    (np.int16, np.int8) : _Dict_Int16_Int8,
+    (np.int16, np.int16) : _Dict_Int16_Int16,
+    (np.int16, np.int32) : _Dict_Int16_Int32,
+    (np.int16, np.int64) : _Dict_Int16_Int64,
+    (np.int32, np.uint8) : _Dict_Int32_Uint8,
+    (np.int32, np.uint16) : _Dict_Int32_Uint16,
+    (np.int32, np.uint32) : _Dict_Int32_Uint32,
+    (np.int32, np.uint64) : _Dict_Int32_Uint64,
+    (np.int32, np.int8) : _Dict_Int32_Int8,
+    (np.int32, np.int16) : _Dict_Int32_Int16,
+    (np.int32, np.int32) : _Dict_Int32_Int32,
+    (np.int32, np.int64) : _Dict_Int32_Int64,
+    (np.int64, np.uint8) : _Dict_Int64_Uint8,
+    (np.int64, np.uint16) : _Dict_Int64_Uint16,
+    (np.int64, np.uint32) : _Dict_Int64_Uint32,
+    (np.int64, np.uint64) : _Dict_Int64_Uint64,
+    (np.int64, np.int8) : _Dict_Int64_Int8,
+    (np.int64, np.int16) : _Dict_Int64_Int16,
+    (np.int64, np.int32) : _Dict_Int64_Int32,
+    (np.int64, np.int64) : _Dict_Int64_Int64,
+}

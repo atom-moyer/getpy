@@ -19,7 +19,7 @@ extra_compile_args_dict = {
 ext_modules = [
   Extension(
     "_sparsepy",
-    glob.glob('src/_sparsepy.cpp'),
+    glob.glob('src/*.cpp'),
     include_dirs = ['lib/sparsepp/sparsepp', 'lib/pybind11/include', 'lib/brigand/include', 'lib/msgpack-c/include'],
     language = 'c++',
     extra_compile_args = extra_compile_args_dict[sys.platform],
@@ -36,7 +36,7 @@ setup(
     url = None,
     description = 'Fast and Memory Efficient Sparse Hash Tables for Python',
     packages = ['sparsepy'],
-    package_dir={'atom': 'atom'},
+    package_dir={'sparsepy': 'sparsepy'},
     package_data={},
     ext_modules = ext_modules,
     install_requires = ['pytest', 'pybind11'],
