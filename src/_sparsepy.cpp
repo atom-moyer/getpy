@@ -5,7 +5,15 @@
 
 namespace py = pybind11;
 
-#include <msgpack.hpp>
+#include <brigand/brigand.hpp>
+#include <brigand/sequences/list.hpp>
+#include <brigand/sequences/at.hpp>
+#include <brigand/algorithms/for_each.hpp>
+
+
+using types = brigand::list<
+    float, int
+>;
 
 template <typename Key, typename Value>
 struct _Dict {
@@ -41,9 +49,10 @@ struct _Dict {
 };
 
 template<typename Key, typename Value>
-void declare_Dict(py::module &m, std::string key_name, std::string value_name) {
+void declare_Dict(const py::module& m) {
     using Class = _Dict<Key, Value>;
-    std::string name = std::string("_Dict_") + key_name + std::string("_") + value_name;
+    
+    std::string name = std::string("_Dict_") + typeid(Key).name() + std::string("_") + typeid(Value).name();
 
     py::class_<Class>(m, name.c_str())
         .def(py::init<>())
@@ -56,15 +65,10 @@ void declare_Dict(py::module &m, std::string key_name, std::string value_name) {
 
 PYBIND11_MODULE(_sparsepy, m) {
     m.doc() = "Fast and Memory Efficient Sparse Hash Tables for Python"; 
-    
-    std::vector<std::string> type_strings = {
-        "int64_t", "int32_t", "int16_t", "int8_t",
-        "uint64_t", "uint32_t", "uint16_t", "uint8_t",
-    };
 
-    for (std::string k : type_strings) {
-        for (std::string v : type_strings) {
-            declare_Dict<k, v>(m, k, v);
-        }
-    }
+    brigand::for_each<types>([&m](auto key) {
+        brigand::for_each<types>([&m, key](auto value) {
+            declare_Dict<key, value>(m);
+        });
+    });
 }
