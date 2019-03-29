@@ -1,22 +1,35 @@
 from collections import MutableMapping
+from typing import Iterable
 
-from .sparsepy_types import types_dict
+from .sparsepy_types import _types
 
 class Dict(MutableMapping):
     def __init__(self, key_type, value_type):
-        self.__dict = types_dict[(key_type, value_type)]()
+        self.__dict = _types[(key_type, value_type)]()
 
     def __getitem__(self, key):
-        return self.__dict.__getitem__(key)
+        if isinstance(key, Iterable):
+            return self.__dict.__getitem_vec__(key)
+        else:
+            return self.__dict.__getitem__(key)
 
     def __setitem__(self, key, value):
-        self.__dict.__setitem__(key, value)
+        if isinstance(key, Iterable):
+            self.__dict.__setitem_vec__(key, value)
+        else:
+            self.__dict.__setitem__(key, value)
 
     def __delitem__(self, key):
-        self.__dict.__delitem__(key)
+        if isinstance(key, Iterable):
+            self.__dict.__delitem_vec__(key)
+        else:
+            self.__dict.__delitem__(key)
 
     def __contains__(self, key):
-        return self.__dict.__contains__(key)
+        if isinstance(key, Iterable):
+            return self.__dict.__contains_vec__(key)
+        else:
+            return self.__dict.__contains__(key)
 
     def __len__(self):
         return self.__dict.__len__()

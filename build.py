@@ -2,11 +2,14 @@ import itertools
 
 import numpy as np
 
+
 key_types = ['uint8_t', 'uint16_t', 'uint32_t', 'uint64_t',
              'int8_t', 'int16_t', 'int32_t', 'int64_t']
 
+
 value_types = ['uint8_t', 'uint16_t', 'uint32_t', 'uint64_t',
                'int8_t', 'int16_t', 'int32_t', 'int64_t']
+
 
 type_names = {
     'int8_t' : 'Int8',
@@ -20,6 +23,7 @@ type_names = {
     'uint64_t' : 'Uint64',
 }
 
+
 np_types = {
     'int8_t' : 'np.int8',
     'int16_t' : 'np.int16',
@@ -32,13 +36,15 @@ np_types = {
     'uint64_t' : 'np.uint64',
 }
 
+
 def create_class_name(key_type, value_type):
     return f'_Dict_{type_names[key_type]}_{type_names[value_type]}'
 
+
 def write_sparsepy_cpp(key_types, value_types):
-    with open('src/_sparsepy.cpp', 'w') as sparsepy_file:
+    with open('src/_sparsepy_types.cpp', 'w') as sparsepy_file:
         sparsepy_file.write("""\
-#include "_sparsepy_util.cpp"
+#include "_sparsepy.cpp"
 
 #include <pybind11/pybind11.h>
 
@@ -58,6 +64,7 @@ PYBIND11_MODULE(_sparsepy, m) {
 }
 """)
 
+
 def write_sparsepy_py(key_types, value_types):
     with open('sparsepy/sparsepy_types.py', 'w') as sparsepy_file:
         sparsepy_file.write("""\
@@ -74,7 +81,7 @@ import numpy as np
 
         sparsepy_file.write("""\
 
-types_dict = {
+_types = {
 """)
 
         def write_type_dict(sparsepy_file, key_type, value_type):

@@ -1,72 +1,85 @@
-#include "_sparsepy_util.cpp"
-
 #include <pybind11/pybind11.h>
+#include <pybind11/numpy.h>
+namespace py = pybind11;
 
-PYBIND11_MODULE(_sparsepy, m) {
-    m.doc() = "Fast and Memory Efficient Sparse Hash Tables for Python";
+#include <spp.h>
 
-    declare_dict<uint8_t, uint8_t>(m, "_Dict_Uint8_Uint8");
-    declare_dict<uint8_t, uint16_t>(m, "_Dict_Uint8_Uint16");
-    declare_dict<uint8_t, uint32_t>(m, "_Dict_Uint8_Uint32");
-    declare_dict<uint8_t, uint64_t>(m, "_Dict_Uint8_Uint64");
-    declare_dict<uint8_t, int8_t>(m, "_Dict_Uint8_Int8");
-    declare_dict<uint8_t, int16_t>(m, "_Dict_Uint8_Int16");
-    declare_dict<uint8_t, int32_t>(m, "_Dict_Uint8_Int32");
-    declare_dict<uint8_t, int64_t>(m, "_Dict_Uint8_Int64");
-    declare_dict<uint16_t, uint8_t>(m, "_Dict_Uint16_Uint8");
-    declare_dict<uint16_t, uint16_t>(m, "_Dict_Uint16_Uint16");
-    declare_dict<uint16_t, uint32_t>(m, "_Dict_Uint16_Uint32");
-    declare_dict<uint16_t, uint64_t>(m, "_Dict_Uint16_Uint64");
-    declare_dict<uint16_t, int8_t>(m, "_Dict_Uint16_Int8");
-    declare_dict<uint16_t, int16_t>(m, "_Dict_Uint16_Int16");
-    declare_dict<uint16_t, int32_t>(m, "_Dict_Uint16_Int32");
-    declare_dict<uint16_t, int64_t>(m, "_Dict_Uint16_Int64");
-    declare_dict<uint32_t, uint8_t>(m, "_Dict_Uint32_Uint8");
-    declare_dict<uint32_t, uint16_t>(m, "_Dict_Uint32_Uint16");
-    declare_dict<uint32_t, uint32_t>(m, "_Dict_Uint32_Uint32");
-    declare_dict<uint32_t, uint64_t>(m, "_Dict_Uint32_Uint64");
-    declare_dict<uint32_t, int8_t>(m, "_Dict_Uint32_Int8");
-    declare_dict<uint32_t, int16_t>(m, "_Dict_Uint32_Int16");
-    declare_dict<uint32_t, int32_t>(m, "_Dict_Uint32_Int32");
-    declare_dict<uint32_t, int64_t>(m, "_Dict_Uint32_Int64");
-    declare_dict<uint64_t, uint8_t>(m, "_Dict_Uint64_Uint8");
-    declare_dict<uint64_t, uint16_t>(m, "_Dict_Uint64_Uint16");
-    declare_dict<uint64_t, uint32_t>(m, "_Dict_Uint64_Uint32");
-    declare_dict<uint64_t, uint64_t>(m, "_Dict_Uint64_Uint64");
-    declare_dict<uint64_t, int8_t>(m, "_Dict_Uint64_Int8");
-    declare_dict<uint64_t, int16_t>(m, "_Dict_Uint64_Int16");
-    declare_dict<uint64_t, int32_t>(m, "_Dict_Uint64_Int32");
-    declare_dict<uint64_t, int64_t>(m, "_Dict_Uint64_Int64");
-    declare_dict<int8_t, uint8_t>(m, "_Dict_Int8_Uint8");
-    declare_dict<int8_t, uint16_t>(m, "_Dict_Int8_Uint16");
-    declare_dict<int8_t, uint32_t>(m, "_Dict_Int8_Uint32");
-    declare_dict<int8_t, uint64_t>(m, "_Dict_Int8_Uint64");
-    declare_dict<int8_t, int8_t>(m, "_Dict_Int8_Int8");
-    declare_dict<int8_t, int16_t>(m, "_Dict_Int8_Int16");
-    declare_dict<int8_t, int32_t>(m, "_Dict_Int8_Int32");
-    declare_dict<int8_t, int64_t>(m, "_Dict_Int8_Int64");
-    declare_dict<int16_t, uint8_t>(m, "_Dict_Int16_Uint8");
-    declare_dict<int16_t, uint16_t>(m, "_Dict_Int16_Uint16");
-    declare_dict<int16_t, uint32_t>(m, "_Dict_Int16_Uint32");
-    declare_dict<int16_t, uint64_t>(m, "_Dict_Int16_Uint64");
-    declare_dict<int16_t, int8_t>(m, "_Dict_Int16_Int8");
-    declare_dict<int16_t, int16_t>(m, "_Dict_Int16_Int16");
-    declare_dict<int16_t, int32_t>(m, "_Dict_Int16_Int32");
-    declare_dict<int16_t, int64_t>(m, "_Dict_Int16_Int64");
-    declare_dict<int32_t, uint8_t>(m, "_Dict_Int32_Uint8");
-    declare_dict<int32_t, uint16_t>(m, "_Dict_Int32_Uint16");
-    declare_dict<int32_t, uint32_t>(m, "_Dict_Int32_Uint32");
-    declare_dict<int32_t, uint64_t>(m, "_Dict_Int32_Uint64");
-    declare_dict<int32_t, int8_t>(m, "_Dict_Int32_Int8");
-    declare_dict<int32_t, int16_t>(m, "_Dict_Int32_Int16");
-    declare_dict<int32_t, int32_t>(m, "_Dict_Int32_Int32");
-    declare_dict<int32_t, int64_t>(m, "_Dict_Int32_Int64");
-    declare_dict<int64_t, uint8_t>(m, "_Dict_Int64_Uint8");
-    declare_dict<int64_t, uint16_t>(m, "_Dict_Int64_Uint16");
-    declare_dict<int64_t, uint32_t>(m, "_Dict_Int64_Uint32");
-    declare_dict<int64_t, uint64_t>(m, "_Dict_Int64_Uint64");
-    declare_dict<int64_t, int8_t>(m, "_Dict_Int64_Int8");
-    declare_dict<int64_t, int16_t>(m, "_Dict_Int64_Int16");
-    declare_dict<int64_t, int32_t>(m, "_Dict_Int64_Int32");
-    declare_dict<int64_t, int64_t>(m, "_Dict_Int64_Int64");
+template <typename Key, typename Value>
+struct _Dict {
+    _Dict () {}
+
+    Value __getitem__ ( Key key ) {
+        return __dict.at(key);
+    }
+
+    bool __setitem__ ( Key key, Value value ) {
+        auto emplace_pair = __dict.emplace(key, value);
+        return emplace_pair.second;
+    }
+
+    bool __delitem__ ( Key key ) {
+        int check = __dict.erase(key);
+
+        if (check) { 
+            return true;
+        } else { 
+            return false; 
+        }
+    }
+
+    void __iter__ () {}
+
+    int __len__ () {
+        return __dict.size();
+    }
+
+    bool __contains__ ( Key key ) {
+        if (__dict.count(key)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    spp::sparse_hash_map<Key, Value> __dict;
+};
+
+
+template<typename Key, typename Value>
+void declare_dict(const py::module& m, const std::string& class_name) {
+    using Class = _Dict<Key, Value>;
+
+    py::class_<Class>(m, class_name.c_str())
+        .def(py::init<>())
+        
+        .def("__getitem__", &Class::__getitem__)
+        .def("__getitem_vec__", py::vectorize(&Class::__getitem__))
+        
+        .def("__setitem__", &Class::__setitem__)
+        .def("__setitem_vec__", py::vectorize(&Class::__setitem__))
+        
+        .def("__delitem__", &Class::__delitem__)
+        .def("__delitem_vec__", py::vectorize(&Class::__delitem__))
+        
+        .def("__contains__", &Class::__contains__)
+        .def("__contains_vec__", py::vectorize(&Class::__contains__))
+        
+        .def("__iter__", [](const Class &c) { return py::make_iterator(c.__dict.begin(), c.__dict.end()); }, py::keep_alive<0, 1>() )
+        .def("__len__", &Class::__len__);
 }
+
+/*
+py::array_t<bool> __contains_vec__ ( py::array_t<Key> key_array ) {
+    py::buffer_info key_buffer = key_array.request();
+    auto bool_array = py::array_t<bool>(key_buffer.size);
+    py::buffer_info bool_buffer = bool_array.request();
+    Key* key_ptr = (Key*) key_buffer.ptr;
+    bool* bool_ptr = (bool*) bool_buffer.ptr;
+
+    for (size_t idx = 0; idx < key_buffer.size; idx++)
+        bool_ptr[idx] = __contains__(key_ptr[idx]);
+
+    return bool_array;
+}
+*/
+

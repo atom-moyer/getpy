@@ -65,7 +65,7 @@ from _sparsepy import _Dict_Int64_Int16
 from _sparsepy import _Dict_Int64_Int32
 from _sparsepy import _Dict_Int64_Int64
 
-types_dict = {
+_types = {
     (np.uint8, np.uint8) : _Dict_Uint8_Uint8,
     (np.uint8, np.uint16) : _Dict_Uint8_Uint16,
     (np.uint8, np.uint32) : _Dict_Uint8_Uint32,
