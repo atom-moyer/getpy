@@ -35,4 +35,4 @@ class Dict(MutableMapping):
         return self.__dict.__len__()
 
     def __iter__(self):
-        pass
+        return self.__dict.__iter__()

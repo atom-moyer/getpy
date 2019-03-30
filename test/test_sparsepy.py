@@ -39,6 +39,8 @@ def test_sparsepy_vectorized_methods():
 
     sp_dict[keys] = values
 
+    key_and_values = [(key, value) for key, value in sp_dict]
+
     select_keys = np.random.choice(keys, size=100)
     select_values = sp_dict[select_keys]
 

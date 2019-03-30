@@ -27,8 +27,6 @@ struct _Dict {
         }
     }
 
-    void __iter__ () {}
-
     int __len__ () {
         return __dict.size();
     }
