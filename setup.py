@@ -13,7 +13,7 @@ os.environ["CXX"] = "g++"
 extra_compile_args_dict = {
     'linux' : ['-w', '-std=c++14'],
     'linux2' : ['-w', '-std=c++14'],
-    'darwin' : ['-w', '-std=c++14'],
+    'darwin' : ['-w', '-std=c++14', '-stdlib=libc++'],
 }
 
 ext_modules = [

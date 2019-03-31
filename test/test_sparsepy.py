@@ -3,7 +3,7 @@ import numpy as np
 
 def test_sparsepy_basic():
     import sparsepy as sp
-    sp_dict = sp.Dict(np.int64, np.int64)
+    sp_dict = sp.Dict(np.dtype('i8'), np.dtype('i8'))
 
 
 def test_sparsepy_types():
@@ -14,7 +14,7 @@ def test_sparsepy_types():
 
 def test_sparsepy_methods():
     import sparsepy as sp
-    sp_dict = sp.Dict(np.int64, np.int64)
+    sp_dict = sp.Dict(np.dtype('i8'), np.dtype('i8'))
 
     sp_dict[42] = 1337
 
@@ -32,7 +32,7 @@ def test_sparsepy_methods():
 
 def test_sparsepy_vectorized_methods():
     import sparsepy as sp
-    sp_dict = sp.Dict(np.int64, np.int64)
+    sp_dict = sp.Dict(np.dtype('i8'), np.dtype('i8'))
 
     keys = np.random.randint(1000, size=200, dtype=np.int64)
     values = np.random.randint(1000, size=200, dtype=np.int64)

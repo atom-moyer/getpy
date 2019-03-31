@@ -4,41 +4,33 @@ import numpy as np
 
 
 key_types = ['uint8_t', 'uint16_t', 'uint32_t', 'uint64_t',
-             'int8_t', 'int16_t', 'int32_t', 'int64_t']
+             'int8_t', 'int16_t', 'int32_t', 'int64_t',]
 
 
 value_types = ['uint8_t', 'uint16_t', 'uint32_t', 'uint64_t',
-               'int8_t', 'int16_t', 'int32_t', 'int64_t']
-
-
-type_names = {
-    'int8_t' : 'Int8',
-    'int16_t' : 'Int16',
-    'int32_t' : 'Int32',
-    'int64_t' : 'Int64',
-
-    'uint8_t' : 'Uint8',
-    'uint16_t' : 'Uint16',
-    'uint32_t' : 'Uint32',
-    'uint64_t' : 'Uint64',
-}
+               'int8_t', 'int16_t', 'int32_t', 'int64_t',
+               'float', 'double', 'bool']
 
 
 np_types = {
-    'int8_t' : 'np.int8',
-    'int16_t' : 'np.int16',
-    'int32_t' : 'np.int32',
-    'int64_t' : 'np.int64',
+    'int8_t' : 'i1',
+    'int16_t' : 'i2',
+    'int32_t' : 'i4',
+    'int64_t' : 'i8',
 
-    'uint8_t' : 'np.uint8',
-    'uint16_t' : 'np.uint16',
-    'uint32_t' : 'np.uint32',
-    'uint64_t' : 'np.uint64',
+    'uint8_t' : 'u1',
+    'uint16_t' : 'u2',
+    'uint32_t' : 'u4',
+    'uint64_t' : 'u8',
+
+    'float' : 'f4',
+    'double' : 'f8',
+    'bool' : '?',
 }
 
 
 def create_class_name(key_type, value_type):
-    return f'_Dict_{type_names[key_type]}_{type_names[value_type]}'
+    return f'_Dict_{key_type}_{value_type}'
 
 
 def write_sparsepy_cpp(key_types, value_types):
@@ -86,7 +78,7 @@ _types = {
 
         def write_type_dict(sparsepy_file, key_type, value_type):
             class_name = create_class_name(key_type, value_type)
-            sparsepy_file.write(f'    ({np_types[key_type]}, {np_types[value_type]}) : {class_name},\n')
+            sparsepy_file.write(f'\t(np.dtype("{np_types[key_type]}"), np.dtype("{np_types[value_type]}")) : {class_name},\n')
 
         for key_type, value_type in itertools.product(key_types, value_types):
             write_type_dict(sparsepy_file, key_type, value_type)
