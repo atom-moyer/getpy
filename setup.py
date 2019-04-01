@@ -20,7 +20,7 @@ ext_modules = [
   Extension(
     "_sparsepy",
     glob.glob('src/*.cpp'),
-    include_dirs = ['lib/sparsepp/sparsepp', 'lib/pybind11/include', 'lib/brigand/include', 'lib/msgpack-c/include'],
+    include_dirs = ['lib/sparsepp', 'lib/pybind11/include', 'lib/half', 'lib/msgpack-c/include'],
     language = 'c++',
     extra_compile_args = extra_compile_args_dict[sys.platform],
     extra_link_args = ['-lz'],
@@ -39,7 +39,7 @@ setup(
     package_dir={'sparsepy': 'sparsepy'},
     package_data={},
     ext_modules = ext_modules,
-    install_requires = ['pytest', 'pybind11'],
+    install_requires = ['pytest', 'pytest-timeout', 'pytest-memprof', 'pybind11'],
     include_package_data=True,
     zip_safe = False,
 )

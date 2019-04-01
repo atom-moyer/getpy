@@ -2,22 +2,37 @@
 #include <pybind11/numpy.h>
 namespace py = pybind11;
 
-#include <spp.h>
+#include <sparsepp/spp.h>
+
+#include <msgpack.hpp>
+
+
+template<typename T, size_t N>
+struct std::hash<std::array<T, N> > {
+    size_t operator()(const std::array<T, N> & array) const {
+        size_t seed = 0;
+        for ( T value : array ) {
+            spp::hash_combine( seed, value );
+        }
+        return seed;
+    }
+};
+
 
 template <typename Key, typename Value>
 struct _Dict {
     _Dict () {}
 
-    Value __getitem__ ( Key key ) {
+    Value __getitem__ ( const Key & key ) {
         return __dict.at(key);
     }
 
-    bool __setitem__ ( Key key, Value value ) {
+    bool __setitem__ ( const Key & key, const Value & value ) {
         auto emplace_pair = __dict.emplace(key, value);
         return emplace_pair.second;
     }
 
-    bool __delitem__ ( Key key ) {
+    bool __delitem__ ( const Key & key ) {
         int check = __dict.erase(key);
 
         if (check) { 
@@ -31,7 +46,7 @@ struct _Dict {
         return __dict.size();
     }
 
-    bool __contains__ ( Key key ) {
+    bool __contains__ ( const Key & key ) {
         if (__dict.count(key)) {
             return true;
         } else {
@@ -39,6 +54,27 @@ struct _Dict {
         }
     }
     
+    void dump ( const std::string & filename ) {
+        std::ofstream file ( filename );
+        std::stringstream buffer;
+        
+        for ( auto & key_value : __dict ) {
+            msgpack::pack(buffer, key_value);
+            file << buffer << std::endl;
+        }
+    }
+
+    void load ( const std::string & filename ) {
+        std::ifstream file ( filename );
+        std::string line;
+
+        while ( getline( file, line ) ) {
+            msgpack::object_handle oh = msgpack::unpack(ss.str().data(), ss.str().size());
+            msgpack::object obj = oh.get();
+            obj.as<std::pair<Key, Value>>();
+        }
+    }
+
     spp::sparse_hash_map<Key, Value> __dict;
 };
 
@@ -65,19 +101,4 @@ void declare_dict(const py::module& m, const std::string& class_name) {
         .def("__iter__", [](const Class &c) { return py::make_iterator(c.__dict.begin(), c.__dict.end()); }, py::keep_alive<0, 1>() )
         .def("__len__", &Class::__len__);
 }
-
-/*
-py::array_t<bool> __contains_vec__ ( py::array_t<Key> key_array ) {
-    py::buffer_info key_buffer = key_array.request();
-    auto bool_array = py::array_t<bool>(key_buffer.size);
-    py::buffer_info bool_buffer = bool_array.request();
-    Key* key_ptr = (Key*) key_buffer.ptr;
-    bool* bool_ptr = (bool*) bool_buffer.ptr;
-
-    for (size_t idx = 0; idx < key_buffer.size; idx++)
-        bool_ptr[idx] = __contains__(key_ptr[idx]);
-
-    return bool_array;
-}
-*/
 

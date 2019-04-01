@@ -1,19 +1,16 @@
+import pytest
+
 import numpy as np
 
+import sparsepy as sp
 
-def test_sparsepy_basic():
-    import sparsepy as sp
-    sp_dict = sp.Dict(np.dtype('i8'), np.dtype('i8'))
+standard = pytest.mark.standard
+long_ = pytest.mark.long_
 
+print()
 
-def test_sparsepy_types():
-    import sparsepy as sp
-    for key_type, value_type in sp._types:
-        sp_dict = sp.Dict(key_type, value_type)
-
-
+@standard
 def test_sparsepy_methods():
-    import sparsepy as sp
     sp_dict = sp.Dict(np.dtype('i8'), np.dtype('i8'))
 
     sp_dict[42] = 1337
@@ -30,8 +27,8 @@ def test_sparsepy_methods():
     assert len(sp_dict) == 0
 
 
+@standard
 def test_sparsepy_vectorized_methods():
-    import sparsepy as sp
     sp_dict = sp.Dict(np.dtype('i8'), np.dtype('i8'))
 
     keys = np.random.randint(1000, size=200, dtype=np.int64)
@@ -49,3 +46,75 @@ def test_sparsepy_vectorized_methods():
 
     mask_keys = random_keys[random_keys_mask]
     mask_values = sp_dict[mask_keys]
+
+
+@standard
+def test_sparsepy_types(): 
+    for key_type, value_type in sp._types:
+        sp_dict = sp.Dict(key_type, value_type)
+        
+        keys = np.array(range(10), dtype=np.dtype(key_type))
+        values = np.array(range(10), dtype=np.dtype(value_type))
+
+        sp_dict[keys] = values
+
+
+@standard
+@pytest.mark.timeout(1)
+def test_sparsepy_big_dict_uint32():
+    key_type = np.dtype('u4')
+    value_type = np.dtype('u4')
+
+    sp_dict = sp.Dict(key_type, value_type)
+    
+    for i in range(10**3):
+        keys = np.random.randint(10**9, size=10**3, dtype=key_type)
+        values = np.random.randint(10**9, size=10**3, dtype=value_type)
+
+        sp_dict[keys] = values
+    
+
+@standard
+@pytest.mark.timeout(1)
+def test_sparsepy_big_dict_uint64():
+    key_type = np.dtype('u8')
+    value_type = np.dtype('u8')
+
+    sp_dict = sp.Dict(key_type, value_type)
+    
+    for i in range(10**3):
+        keys = np.random.randint(10**15, size=10**3, dtype=key_type)
+        values = np.random.randint(10**15, size=10**3, dtype=value_type)
+
+        sp_dict[keys] = values
+
+
+@long_
+@pytest.mark.timeout(100)
+def test_sparsepy_very_big_dict_uint32():
+    key_type = np.dtype('u4')
+    value_type = np.dtype('u4')
+
+    sp_dict = sp.Dict(key_type, value_type)
+    
+    for i in range(10**3):
+        keys = np.random.randint(10**9, size=10**5, dtype=key_type)
+        values = np.random.randint(10**9, size=10**5, dtype=value_type)
+
+        sp_dict[keys] = values
+
+
+@long_
+@pytest.mark.timeout(100)
+def test_sparsepy_very_big_dict_uint64():
+    key_type = np.dtype('u8')
+    value_type = np.dtype('u8')
+
+    sp_dict = sp.Dict(key_type, value_type)
+    
+    for i in range(10**3):
+        keys = np.random.randint(10**15, size=10**5, dtype=key_type)
+        values = np.random.randint(10**15, size=10**5, dtype=value_type)
+
+        sp_dict[keys] = values
+    
