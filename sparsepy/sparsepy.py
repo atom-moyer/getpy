@@ -7,6 +7,9 @@ class Dict(MutableMapping):
     def __init__(self, key_type, value_type):
         self.__dict = _types[(key_type, value_type)]()
 
+    def __repr__(self):
+        return str([(key, value) for key, value in self.items()])
+
     def __getitem__(self, key):
         if isinstance(key, Iterable):
             return self.__dict.__getitem_vec__(key)
@@ -35,4 +38,14 @@ class Dict(MutableMapping):
         return self.__dict.__len__()
 
     def __iter__(self):
-        return self.__dict.__iter__()
+        for key, value in self.items():
+            yield key
+
+    def items(self):
+        return self.__dict.items()
+
+    def dump(self, filename):
+        return self.__dict.dump(filename)
+
+    def load(self, filename):
+        return self.__dict.load(filename)

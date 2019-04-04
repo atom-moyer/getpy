@@ -4,7 +4,34 @@ namespace py = pybind11;
 
 #include <sparsepp/spp.h>
 
-#include <msgpack.hpp>
+#include <cereal/archives/binary.hpp>
+#include <cereal/types/utility.hpp>
+#include <cereal/types/array.hpp>
+#include <cereal/types/string.hpp>
+#include <cereal/types/vector.hpp>
+#include <fstream>
+
+template <typename Key, typename Value>
+struct Serializer {
+    bool operator()(std::ofstream * stream, const std::pair<const Key, Value> & key_value) const {
+        cereal::BinaryOutputArchive oarchive ( * stream );
+        oarchive(key_value);
+
+        return true;
+    }
+
+    bool operator()(std::ifstream * stream, std::pair<const Key, Value> * key_value) const {
+        std::pair<Key, Value> in_key_value;
+
+        cereal::BinaryInputArchive iarchive ( * stream );
+        iarchive(in_key_value);
+
+        (const_cast<Key&>(key_value->first)) = in_key_value.first;
+        key_value->second = in_key_value.second;
+
+        return true;
+    }
+};
 
 
 template<typename T, size_t N>
@@ -35,10 +62,10 @@ struct _Dict {
     bool __delitem__ ( const Key & key ) {
         int check = __dict.erase(key);
 
-        if (check) { 
+        if (check) {
             return true;
-        } else { 
-            return false; 
+        } else {
+            return false;
         }
     }
 
@@ -53,26 +80,15 @@ struct _Dict {
             return false;
         }
     }
-    
+
     void dump ( const std::string & filename ) {
-        std::ofstream file ( filename );
-        std::stringstream buffer;
-        
-        for ( auto & key_value : __dict ) {
-            msgpack::pack(buffer, key_value);
-            file << buffer << std::endl;
-        }
+        std::shared_ptr<std::ofstream> file = std::make_shared<std::ofstream>( filename );
+        __dict.serialize(Serializer<Key, Value>(), file.get());
     }
 
     void load ( const std::string & filename ) {
-        std::ifstream file ( filename );
-        std::string line;
-
-        while ( getline( file, line ) ) {
-            msgpack::object_handle oh = msgpack::unpack(ss.str().data(), ss.str().size());
-            msgpack::object obj = oh.get();
-            obj.as<std::pair<Key, Value>>();
-        }
+        std::shared_ptr<std::ifstream> file = std::make_shared<std::ifstream>( filename );
+        __dict.unserialize(Serializer<Key, Value>(), file.get());
     }
 
     spp::sparse_hash_map<Key, Value> __dict;
@@ -85,20 +101,22 @@ void declare_dict(const py::module& m, const std::string& class_name) {
 
     py::class_<Class>(m, class_name.c_str())
         .def(py::init<>())
-        
+
         .def("__getitem__", &Class::__getitem__)
         .def("__getitem_vec__", py::vectorize(&Class::__getitem__))
-        
+
         .def("__setitem__", &Class::__setitem__)
         .def("__setitem_vec__", py::vectorize(&Class::__setitem__))
-        
+
         .def("__delitem__", &Class::__delitem__)
         .def("__delitem_vec__", py::vectorize(&Class::__delitem__))
-        
+
         .def("__contains__", &Class::__contains__)
         .def("__contains_vec__", py::vectorize(&Class::__contains__))
-        
-        .def("__iter__", [](const Class &c) { return py::make_iterator(c.__dict.begin(), c.__dict.end()); }, py::keep_alive<0, 1>() )
+
+        .def("dump", &Class::dump)
+        .def("load", &Class::load)
+
+        .def("items", [](const Class &c) { return py::make_iterator(c.__dict.begin(), c.__dict.end()); }, py::keep_alive<0, 1>() )
         .def("__len__", &Class::__len__);
 }
-

@@ -5,7 +5,7 @@ import sys
 import setuptools
 import glob
 
-__version__ = '0.0.1'
+__version__ = '0.1.0'
 
 os.environ["CC"] = "gcc"
 os.environ["CXX"] = "g++"
@@ -20,7 +20,7 @@ ext_modules = [
   Extension(
     "_sparsepy",
     glob.glob('src/*.cpp'),
-    include_dirs = ['lib/sparsepp', 'lib/pybind11/include', 'lib/half', 'lib/msgpack-c/include'],
+    include_dirs = ['lib/sparsepp', 'lib/pybind11/include', 'lib/cereal/include'],
     language = 'c++',
     extra_compile_args = extra_compile_args_dict[sys.platform],
     extra_link_args = ['-lz'],
