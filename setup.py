@@ -17,7 +17,7 @@ ext_modules = [
   Extension(
     "_sparsepy",
     glob.glob('src/*.cpp'),
-    include_dirs = ['lib/sparsepp', 'lib/pybind11/include', 'lib/cereal/include'],
+    include_dirs = ['lib/parallel-hashmap', 'lib/pybind11/include', 'lib/cereal/include'],
     language = 'c++',
     extra_compile_args = extra_compile_args_dict[sys.platform],
     extra_link_args = ['-lz'],

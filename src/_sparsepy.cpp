@@ -2,7 +2,7 @@
 #include <pybind11/numpy.h>
 namespace py = pybind11;
 
-#include <sparsepp/spp.h>
+#include <parallel_hashmap/phmap.h>
 
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/utility.hpp>
@@ -11,39 +11,7 @@ namespace py = pybind11;
 #include <cereal/types/vector.hpp>
 #include <fstream>
 
-template <typename Key, typename Value>
-struct Serializer {
-    bool operator()(std::ofstream * stream, const std::pair<const Key, Value> & key_value) const {
-        cereal::BinaryOutputArchive oarchive ( * stream );
-        oarchive(key_value);
-
-        return true;
-    }
-
-    bool operator()(std::ifstream * stream, std::pair<const Key, Value> * key_value) const {
-        std::pair<Key, Value> in_key_value;
-
-        cereal::BinaryInputArchive iarchive ( * stream );
-        iarchive(in_key_value);
-
-        (const_cast<Key&>(key_value->first)) = in_key_value.first;
-        key_value->second = in_key_value.second;
-
-        return true;
-    }
-};
-
-
-template<typename T, size_t N>
-struct std::hash<std::array<T, N> > {
-    size_t operator()(const std::array<T, N> & array) const {
-        size_t seed = 0;
-        for ( T value : array ) {
-            spp::hash_combine( seed, value );
-        }
-        return seed;
-    }
-};
+#include <iostream>
 
 
 template <typename Key, typename Value>
@@ -82,16 +50,28 @@ struct _Dict {
     }
 
     void dump ( const std::string & filename ) {
-        std::shared_ptr<std::ofstream> file = std::make_shared<std::ofstream>( filename );
-        __dict.serialize(Serializer<Key, Value>(), file.get());
+        std::ofstream stream ( filename , std::ios::binary );
+        cereal::BinaryOutputArchive oarchive ( stream );
+
+        for ( auto & key_value : __dict ) {
+            std::cout << key_value.first << key_value.second << std::endl;
+            oarchive(key_value);
+        }
     }
 
     void load ( const std::string & filename ) {
-        std::shared_ptr<std::ifstream> file = std::make_shared<std::ifstream>( filename );
-        __dict.unserialize(Serializer<Key, Value>(), file.get());
+        std::ifstream stream ( filename , std::ios::binary);
+        cereal::BinaryInputArchive iarchive ( stream );
+
+        std::pair<Key, Value> in_key_value;
+        while ( !stream.eof() ) {
+            iarchive(in_key_value);
+            __dict.emplace(in_key_value.first, in_key_value.second);
+            stream.peek();
+        }
     }
 
-    spp::sparse_hash_map<Key, Value> __dict;
+    phmap::parallel_flat_hash_map<Key, Value> __dict;
 };
 
 
