@@ -12,7 +12,7 @@ print()
 @standard
 def test_sparsepy_methods():
     key_type = np.dtype('u8')
-    value_type = np.dtype('u8')
+    value_type = np.int64
 
     sp_dict = sp.Dict(key_type, value_type)
 

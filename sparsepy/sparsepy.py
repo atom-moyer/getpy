@@ -1,11 +1,13 @@
 from collections import MutableMapping
 from typing import Iterable
 
+import numpy as np
+
 from .sparsepy_types import _types
 
 class Dict(MutableMapping):
     def __init__(self, key_type, value_type):
-        self.__dict = _types[(key_type, value_type)]()
+        self.__dict = _types[(np.dtype(key_type), np.dtype(value_type))]()
 
     def __repr__(self):
         return str([(key, value) for key, value in self.items()])

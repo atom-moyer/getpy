@@ -5,10 +5,7 @@ import sys
 import setuptools
 import glob
 
-__version__ = '0.1.0'
-
-os.environ["CC"] = "gcc"
-os.environ["CXX"] = "g++"
+__version__ = '0.1.1'
 
 extra_compile_args_dict = {
     'linux' : ['-w', '-std=c++14'],

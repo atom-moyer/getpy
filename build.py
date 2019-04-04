@@ -29,6 +29,8 @@ value_types = [
     # 'bool_v', 'bool_2', 'bool_4', 'bool_8', 'bool_16', 'bool_32', 'bool_64', 'bool_128', 'bool_256',
 
     'float32', 'float64',
+
+    # 'pyobject',
 ]
 
 cpp_types = {
@@ -72,50 +74,54 @@ cpp_types = {
     'bool_64' : 'std::array<bool, 64>',
     'bool_128' : 'std::array<bool, 128>',
     'bool_256' : 'std::array<bool, 256>',
+
+    'pyobject' : 'py::object',
 }
 
 np_types = {
-    'ubyte_v' : 'b',
-    'ubyte_2' : '2b',
-    'ubyte_4' : '4b',
-    'ubyte_8' : '8b',
-    'ubyte_16' : '16b',
-    'ubyte_32' : '32b',
+    'ubyte_v' : ['b'],
+    'ubyte_2' : ['2b'],
+    'ubyte_4' : ['4b'],
+    'ubyte_8' : ['8b'],
+    'ubyte_16' : ['16b'],
+    'ubyte_32' : ['32b'],
 
-    'byte_v' : 'B',
-    'byte_2' : '2B',
-    'byte_4' : '4B',
-    'byte_8' : '8B',
-    'byte_16' : '16B',
-    'byte_32' : '32B',
+    'byte_v' : ['B'],
+    'byte_2' : ['2B'],
+    'byte_4' : ['4B'],
+    'byte_8' : ['8B'],
+    'byte_16' : ['16B'],
+    'byte_32' : ['32B'],
 
-    'int8' : 'i1',
-    'int16' : 'i2',
-    'int32' : 'i4',
-    'int64' : 'i8',
-    'int128' : 'i16',
+    'int8' : ['i1', 'int8'],
+    'int16' : ['i2', 'int16'],
+    'int32' : ['i4', 'int32'],
+    'int64' : ['i8', 'int64'],
+    'int128' : ['i16', 'int128'],
 
-    'uint8' : 'u1',
-    'uint16' : 'u2',
-    'uint32' : 'u4',
-    'uint64' : 'u8',
-    'uint128' : 'u16',
+    'uint8' : ['u1', 'uint8'],
+    'uint16' : ['u2', 'uint16'],
+    'uint32' : ['u4', 'uint32'],
+    'uint64' : ['u8', 'uint64'],
+    'uint128' : ['u16', 'uint128'],
 
-    'float16' : 'f2',
-    'float32' : 'f4',
-    'float64' : 'f8',
+    'float16' : ['f2', 'float16'],
+    'float32' : ['f4', 'float32'],
+    'float64' : ['f8', 'float64'],
 
-    'bool' : '?',
-    'bool_2' : '2?',
-    'bool_4' : '4?',
-    'bool_8' : '8?',
-    'bool_16' : '16?',
-    'bool_32' : '32?',
-    'bool_64' : '64?',
-    'bool_128' : '128?',
-    'bool_256' : '256?',
+    'bool' : ['?', 'bool'],
+    'bool_2' : ['2?'],
+    'bool_4' : ['4?'],
+    'bool_8' : ['8?'],
+    'bool_16' : ['16?'],
+    'bool_32' : ['32?'],
+    'bool_64' : ['64?'],
+    'bool_128' : ['128?'],
+    'bool_256' : ['256?'],
 
-    'str' : 'U',
+    'str' : ['U'],
+
+    'pyobject' : ['O'],
 }
 
 
@@ -182,7 +188,10 @@ _types = {
 
         def write_type_dict(sparsepy_file, key_type, value_type):
             class_name = create_class_name(key_type, value_type)
-            sparsepy_file.write(f'\t(np.dtype("{np_types[key_type]}"), np.dtype("{np_types[value_type]}")) : {class_name},\n')
+
+            for kt in np_types[key_type]:
+                for vt in np_types[value_type]:
+                    sparsepy_file.write(f'\t(np.dtype("{kt}"), np.dtype("{vt}")) : {class_name},\n')
 
         for key_type, value_type in itertools.product(key_types, value_types):
             write_type_dict(sparsepy_file, key_type, value_type)

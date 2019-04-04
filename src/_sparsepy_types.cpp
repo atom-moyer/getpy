@@ -2,16 +2,16 @@
 
 #include <pybind11/pybind11.h>
 
+using int8 = int8_t;
+using uint32 = uint32_t;
+using int32 = int32_t;
+using int64 = int64_t;
+using uint64 = uint64_t;
+using float32 = float;
 using int16 = int16_t;
 using uint8 = uint8_t;
-using float64 = double;
-using uint32 = uint32_t;
-using int64 = int64_t;
-using int32 = int32_t;
-using int8 = int8_t;
-using uint64 = uint64_t;
 using uint16 = uint16_t;
-using float32 = float;
+using float64 = double;
 
 PYBIND11_MODULE(_sparsepy, m) {
     m.doc() = "Fast and Memory Efficient Sparse Hash Tables for Python";
