@@ -11,7 +11,7 @@ The `sparsepy.Dict` object is designed to maintain a similar interface to the st
 
 1) `sparsepy.Dict.__init__` has two arguments `key_type` and `value_type`. Those arguments are defined with a preset combinations of `np.dtype`s.  The full list of supported `np.dtype` combinations is found by `sparsepy._types`. Most of the future work on sparsepy will be expanding this list of supported types.
 
-2) All of `sparsepy.Dict` methods support vectorization. Therefore, methods like `sparsepy.Dict.__getitem__`, `sparsepy.Dict.__setitem__`, and `sparsepy.Dict.__contains__` can be performed with `np.array(dtype)`.  That allows the performance critical for loop to happen within the compiled c++.
+2) All of `sparsepy.Dict` methods support vectorization. Therefore, methods like `sparsepy.Dict.__getitem__`, `sparsepy.Dict.__setitem__`, and `sparsepy.Dict.__contains__` can be performed with `np.array(dtype)`.  That allows the performance critical for-loop to happen within the compiled c++.
 
 3) `sparsepy.Dict.__getitem__` will throw an error if you attempt to retrieve a key that does not exist. Instead, you should first run `sparsepy.__contains__` on your key/array of keys, and then retrieve values corresponding to keys that exist. This is necessary for the vectorization support.
 
