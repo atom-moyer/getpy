@@ -10,7 +10,7 @@ class Dict(MutableMapping):
         self.__dict = _types[(np.dtype(key_type), np.dtype(value_type))]()
 
     def __repr__(self):
-        return str([(key, value) for key, value in self.items()])
+        return str(self.items())
 
     def __getitem__(self, key):
         if isinstance(key, Iterable):
