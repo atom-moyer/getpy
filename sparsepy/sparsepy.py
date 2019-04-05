@@ -13,7 +13,7 @@ class Dict(MutableMapping):
         return str(self.items())
 
     def __getitem__(self, key):
-        if isinstance(key, Iterable):
+        if isinstance(key, Iterable) and not isinstance(key, str):
             if hasattr(self.__dict, '__getitem_vec__'):
                 return self.__dict.__getitem_vec__(key)
             else:
@@ -23,7 +23,7 @@ class Dict(MutableMapping):
             return self.__dict.__getitem__(key)
 
     def __setitem__(self, key, value):
-        if isinstance(key, Iterable):
+        if isinstance(key, Iterable) and not isinstance(key, str):
             if hasattr(self.__dict, '__setitem_vec__'):
                 return self.__dict.__setitem_vec__(key, value)
             else:
@@ -32,7 +32,7 @@ class Dict(MutableMapping):
             self.__dict.__setitem__(key, value)
 
     def __delitem__(self, key):
-        if isinstance(key, Iterable):
+        if isinstance(key, Iterable) and not isinstance(key, str):
             if hasattr(self.__dict, '__delitem_vec__'):
                 return self.__dict.__delitem_vec__(key)
             else:
@@ -41,7 +41,7 @@ class Dict(MutableMapping):
             self.__dict.__delitem__(key)
 
     def __contains__(self, key):
-        if isinstance(key, Iterable):
+        if isinstance(key, Iterable) and not isinstance(key, str):
             if hasattr(self.__dict, '__contains_vec__'):
                 return self.__dict.__contains_vec__(key)
             else:
