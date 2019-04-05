@@ -31,7 +31,7 @@ setup(
     author = 'Adam Moyer',
     author_email = 'atom.moyer@gmail.com',
     url = None,
-    description = 'Fast and Memory Efficient Sparse Hash Tables for Python',
+    description = 'A Fast and Memory Efficient Hash Map for Python',
     packages = ['sparsepy'],
     package_dir={'sparsepy': 'sparsepy'},
     package_data={},
