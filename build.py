@@ -6,34 +6,55 @@ import numpy as np
 key_types = [
     'uint32', 'uint64',
     'int32', 'int64',
+
+    'str',
 ]
 
 value_types = [
-    # 'ubyte_v', 'ubyte_2', 'ubyte_4', 'ubyte_8', 'ubyte_16', 'ubyte_32',
+    # 'ubyte',
+    # 'ubyte_2', 'ubyte_4', 'ubyte_8', 'ubyte_16', 'ubyte_32',
 
-    # 'byte_v', 'byte_2', 'byte_4', 'byte_8', 'byte_16', 'byte_32',
+    # 'byte',
+    # 'byte_2', 'byte_4', 'byte_8', 'byte_16', 'byte_32',
 
     'uint8', 'uint16', 'uint32', 'uint64',
-    # 'int8_v', 'uint8_2', 'uint8_4', 'uint8_8', 'uint8_16', 'uint8_32',
-    # 'int16_v', 'uint16_2', 'uint16_4', 'uint16_8', 'uint16_16', 'uint16_32',
-    # 'int32_v', 'uint32_2', 'uint32_4', 'uint32_8', 'uint32_16', 'uint32_32',
-    # 'int64_v', 'uint64_2', 'uint64_4', 'uint64_8', 'uint64_16', 'uint64_32',
+    # 'uint8_2', 'uint8_4', 'uint8_8', 'uint8_16', 'uint8_32',
+    # 'uint16_2', 'uint16_4', 'uint16_8', 'uint16_16', 'uint16_32',
+    # 'uint32_2', 'uint32_4', 'uint32_8', 'uint32_16', 'uint32_32',
+    # 'uint64_2', 'uint64_4', 'uint64_8', 'uint64_16', 'uint64_32',
 
     'int8', 'int16', 'int32', 'int64',
-    # 'int8_v', 'int8_2', 'int8_4', 'int8_8', 'int8_16', 'int8_32',
-    # 'int16_v', 'int16_2', 'int16_4', 'int16_8', 'int16_16', 'int16_32',
-    # 'int32_v', 'int32_2', 'int32_4', 'int32_8', 'int32_16', 'int32_32',
-    # 'int64_v', 'int64_2', 'int64_4', 'int64_8', 'int64_16', 'int64_32',
+    # 'int8_2', 'int8_4', 'int8_8', 'int8_16', 'int8_32',
+    # 'int16_2', 'int16_4', 'int16_8', 'int16_16', 'int16_32',
+    # 'int32_2', 'int32_4', 'int32_8', 'int32_16', 'int32_32',
+    # 'int64_2', 'int64_4', 'int64_8', 'int64_16', 'int64_32',
 
     'bool',
-    # 'bool_v', 'bool_2', 'bool_4', 'bool_8', 'bool_16', 'bool_32', 'bool_64', 'bool_128', 'bool_256',
+    #'bool_2', 'bool_4', 'bool_8', 'bool_16', 'bool_32', 'bool_64', 'bool_128', 'bool_256',
 
+    # 'float16',
     'float32', 'float64',
+
+    'str',
 
     # 'pyobject',
 ]
 
+no_vec_support_types = {
+    'ubyte',
+    'ubyte_2', 'ubyte_4', 'ubyte_8', 'ubyte_16', 'ubyte_32',
+
+    'byte',
+
+    'bool_2', 'bool_4', 'bool_8', 'bool_16', 'bool_32', 'bool_64', 'bool_128', 'bool_256',
+
+    'str',
+
+    'pyobject',
+}
+
 cpp_types = {
+    'ubyte' : 'unsigned char',
     'ubyte_v' : 'std::vector<unsigned char>',
     'ubyte_2' : 'std::array<unsigned char, 2>',
     'ubyte_4' : 'std::array<unsigned char, 4>',
@@ -41,7 +62,8 @@ cpp_types = {
     'ubyte_16' : 'std::array<unsigned char, 16>',
     'ubyte_32' : 'std::array<unsigned char, 32>',
 
-    'byte_v' : 'std::vector<char>',
+    'byte' : 'char',
+    'byte_v' : 'py::str',
     'byte_2' : 'std::array<char, 2>',
     'byte_4' : 'std::array<char, 4>',
     'byte_8' : 'std::array<char, 8>',
@@ -65,7 +87,6 @@ cpp_types = {
     'float64' : 'double',
 
     'bool' : 'bool',
-    'bool_v' : 'std::vector<bool>',
     'bool_2' : 'std::array<bool, 2>',
     'bool_4' : 'std::array<bool, 4>',
     'bool_8' : 'std::array<bool, 8>',
@@ -75,18 +96,20 @@ cpp_types = {
     'bool_128' : 'std::array<bool, 128>',
     'bool_256' : 'std::array<bool, 256>',
 
+    'str' : 'std::string',
+
     'pyobject' : 'py::object',
 }
 
 np_types = {
-    'ubyte_v' : ['b'],
+    'ubyte' : ['b'],
     'ubyte_2' : ['2b'],
     'ubyte_4' : ['4b'],
     'ubyte_8' : ['8b'],
     'ubyte_16' : ['16b'],
     'ubyte_32' : ['32b'],
 
-    'byte_v' : ['B'],
+    'byte' : ['B'],
     'byte_2' : ['2B'],
     'byte_4' : ['4B'],
     'byte_8' : ['8B'],
@@ -159,8 +182,16 @@ PYBIND11_MODULE(_sparsepy, m) {
             class_name = create_class_name(key_type, value_type)
             sparsepy_file.write(f'\tdeclare_dict<{key_type}, {value_type}>(m, "{class_name}");\n')
 
+        def write_declare_dict_no_vec(sparsepy_file, key_type, value_type):
+            class_name = create_class_name(key_type, value_type)
+            sparsepy_file.write(f'\tdeclare_dict_no_vec<{key_type}, {value_type}>(m, "{class_name}");\n')
+
         for key_type, value_type in itertools.product(key_types, value_types):
-            write_declare_dict(sparsepy_file, key_type, value_type)
+
+            if (key_type in no_vec_support_types) or (value_type in no_vec_support_types):
+                write_declare_dict_no_vec(sparsepy_file, key_type, value_type)
+            else:
+                write_declare_dict(sparsepy_file, key_type, value_type)
 
         sparsepy_file.write("""\
 }
