@@ -18,7 +18,6 @@ class Dict(MutableMapping):
                 return self.__dict.__getitem_vec__(key)
             else:
                 return [self.__dict.__getitem__(k) for k in key]
-
         else:
             return self.__dict.__getitem__(key)
 
