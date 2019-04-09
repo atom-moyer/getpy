@@ -18,7 +18,7 @@ The `sparsepy.Dict` object is designed to maintain a similar interface to the st
 ## Examples
 
 ### Simple Example
-```
+```python
 import numpy as np
 import sparsepy as sp
 
@@ -42,7 +42,7 @@ assert len(sp_dict) == 0
 ```
 
 ### Vectorized Example
-```
+```python
 import numpy as np
 import sparsepy as sp
 
@@ -70,7 +70,7 @@ mask_values = sp_dict[mask_keys]
 ```
 
 ### Serialization Example
-```
+```python
 import numpy as np
 import sparsepy as sp
 
