@@ -1,7 +1,7 @@
 # Sparsepy
 A Fast and Memory Efficient Hash Map for Python
 
-The goal of Sparsepy is a simple to use and high performance python dictionary which integrates smoothly into the numpy/python ecosystem.
+The goal of Sparsepy is a simple to use and high performance python dictionary which integrates smoothly into the numpy/scipy ecosystem.
 
 ## About Sparsepy
 Sparsepy is a thin and robust binding to the parallel_hashmap which is the current state of the art for minimal memory overhead and fast runtime speed. The binding layer is supported by PyBind11 which is fast to compile and simple to extend. Serialization is handled by Cereal which supports streaming binary serialization, a critical feature for the large hash tables this is designed to support.
@@ -18,7 +18,7 @@ The `sparsepy.Dict` object is designed to maintain a similar interface to the st
 ## Examples
 
 ### Simple Example
-```
+```python
 import numpy as np
 import sparsepy as sp
 
@@ -42,7 +42,7 @@ assert len(sp_dict) == 0
 ```
 
 ### Vectorized Example
-```
+```python
 import numpy as np
 import sparsepy as sp
 
@@ -70,7 +70,7 @@ mask_values = sp_dict[mask_keys]
 ```
 
 ### Serialization Example
-```
+```python
 import numpy as np
 import sparsepy as sp
 
