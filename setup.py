@@ -15,7 +15,7 @@ extra_compile_args_dict = {
 
 ext_modules = [
   Extension(
-    "_sparsepy",
+    "_getpy",
     glob.glob('src/*.cpp'),
     include_dirs = ['lib/parallel-hashmap', 'lib/pybind11/include', 'lib/cereal/include'],
     language = 'c++',
@@ -26,14 +26,14 @@ ext_modules = [
 ]
 
 setup(
-    name = 'sparsepy',
+    name = 'getpy',
     version = __version__,
     author = 'Adam Moyer',
     author_email = 'atom.moyer@gmail.com',
     url = None,
     description = 'A Fast and Memory Efficient Hash Map for Python',
-    packages = ['sparsepy'],
-    package_dir={'sparsepy': 'sparsepy'},
+    packages = ['getpy'],
+    package_dir={'getpy': 'getpy'},
     package_data={},
     ext_modules = ext_modules,
     install_requires = ['pytest', 'pytest-timeout', 'pytest-memprof', 'pybind11'],

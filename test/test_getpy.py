@@ -2,7 +2,7 @@ import pytest
 
 import numpy as np
 
-import sparsepy as sp
+import getpy as gp
 
 fast = pytest.mark.fast
 standard = pytest.mark.standard
@@ -15,20 +15,20 @@ def test_sparsepy_methods():
     key_type = np.dtype('u8')
     value_type = np.uint64
 
-    sp_dict = sp.Dict(key_type, value_type)
+    gp_dict = gp.Dict(key_type, value_type)
 
-    sp_dict[42] = 1337
+    gp_dict[42] = 1337
 
-    assert sp_dict[42] == 1337
-    assert 42 in sp_dict
-    assert 41 not in sp_dict
-    assert len(sp_dict) == 1
+    assert gp_dict[42] == 1337
+    assert 42 in gp_dict
+    assert 41 not in gp_dict
+    assert len(gp_dict) == 1
 
-    del sp_dict[42]
+    del gp_dict[42]
 
-    assert 42 not in sp_dict
-    assert 41 not in sp_dict
-    assert len(sp_dict) == 0
+    assert 42 not in gp_dict
+    assert 41 not in gp_dict
+    assert len(gp_dict) == 0
 
 
 @standard
@@ -36,30 +36,30 @@ def test_sparsepy_vectorized_methods():
     key_type = np.dtype('u8')
     value_type = np.uint64
 
-    sp_dict = sp.Dict(key_type, value_type)
+    gp_dict = gp.Dict(key_type, value_type)
 
     keys = np.random.randint(1000, size=200, dtype=key_type)
     values = np.random.randint(1000, size=200, dtype=value_type)
 
-    sp_dict[keys] = values
+    gp_dict[keys] = values
 
-    keys = [key for key in sp_dict]
-    keys_and_values = [(key, value) for key, value in sp_dict.items()]
+    keys = [key for key in gp_dict]
+    keys_and_values = [(key, value) for key, value in gp_dict.items()]
 
     select_keys = np.random.choice(keys, size=100)
-    select_values = sp_dict[select_keys]
+    select_values = gp_dict[select_keys]
 
     random_keys = np.random.randint(1000, size=500, dtype=key_type)
-    random_keys_mask = sp_dict.__contains__(random_keys)
+    random_keys_mask = gp_dict.__contains__(random_keys)
 
     mask_keys = random_keys[random_keys_mask]
-    mask_values = sp_dict[mask_keys]
+    mask_values = gp_dict[mask_keys]
 
 
 @standard
 def test_sparsepy_types():
-    for key_type, value_type in sp._types:
-        sp_dict = sp.Dict(key_type, value_type)
+    for key_type, value_type in gp.types:
+        gp_dict = gp.Dict(key_type, value_type)
 
         if key_type.kind == 'U':
             keys = np.array(['0123456789'*10 for i in range(10)], dtype=key_type)
@@ -71,7 +71,7 @@ def test_sparsepy_types():
         else:
             values = np.array(range(10), dtype=value_type)
 
-        sp_dict[keys] = values
+        gp_dict[keys] = values
 
 
 @standard
@@ -80,18 +80,18 @@ def test_sparsepy_dump_load():
     key_type = np.dtype('u8')
     value_type = np.dtype('u8')
 
-    sp_dict_1 = sp.Dict(key_type, value_type)
+    gp_dict_1 = gp.Dict(key_type, value_type)
 
     keys = np.random.randint(1000, size=10, dtype=key_type)
     values = np.random.randint(1000, size=10, dtype=value_type)
-    sp_dict_1[keys] = values
+    gp_dict_1[keys] = values
 
-    sp_dict_1.dump('test/test.hashtable.bin')
+    gp_dict_1.dump('test/test.hashtable.bin')
 
-    sp_dict_2 = sp.Dict(key_type, value_type)
-    sp_dict_2.load('test/test.hashtable.bin')
+    gp_dict_2 = gp.Dict(key_type, value_type)
+    gp_dict_2.load('test/test.hashtable.bin')
 
-    assert sp_dict_1 == sp_dict_2
+    assert gp_dict_1 == gp_dict_2
 
 
 @standard
@@ -100,13 +100,13 @@ def test_sparsepy_big_dict_uint32():
     key_type = np.dtype('u4')
     value_type = np.dtype('u4')
 
-    sp_dict = sp.Dict(key_type, value_type)
+    gp_dict = gp.Dict(key_type, value_type)
 
     for i in range(10**3):
         keys = np.random.randint(10**9, size=10**3, dtype=key_type)
         values = np.random.randint(10**9, size=10**3, dtype=value_type)
 
-        sp_dict[keys] = values
+        gp_dict[keys] = values
 
 
 @standard
@@ -115,13 +115,13 @@ def test_sparsepy_big_dict_uint64():
     key_type = np.dtype('u8')
     value_type = np.dtype('u8')
 
-    sp_dict = sp.Dict(key_type, value_type)
+    gp_dict = gp.Dict(key_type, value_type)
 
     for i in range(10**3):
         keys = np.random.randint(10**15, size=10**3, dtype=key_type)
         values = np.random.randint(10**15, size=10**3, dtype=value_type)
 
-        sp_dict[keys] = values
+        gp_dict[keys] = values
 
 @standard
 @pytest.mark.timeout(1)
@@ -129,7 +129,7 @@ def test_sparsepy_big_dict_str4():
     key_type = np.dtype('U4')
     value_type = np.dtype('U4')
 
-    sp_dict = sp.Dict(key_type, value_type)
+    gp_dict = gp.Dict(key_type, value_type)
 
     chars = list('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
 
@@ -137,7 +137,7 @@ def test_sparsepy_big_dict_str4():
         keys = np.array([''.join(np.random.choice(chars, 4)) for i in range(10**3)], dtype=key_type)
         values = np.array([''.join(np.random.choice(chars, 4)) for i in range(10**3)], dtype=value_type)
 
-        sp_dict[keys] = values
+        gp_dict[keys] = values
 
 
 @standard
@@ -146,7 +146,7 @@ def test_sparsepy_big_dict_str8():
     key_type = np.dtype('U8')
     value_type = np.dtype('U8')
 
-    sp_dict = sp.Dict(key_type, value_type)
+    gp_dict = gp.Dict(key_type, value_type)
 
     chars = list('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
 
@@ -154,7 +154,7 @@ def test_sparsepy_big_dict_str8():
         keys = np.array([''.join(np.random.choice(chars, 8)) for i in range(10**3)], dtype=key_type)
         values = np.array([''.join(np.random.choice(chars, 8)) for i in range(10**3)], dtype=value_type)
 
-        sp_dict[keys] = values
+        gp_dict[keys] = values
 
 
 @standard
@@ -163,15 +163,15 @@ def test_sparsepy_big_dict_uint64_lookup():
     key_type = np.dtype('u8')
     value_type = np.dtype('u8')
 
-    sp_dict = sp.Dict(key_type, value_type)
+    gp_dict = gp.Dict(key_type, value_type)
 
     for i in range(10**3):
         keys = np.random.randint(10**15, size=10**3, dtype=key_type)
         values = np.random.randint(10**15, size=10**3, dtype=value_type)
 
-        sp_dict[keys] = values
+        gp_dict[keys] = values
 
-    values = sp_dict[keys]
+    values = gp_dict[keys]
 
 
 @standard
@@ -180,20 +180,20 @@ def test_sparsepy_big_dict_uint64_dump_load():
     key_type = np.dtype('u8')
     value_type = np.dtype('u8')
 
-    sp_dict_1 = sp.Dict(key_type, value_type)
+    gp_dict_1 = gp.Dict(key_type, value_type)
 
     for i in range(10**3):
         keys = np.random.randint(10**15, size=10**3, dtype=key_type)
         values = np.random.randint(10**15, size=10**3, dtype=value_type)
 
-        sp_dict_1[keys] = values
+        gp_dict_1[keys] = values
 
-    sp_dict_1.dump('test/test.hashtable.bin')
+    gp_dict_1.dump('test/test.hashtable.bin')
 
-    sp_dict_2 = sp.Dict(key_type, value_type)
-    sp_dict_2.load('test/test.hashtable.bin')
+    gp_dict_2 = gp.Dict(key_type, value_type)
+    gp_dict_2.load('test/test.hashtable.bin')
 
-    assert sp_dict_1 == sp_dict_2
+    assert gp_dict_1 == gp_dict_2
 
 
 @slow
@@ -202,13 +202,13 @@ def test_sparsepy_very_big_dict_uint32():
     key_type = np.dtype('u4')
     value_type = np.dtype('u4')
 
-    sp_dict = sp.Dict(key_type, value_type)
+    gp_dict = gp.Dict(key_type, value_type)
 
     for i in range(10**3):
         keys = np.random.randint(10**9, size=10**5, dtype=key_type)
         values = np.random.randint(10**9, size=10**5, dtype=value_type)
 
-        sp_dict[keys] = values
+        gp_dict[keys] = values
 
 
 @slow
@@ -217,13 +217,13 @@ def test_sparsepy_very_big_dict_uint64():
     key_type = np.dtype('u8')
     value_type = np.dtype('u8')
 
-    sp_dict = sp.Dict(key_type, value_type)
+    gp_dict = gp.Dict(key_type, value_type)
 
     for i in range(10**3):
         keys = np.random.randint(10**15, size=10**5, dtype=key_type)
         values = np.random.randint(10**15, size=10**5, dtype=value_type)
 
-        sp_dict[keys] = values
+        gp_dict[keys] = values
 
 
 @very_slow
@@ -232,13 +232,13 @@ def test_sparsepy_uber_big_dict_uint32():
     key_type = np.dtype('u4')
     value_type = np.dtype('u4')
 
-    sp_dict = sp.Dict(key_type, value_type)
+    gp_dict = gp.Dict(key_type, value_type)
 
     for i in range(10**3):
         keys = np.random.randint(10**9, size=10**6, dtype=key_type)
         values = np.random.randint(10**9, size=10**6, dtype=value_type)
 
-        sp_dict[keys] = values
+        gp_dict[keys] = values
 
 
 @very_slow
@@ -247,13 +247,13 @@ def test_sparsepy_uber_big_dict_uint64():
     key_type = np.dtype('u8')
     value_type = np.dtype('u8')
 
-    sp_dict = sp.Dict(key_type, value_type)
+    gp_dict = gp.Dict(key_type, value_type)
 
     for i in range(10**3):
         keys = np.random.randint(10**15, size=10**6, dtype=key_type)
         values = np.random.randint(10**15, size=10**6, dtype=value_type)
 
-        sp_dict[keys] = values
+        gp_dict[keys] = values
 
 
 # @slow
@@ -262,13 +262,13 @@ def test_sparsepy_uber_big_dict_uint64():
 #     key_type = np.dtype('u4')
 #     value_type = np.dtype('u4')
 #
-#     sp_dict = sp.Dict(key_type, value_type)
+#     gp_dict = gp.Dict(key_type, value_type)
 #
 #     for i in range(10**3):
 #         keys = np.random.randint(10**9, size=10**7, dtype=key_type)
 #         values = np.random.randint(10**9, size=10**7, dtype=value_type)
 #
-#         sp_dict[keys] = values
+#         gp_dict[keys] = values
 #
 #
 # @slow
@@ -277,10 +277,10 @@ def test_sparsepy_uber_big_dict_uint64():
 #     key_type = np.dtype('u8')
 #     value_type = np.dtype('u8')
 #
-#     sp_dict = sp.Dict(key_type, value_type)
+#     gp_dict = gp.Dict(key_type, value_type)
 #
 #     for i in range(10**3):
 #         keys = np.random.randint(10**15, size=10**7, dtype=key_type)
 #         values = np.random.randint(10**15, size=10**7, dtype=value_type)
 #
-#         sp_dict[keys] = values
+#         gp_dict[keys] = values

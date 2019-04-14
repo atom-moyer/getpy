@@ -1,26 +1,26 @@
-#include "_sparsepy.cpp"
+#include "getpy.cpp"
 
 #include <pybind11/pybind11.h>
 
-using str4 = std::array<char, 4>;
-using str8 = std::array<char, 8>;
-using float32 = float;
-using str1 = std::array<char, 1>;
-using int8 = int8_t;
-using int16 = int16_t;
 using str16 = std::array<char, 16>;
 using int32 = int32_t;
-using uint16 = uint16_t;
-using float64 = double;
-using uint64 = uint64_t;
-using uint8 = uint8_t;
-using str2 = std::array<char, 2>;
 using uint32 = uint32_t;
-using str32 = std::array<char, 32>;
+using str1 = std::array<char, 1>;
+using str2 = std::array<char, 2>;
+using uint16 = uint16_t;
+using uint8 = uint8_t;
+using int8 = int8_t;
+using str4 = std::array<char, 4>;
 using int64 = int64_t;
+using str32 = std::array<char, 32>;
+using int16 = int16_t;
+using float32 = float;
+using uint64 = uint64_t;
+using str8 = std::array<char, 8>;
+using float64 = double;
 
-PYBIND11_MODULE(_sparsepy, m) {
-    m.doc() = "Fast and Memory Efficient Sparse Hash Tables for Python";
+PYBIND11_MODULE(_getpy, m) {
+    m.doc() = "A Fast and Memory Efficient Hash Map for Python";
 
 	declare_dict<str4, str1>(m, "Dict_str4_str1");
 	declare_dict<str4, str2>(m, "Dict_str4_str2");

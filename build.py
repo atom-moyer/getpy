@@ -91,79 +91,77 @@ def create_class_name(key_type, value_type):
     return f'Dict_{key_type}_{value_type}'
 
 
-def write_sparsepy_cpp(key_types, value_types):
-    with open('src/_sparsepy_types.cpp', 'w') as sparsepy_file:
-        sparsepy_file.write("""\
-#include "_sparsepy.cpp"
+def write_getpy_cpp(key_types, value_types):
+    with open('src/getpy_types.cpp', 'w') as getpy_file:
+        getpy_file.write("""\
+#include "getpy.cpp"
 
 #include <pybind11/pybind11.h>
 
 """)
-        def write_usings(sparsepy_file, key_types, value_types):
+        def write_usings(getpy_file, key_types, value_types):
             types = list(set(key_types + value_types))
 
             for type_ in types:
                 if type_ == cpp_types[type_]:
                     continue
                 else:
-                    sparsepy_file.write(f'using {type_} = {cpp_types[type_]};\n')
+                    getpy_file.write(f'using {type_} = {cpp_types[type_]};\n')
 
-        write_usings(sparsepy_file, key_types, value_types)
+        write_usings(getpy_file, key_types, value_types)
 
-        sparsepy_file.write("""\
+        getpy_file.write("""\
 
-PYBIND11_MODULE(_sparsepy, m) {
-    m.doc() = "Fast and Memory Efficient Sparse Hash Tables for Python";
+PYBIND11_MODULE(_getpy, m) {
+    m.doc() = "A Fast and Memory Efficient Hash Map for Python";
 
 """)
 
-        def write_declare_dict(sparsepy_file, key_type, value_type):
+        def write_declare_dict(getpy_file, key_type, value_type):
             class_name = create_class_name(key_type, value_type)
-            sparsepy_file.write(f'\tdeclare_dict<{key_type}, {value_type}>(m, "{class_name}");\n')
-
+            getpy_file.write(f'\tdeclare_dict<{key_type}, {value_type}>(m, "{class_name}");\n')
 
         for key_type, value_type in itertools.product(key_types, value_types):
-            write_declare_dict(sparsepy_file, key_type, value_type)
+            write_declare_dict(getpy_file, key_type, value_type)
 
-
-        sparsepy_file.write("""\
+        getpy_file.write("""\
 }
 """)
 
 
-def write_sparsepy_py(key_types, value_types):
-    with open('sparsepy/sparsepy_types.py', 'w') as sparsepy_file:
-        sparsepy_file.write("""\
+def write_getpy_py(key_types, value_types):
+    with open('getpy/getpy_types.py', 'w') as getpy_file:
+        getpy_file.write("""\
 import numpy as np
 
 """)
 
-        def write_import(sparsepy_file, key_type, value_type):
+        def write_import(getpy_file, key_type, value_type):
             class_name = create_class_name(key_type, value_type)
-            sparsepy_file.write(f'from _sparsepy import {class_name}\n')
+            getpy_file.write(f'from _getpy import {class_name}\n')
 
         for key_type, value_type in itertools.product(key_types, value_types):
-            write_import(sparsepy_file, key_type, value_type)
+            write_import(getpy_file, key_type, value_type)
 
-        sparsepy_file.write("""\
+        getpy_file.write("""\
 
-_types = {
+types = {
 """)
 
-        def write_type_dict(sparsepy_file, key_type, value_type):
+        def write_type_dict(getpy_file, key_type, value_type):
             class_name = create_class_name(key_type, value_type)
 
             for kt in np_types[key_type]:
                 for vt in np_types[value_type]:
-                    sparsepy_file.write(f'\t(np.dtype("{kt}"), np.dtype("{vt}")) : {class_name},\n')
+                    getpy_file.write(f'\t(np.dtype("{kt}"), np.dtype("{vt}")) : {class_name},\n')
 
         for key_type, value_type in itertools.product(key_types, value_types):
-            write_type_dict(sparsepy_file, key_type, value_type)
+            write_type_dict(getpy_file, key_type, value_type)
 
-        sparsepy_file.write("""\
+        getpy_file.write("""\
 }
 """)
 
 if __name__ == '__main__':
-    write_sparsepy_cpp(key_types, value_types)
-    write_sparsepy_py(key_types, value_types)
+    write_getpy_cpp(key_types, value_types)
+    write_getpy_py(key_types, value_types)
