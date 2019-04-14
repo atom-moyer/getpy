@@ -11,7 +11,7 @@ GetPy is a thin and robust binding to the parallel_hashmap which is the current 
 ## How To Use
 The `getpy.Dict` object is designed to maintain a similar interface to the standard python dictionary. There are some key differences though, which are necessary for performance reasons.
 
-1) `gp.Dict.__init__` has two arguments `key_type` and `value_type`. Those arguments are defined with a preset combinations of `np.dtype`s.  The full list of supported `np.dtype` combinations is found by `gp._types`. Most of the future work on sparsepy will be expanding this list of supported types.
+1) `gp.Dict.__init__` has two arguments `key_type` and `value_type`. Those arguments are defined with a preset combinations of `np.dtype`s.  The full list of supported `np.dtype` combinations is found by `gp.types`. Most of the future work on sparsepy will be expanding this list of supported types.
 
 2) All of `getpy.Dict` methods support vectorization. Therefore, methods like `gp.Dict.__getitem__`, `gp.Dict.__setitem__`, and `gp.Dict.__contains__` can be performed with `np.ndarray`.  That allows the performance critical for-loop to happen within the compiled c++.
 
@@ -93,3 +93,89 @@ gp_dict_2.load('test/test.hashtable.bin')
 assert gp_dict_1 == gp_dict_2
 ```
 
+## Supported Data Types
+
+```python
+key_types = [
+    'str4',
+    'str8',
+
+    'uint32',
+    'uint64',
+
+    'int32',
+    'int64',
+]
+
+value_types = [
+    'str1',
+    'str2',
+    'str4',
+    'str8',
+    'str16',
+    'str32',
+
+    'uint8',
+    'uint16',
+    'uint32',
+    'uint64',
+
+    'int8',
+    'int16',
+    'int32',
+    'int64',
+
+    'float32',
+    'float64',
+
+    'bool',
+]
+
+cpp_types = {
+    'str1' : 'std::array<char, 1>',
+    'str2' : 'std::array<char, 2>',
+    'str4' : 'std::array<char, 4>',
+    'str8' : 'std::array<char, 8>',
+    'str16' : 'std::array<char, 16>',
+    'str32' : 'std::array<char, 32>',
+
+    'int8' : 'int8_t',
+    'int16' : 'int16_t',
+    'int32' : 'int32_t',
+    'int64' : 'int64_t',
+
+    'uint8' : 'uint8_t',
+    'uint16' : 'uint16_t',
+    'uint32' : 'uint32_t',
+    'uint64' : 'uint64_t',
+
+    'float32' : 'float',
+    'float64' : 'double',
+
+    'bool' : 'bool',
+}
+
+np_types = {
+    'str1' : ['U1'],
+    'str2' : ['U2'],
+    'str4' : ['U4'],
+    'str8' : ['U8'],
+    'str16' : ['U16'],
+    'str32' : ['U32'],
+
+    'int8' : ['i1', 'int8'],
+    'int16' : ['i2', 'int16'],
+    'int32' : ['i4', 'int32'],
+    'int64' : ['i8', 'int64'],
+
+    'uint8' : ['u1', 'uint8'],
+    'uint16' : ['u2', 'uint16'],
+    'uint32' : ['u4', 'uint32'],
+    'uint64' : ['u8', 'uint64'],
+
+    'float32' : ['f4', 'float32'],
+    'float64' : ['f8', 'float64'],
+
+    'bool' : ['?', 'bool'],
+}
+```
