@@ -33,7 +33,7 @@ setup(
     version = __version__,
     author = 'Adam Moyer',
     author_email = 'atom.moyer@gmail.com',
-    description = 'A Fast and Memory Efficient Hash Map for Python',
+    description = 'A Simple, Fast, and Small Hash Map for Python',
     packages = ['getpy'],
     package_dir={'getpy': 'getpy'},
     package_data={},
