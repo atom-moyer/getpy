@@ -3,6 +3,7 @@
 #include <pybind11/stl.h>
 namespace py = pybind11;
 
+#include <parallel_hashmap/phmap_utils.h>
 #include <parallel_hashmap/phmap.h>
 
 #include <cereal/archives/binary.hpp>
@@ -15,34 +16,72 @@ namespace py = pybind11;
 #include <iostream>
 
 
+template<typename T, size_t N>
+struct std::hash<std::array<T, N>> {
+    size_t operator()(const std::array<T, N> & array) const {
+        size_t seed = 0;
+        for ( T value : array ) {
+            phmap::HashState().combine( seed, value );
+        }
+        return seed;
+    }
+};
+
+
 template <typename Key, typename Value>
-struct _Dict {
-    _Dict () {}
+struct Dict {
+    Dict () {}
+
 
     Value __getitem__ ( const Key & key ) {
         return __dict.at(key);
     }
 
+    py::array_t<Value> __getitem_vec__ ( py::array_t<Key> & key_array ) {
+        py::buffer_info key_array_buffer = key_array.request();
+        auto * key_array_ptr = (Key *) key_array_buffer.ptr;
 
-    bool __setitem__ ( const Key & key, const Value & value ) {
-        auto emplace_pair = __dict.emplace(key, value);
-        return emplace_pair.second;
+        auto result_array = py::array_t<Value> ( key_array_buffer.shape[0] );
+        py::buffer_info result_array_buffer = result_array.request();
+        auto * result_array_ptr = (Value *) result_array_buffer.ptr;
+        
+        for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++)
+            result_array_ptr[idx] = __getitem__( key_array_ptr[idx] );
+
+        return result_array;
     }
 
 
-    bool __delitem__ ( const Key & key ) {
-        int check = __dict.erase(key);
+    void __setitem__ ( const Key & key, const Value & value ) {
+        __dict.emplace(key, value);
+    }
 
-        if (check) {
-            return true;
-        } else {
-            return false;
+    void __setitem_vec__ ( py::array_t<Key> & key_array, py::array_t<Value> & value_array ) {
+        py::buffer_info key_array_buffer = key_array.request();
+        auto * key_array_ptr = (Key *) key_array_buffer.ptr;
+        
+        py::buffer_info value_array_buffer = value_array.request();
+        auto * value_array_ptr = (Value *) value_array_buffer.ptr;
+
+        if (key_array_buffer.shape[0] != value_array_buffer.shape[0])
+            throw std::runtime_error("Size of first dimension must match.");
+
+        for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++) {
+            __setitem__( key_array_ptr[idx], value_array_ptr[idx] );
         }
     }
 
 
-    int __len__ () {
-        return __dict.size();
+    void __delitem__ ( const Key & key ) {
+        __dict.erase(key);
+    }
+
+    void __delitem_vec__ ( py::array_t<Key> & key_array ) {
+        py::buffer_info key_array_buffer = key_array.request();
+        auto * key_array_ptr = (Key *) key_array_buffer.ptr;
+
+        for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++)
+            __delitem__( key_array_ptr[idx] );
     }
 
 
@@ -52,6 +91,25 @@ struct _Dict {
         } else {
             return false;
         }
+    }
+
+    py::array_t<bool> __contains_vec__ ( py::array_t<Key> & key_array ) {
+        py::buffer_info key_array_buffer = key_array.request();
+        auto * key_array_ptr = (Key *) key_array_buffer.ptr;
+
+        auto result_array = py::array_t<bool>( key_array_buffer.shape[0] );
+        py::buffer_info result_array_buffer = result_array.request();
+        auto * result_array_ptr = (bool *) result_array_buffer.ptr;
+
+        for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++)
+            result_array_ptr[idx] = __contains__( key_array_ptr[idx] );
+
+        return result_array;
+    }
+
+    
+    int __len__ () {
+        return __dict.size();
     }
 
 
@@ -82,44 +140,22 @@ struct _Dict {
 
 template<typename Key, typename Value>
 void declare_dict(const py::module& m, const std::string& class_name) {
-    using Class = _Dict<Key, Value>;
+    using Class = Dict<Key, Value>;
 
     py::class_<Class>(m, class_name.c_str())
         .def(py::init<>())
 
         .def("__getitem__", &Class::__getitem__)
-        .def("__getitem_vec__", py::vectorize(&Class::__getitem__))
+        .def("__getitem_vec__", &Class::__getitem_vec__)
 
         .def("__setitem__", &Class::__setitem__)
-        .def("__setitem_vec__", py::vectorize(&Class::__setitem__))
+        .def("__setitem_vec__", &Class::__setitem_vec__)
 
         .def("__delitem__", &Class::__delitem__)
-        .def("__delitem_vec__", py::vectorize(&Class::__delitem__))
+        .def("__delitem_vec__", &Class::__delitem_vec__)
 
         .def("__contains__", &Class::__contains__)
-        .def("__contains_vec__", py::vectorize(&Class::__contains__))
-
-        .def("dump", &Class::dump)
-        .def("load", &Class::load)
-
-        .def("items", [](const Class &c) { return py::make_iterator(c.__dict.begin(), c.__dict.end()); }, py::keep_alive<0, 1>() )
-        .def("__len__", &Class::__len__);
-}
-
-template<typename Key, typename Value>
-void declare_dict_no_vec(const py::module& m, const std::string& class_name) {
-    using Class = _Dict<Key, Value>;
-
-    py::class_<Class>(m, class_name.c_str())
-        .def(py::init<>())
-
-        .def("__getitem__", &Class::__getitem__)
-
-        .def("__setitem__", &Class::__setitem__)
-
-        .def("__delitem__", &Class::__delitem__)
-
-        .def("__contains__", &Class::__contains__)
+        .def("__contains_vec__", &Class::__contains_vec__)
 
         .def("dump", &Class::dump)
         .def("load", &Class::load)

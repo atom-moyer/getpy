@@ -5,7 +5,7 @@ import sys
 import setuptools
 import glob
 
-__version__ = '0.2.0'
+__version__ = '0.9.0'
 
 extra_compile_args_dict = {
     'linux' : ['-w', '-ftemplate-backtrace-limit=0', '-std=c++14'],

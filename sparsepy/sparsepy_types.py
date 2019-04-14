@@ -1,272 +1,387 @@
 import numpy as np
 
-from _sparsepy import _Dict_uint32_uint8
-from _sparsepy import _Dict_uint32_uint16
-from _sparsepy import _Dict_uint32_uint32
-from _sparsepy import _Dict_uint32_uint64
-from _sparsepy import _Dict_uint32_int8
-from _sparsepy import _Dict_uint32_int16
-from _sparsepy import _Dict_uint32_int32
-from _sparsepy import _Dict_uint32_int64
-from _sparsepy import _Dict_uint32_bool
-from _sparsepy import _Dict_uint32_float32
-from _sparsepy import _Dict_uint32_float64
-from _sparsepy import _Dict_uint32_str
-from _sparsepy import _Dict_uint64_uint8
-from _sparsepy import _Dict_uint64_uint16
-from _sparsepy import _Dict_uint64_uint32
-from _sparsepy import _Dict_uint64_uint64
-from _sparsepy import _Dict_uint64_int8
-from _sparsepy import _Dict_uint64_int16
-from _sparsepy import _Dict_uint64_int32
-from _sparsepy import _Dict_uint64_int64
-from _sparsepy import _Dict_uint64_bool
-from _sparsepy import _Dict_uint64_float32
-from _sparsepy import _Dict_uint64_float64
-from _sparsepy import _Dict_uint64_str
-from _sparsepy import _Dict_int32_uint8
-from _sparsepy import _Dict_int32_uint16
-from _sparsepy import _Dict_int32_uint32
-from _sparsepy import _Dict_int32_uint64
-from _sparsepy import _Dict_int32_int8
-from _sparsepy import _Dict_int32_int16
-from _sparsepy import _Dict_int32_int32
-from _sparsepy import _Dict_int32_int64
-from _sparsepy import _Dict_int32_bool
-from _sparsepy import _Dict_int32_float32
-from _sparsepy import _Dict_int32_float64
-from _sparsepy import _Dict_int32_str
-from _sparsepy import _Dict_int64_uint8
-from _sparsepy import _Dict_int64_uint16
-from _sparsepy import _Dict_int64_uint32
-from _sparsepy import _Dict_int64_uint64
-from _sparsepy import _Dict_int64_int8
-from _sparsepy import _Dict_int64_int16
-from _sparsepy import _Dict_int64_int32
-from _sparsepy import _Dict_int64_int64
-from _sparsepy import _Dict_int64_bool
-from _sparsepy import _Dict_int64_float32
-from _sparsepy import _Dict_int64_float64
-from _sparsepy import _Dict_int64_str
-from _sparsepy import _Dict_str_uint8
-from _sparsepy import _Dict_str_uint16
-from _sparsepy import _Dict_str_uint32
-from _sparsepy import _Dict_str_uint64
-from _sparsepy import _Dict_str_int8
-from _sparsepy import _Dict_str_int16
-from _sparsepy import _Dict_str_int32
-from _sparsepy import _Dict_str_int64
-from _sparsepy import _Dict_str_bool
-from _sparsepy import _Dict_str_float32
-from _sparsepy import _Dict_str_float64
-from _sparsepy import _Dict_str_str
+from _sparsepy import Dict_str4_str1
+from _sparsepy import Dict_str4_str2
+from _sparsepy import Dict_str4_str4
+from _sparsepy import Dict_str4_str8
+from _sparsepy import Dict_str4_str16
+from _sparsepy import Dict_str4_str32
+from _sparsepy import Dict_str4_uint8
+from _sparsepy import Dict_str4_uint16
+from _sparsepy import Dict_str4_uint32
+from _sparsepy import Dict_str4_uint64
+from _sparsepy import Dict_str4_int8
+from _sparsepy import Dict_str4_int16
+from _sparsepy import Dict_str4_int32
+from _sparsepy import Dict_str4_int64
+from _sparsepy import Dict_str4_float32
+from _sparsepy import Dict_str4_float64
+from _sparsepy import Dict_str4_bool
+from _sparsepy import Dict_str8_str1
+from _sparsepy import Dict_str8_str2
+from _sparsepy import Dict_str8_str4
+from _sparsepy import Dict_str8_str8
+from _sparsepy import Dict_str8_str16
+from _sparsepy import Dict_str8_str32
+from _sparsepy import Dict_str8_uint8
+from _sparsepy import Dict_str8_uint16
+from _sparsepy import Dict_str8_uint32
+from _sparsepy import Dict_str8_uint64
+from _sparsepy import Dict_str8_int8
+from _sparsepy import Dict_str8_int16
+from _sparsepy import Dict_str8_int32
+from _sparsepy import Dict_str8_int64
+from _sparsepy import Dict_str8_float32
+from _sparsepy import Dict_str8_float64
+from _sparsepy import Dict_str8_bool
+from _sparsepy import Dict_uint32_str1
+from _sparsepy import Dict_uint32_str2
+from _sparsepy import Dict_uint32_str4
+from _sparsepy import Dict_uint32_str8
+from _sparsepy import Dict_uint32_str16
+from _sparsepy import Dict_uint32_str32
+from _sparsepy import Dict_uint32_uint8
+from _sparsepy import Dict_uint32_uint16
+from _sparsepy import Dict_uint32_uint32
+from _sparsepy import Dict_uint32_uint64
+from _sparsepy import Dict_uint32_int8
+from _sparsepy import Dict_uint32_int16
+from _sparsepy import Dict_uint32_int32
+from _sparsepy import Dict_uint32_int64
+from _sparsepy import Dict_uint32_float32
+from _sparsepy import Dict_uint32_float64
+from _sparsepy import Dict_uint32_bool
+from _sparsepy import Dict_uint64_str1
+from _sparsepy import Dict_uint64_str2
+from _sparsepy import Dict_uint64_str4
+from _sparsepy import Dict_uint64_str8
+from _sparsepy import Dict_uint64_str16
+from _sparsepy import Dict_uint64_str32
+from _sparsepy import Dict_uint64_uint8
+from _sparsepy import Dict_uint64_uint16
+from _sparsepy import Dict_uint64_uint32
+from _sparsepy import Dict_uint64_uint64
+from _sparsepy import Dict_uint64_int8
+from _sparsepy import Dict_uint64_int16
+from _sparsepy import Dict_uint64_int32
+from _sparsepy import Dict_uint64_int64
+from _sparsepy import Dict_uint64_float32
+from _sparsepy import Dict_uint64_float64
+from _sparsepy import Dict_uint64_bool
+from _sparsepy import Dict_int32_str1
+from _sparsepy import Dict_int32_str2
+from _sparsepy import Dict_int32_str4
+from _sparsepy import Dict_int32_str8
+from _sparsepy import Dict_int32_str16
+from _sparsepy import Dict_int32_str32
+from _sparsepy import Dict_int32_uint8
+from _sparsepy import Dict_int32_uint16
+from _sparsepy import Dict_int32_uint32
+from _sparsepy import Dict_int32_uint64
+from _sparsepy import Dict_int32_int8
+from _sparsepy import Dict_int32_int16
+from _sparsepy import Dict_int32_int32
+from _sparsepy import Dict_int32_int64
+from _sparsepy import Dict_int32_float32
+from _sparsepy import Dict_int32_float64
+from _sparsepy import Dict_int32_bool
+from _sparsepy import Dict_int64_str1
+from _sparsepy import Dict_int64_str2
+from _sparsepy import Dict_int64_str4
+from _sparsepy import Dict_int64_str8
+from _sparsepy import Dict_int64_str16
+from _sparsepy import Dict_int64_str32
+from _sparsepy import Dict_int64_uint8
+from _sparsepy import Dict_int64_uint16
+from _sparsepy import Dict_int64_uint32
+from _sparsepy import Dict_int64_uint64
+from _sparsepy import Dict_int64_int8
+from _sparsepy import Dict_int64_int16
+from _sparsepy import Dict_int64_int32
+from _sparsepy import Dict_int64_int64
+from _sparsepy import Dict_int64_float32
+from _sparsepy import Dict_int64_float64
+from _sparsepy import Dict_int64_bool
 
 _types = {
-	(np.dtype("u4"), np.dtype("u1")) : _Dict_uint32_uint8,
-	(np.dtype("u4"), np.dtype("uint8")) : _Dict_uint32_uint8,
-	(np.dtype("uint32"), np.dtype("u1")) : _Dict_uint32_uint8,
-	(np.dtype("uint32"), np.dtype("uint8")) : _Dict_uint32_uint8,
-	(np.dtype("u4"), np.dtype("u2")) : _Dict_uint32_uint16,
-	(np.dtype("u4"), np.dtype("uint16")) : _Dict_uint32_uint16,
-	(np.dtype("uint32"), np.dtype("u2")) : _Dict_uint32_uint16,
-	(np.dtype("uint32"), np.dtype("uint16")) : _Dict_uint32_uint16,
-	(np.dtype("u4"), np.dtype("u4")) : _Dict_uint32_uint32,
-	(np.dtype("u4"), np.dtype("uint32")) : _Dict_uint32_uint32,
-	(np.dtype("uint32"), np.dtype("u4")) : _Dict_uint32_uint32,
-	(np.dtype("uint32"), np.dtype("uint32")) : _Dict_uint32_uint32,
-	(np.dtype("u4"), np.dtype("u8")) : _Dict_uint32_uint64,
-	(np.dtype("u4"), np.dtype("uint64")) : _Dict_uint32_uint64,
-	(np.dtype("uint32"), np.dtype("u8")) : _Dict_uint32_uint64,
-	(np.dtype("uint32"), np.dtype("uint64")) : _Dict_uint32_uint64,
-	(np.dtype("u4"), np.dtype("i1")) : _Dict_uint32_int8,
-	(np.dtype("u4"), np.dtype("int8")) : _Dict_uint32_int8,
-	(np.dtype("uint32"), np.dtype("i1")) : _Dict_uint32_int8,
-	(np.dtype("uint32"), np.dtype("int8")) : _Dict_uint32_int8,
-	(np.dtype("u4"), np.dtype("i2")) : _Dict_uint32_int16,
-	(np.dtype("u4"), np.dtype("int16")) : _Dict_uint32_int16,
-	(np.dtype("uint32"), np.dtype("i2")) : _Dict_uint32_int16,
-	(np.dtype("uint32"), np.dtype("int16")) : _Dict_uint32_int16,
-	(np.dtype("u4"), np.dtype("i4")) : _Dict_uint32_int32,
-	(np.dtype("u4"), np.dtype("int32")) : _Dict_uint32_int32,
-	(np.dtype("uint32"), np.dtype("i4")) : _Dict_uint32_int32,
-	(np.dtype("uint32"), np.dtype("int32")) : _Dict_uint32_int32,
-	(np.dtype("u4"), np.dtype("i8")) : _Dict_uint32_int64,
-	(np.dtype("u4"), np.dtype("int64")) : _Dict_uint32_int64,
-	(np.dtype("uint32"), np.dtype("i8")) : _Dict_uint32_int64,
-	(np.dtype("uint32"), np.dtype("int64")) : _Dict_uint32_int64,
-	(np.dtype("u4"), np.dtype("?")) : _Dict_uint32_bool,
-	(np.dtype("u4"), np.dtype("bool")) : _Dict_uint32_bool,
-	(np.dtype("uint32"), np.dtype("?")) : _Dict_uint32_bool,
-	(np.dtype("uint32"), np.dtype("bool")) : _Dict_uint32_bool,
-	(np.dtype("u4"), np.dtype("f4")) : _Dict_uint32_float32,
-	(np.dtype("u4"), np.dtype("float32")) : _Dict_uint32_float32,
-	(np.dtype("uint32"), np.dtype("f4")) : _Dict_uint32_float32,
-	(np.dtype("uint32"), np.dtype("float32")) : _Dict_uint32_float32,
-	(np.dtype("u4"), np.dtype("f8")) : _Dict_uint32_float64,
-	(np.dtype("u4"), np.dtype("float64")) : _Dict_uint32_float64,
-	(np.dtype("uint32"), np.dtype("f8")) : _Dict_uint32_float64,
-	(np.dtype("uint32"), np.dtype("float64")) : _Dict_uint32_float64,
-	(np.dtype("u4"), np.dtype("U")) : _Dict_uint32_str,
-	(np.dtype("uint32"), np.dtype("U")) : _Dict_uint32_str,
-	(np.dtype("u8"), np.dtype("u1")) : _Dict_uint64_uint8,
-	(np.dtype("u8"), np.dtype("uint8")) : _Dict_uint64_uint8,
-	(np.dtype("uint64"), np.dtype("u1")) : _Dict_uint64_uint8,
-	(np.dtype("uint64"), np.dtype("uint8")) : _Dict_uint64_uint8,
-	(np.dtype("u8"), np.dtype("u2")) : _Dict_uint64_uint16,
-	(np.dtype("u8"), np.dtype("uint16")) : _Dict_uint64_uint16,
-	(np.dtype("uint64"), np.dtype("u2")) : _Dict_uint64_uint16,
-	(np.dtype("uint64"), np.dtype("uint16")) : _Dict_uint64_uint16,
-	(np.dtype("u8"), np.dtype("u4")) : _Dict_uint64_uint32,
-	(np.dtype("u8"), np.dtype("uint32")) : _Dict_uint64_uint32,
-	(np.dtype("uint64"), np.dtype("u4")) : _Dict_uint64_uint32,
-	(np.dtype("uint64"), np.dtype("uint32")) : _Dict_uint64_uint32,
-	(np.dtype("u8"), np.dtype("u8")) : _Dict_uint64_uint64,
-	(np.dtype("u8"), np.dtype("uint64")) : _Dict_uint64_uint64,
-	(np.dtype("uint64"), np.dtype("u8")) : _Dict_uint64_uint64,
-	(np.dtype("uint64"), np.dtype("uint64")) : _Dict_uint64_uint64,
-	(np.dtype("u8"), np.dtype("i1")) : _Dict_uint64_int8,
-	(np.dtype("u8"), np.dtype("int8")) : _Dict_uint64_int8,
-	(np.dtype("uint64"), np.dtype("i1")) : _Dict_uint64_int8,
-	(np.dtype("uint64"), np.dtype("int8")) : _Dict_uint64_int8,
-	(np.dtype("u8"), np.dtype("i2")) : _Dict_uint64_int16,
-	(np.dtype("u8"), np.dtype("int16")) : _Dict_uint64_int16,
-	(np.dtype("uint64"), np.dtype("i2")) : _Dict_uint64_int16,
-	(np.dtype("uint64"), np.dtype("int16")) : _Dict_uint64_int16,
-	(np.dtype("u8"), np.dtype("i4")) : _Dict_uint64_int32,
-	(np.dtype("u8"), np.dtype("int32")) : _Dict_uint64_int32,
-	(np.dtype("uint64"), np.dtype("i4")) : _Dict_uint64_int32,
-	(np.dtype("uint64"), np.dtype("int32")) : _Dict_uint64_int32,
-	(np.dtype("u8"), np.dtype("i8")) : _Dict_uint64_int64,
-	(np.dtype("u8"), np.dtype("int64")) : _Dict_uint64_int64,
-	(np.dtype("uint64"), np.dtype("i8")) : _Dict_uint64_int64,
-	(np.dtype("uint64"), np.dtype("int64")) : _Dict_uint64_int64,
-	(np.dtype("u8"), np.dtype("?")) : _Dict_uint64_bool,
-	(np.dtype("u8"), np.dtype("bool")) : _Dict_uint64_bool,
-	(np.dtype("uint64"), np.dtype("?")) : _Dict_uint64_bool,
-	(np.dtype("uint64"), np.dtype("bool")) : _Dict_uint64_bool,
-	(np.dtype("u8"), np.dtype("f4")) : _Dict_uint64_float32,
-	(np.dtype("u8"), np.dtype("float32")) : _Dict_uint64_float32,
-	(np.dtype("uint64"), np.dtype("f4")) : _Dict_uint64_float32,
-	(np.dtype("uint64"), np.dtype("float32")) : _Dict_uint64_float32,
-	(np.dtype("u8"), np.dtype("f8")) : _Dict_uint64_float64,
-	(np.dtype("u8"), np.dtype("float64")) : _Dict_uint64_float64,
-	(np.dtype("uint64"), np.dtype("f8")) : _Dict_uint64_float64,
-	(np.dtype("uint64"), np.dtype("float64")) : _Dict_uint64_float64,
-	(np.dtype("u8"), np.dtype("U")) : _Dict_uint64_str,
-	(np.dtype("uint64"), np.dtype("U")) : _Dict_uint64_str,
-	(np.dtype("i4"), np.dtype("u1")) : _Dict_int32_uint8,
-	(np.dtype("i4"), np.dtype("uint8")) : _Dict_int32_uint8,
-	(np.dtype("int32"), np.dtype("u1")) : _Dict_int32_uint8,
-	(np.dtype("int32"), np.dtype("uint8")) : _Dict_int32_uint8,
-	(np.dtype("i4"), np.dtype("u2")) : _Dict_int32_uint16,
-	(np.dtype("i4"), np.dtype("uint16")) : _Dict_int32_uint16,
-	(np.dtype("int32"), np.dtype("u2")) : _Dict_int32_uint16,
-	(np.dtype("int32"), np.dtype("uint16")) : _Dict_int32_uint16,
-	(np.dtype("i4"), np.dtype("u4")) : _Dict_int32_uint32,
-	(np.dtype("i4"), np.dtype("uint32")) : _Dict_int32_uint32,
-	(np.dtype("int32"), np.dtype("u4")) : _Dict_int32_uint32,
-	(np.dtype("int32"), np.dtype("uint32")) : _Dict_int32_uint32,
-	(np.dtype("i4"), np.dtype("u8")) : _Dict_int32_uint64,
-	(np.dtype("i4"), np.dtype("uint64")) : _Dict_int32_uint64,
-	(np.dtype("int32"), np.dtype("u8")) : _Dict_int32_uint64,
-	(np.dtype("int32"), np.dtype("uint64")) : _Dict_int32_uint64,
-	(np.dtype("i4"), np.dtype("i1")) : _Dict_int32_int8,
-	(np.dtype("i4"), np.dtype("int8")) : _Dict_int32_int8,
-	(np.dtype("int32"), np.dtype("i1")) : _Dict_int32_int8,
-	(np.dtype("int32"), np.dtype("int8")) : _Dict_int32_int8,
-	(np.dtype("i4"), np.dtype("i2")) : _Dict_int32_int16,
-	(np.dtype("i4"), np.dtype("int16")) : _Dict_int32_int16,
-	(np.dtype("int32"), np.dtype("i2")) : _Dict_int32_int16,
-	(np.dtype("int32"), np.dtype("int16")) : _Dict_int32_int16,
-	(np.dtype("i4"), np.dtype("i4")) : _Dict_int32_int32,
-	(np.dtype("i4"), np.dtype("int32")) : _Dict_int32_int32,
-	(np.dtype("int32"), np.dtype("i4")) : _Dict_int32_int32,
-	(np.dtype("int32"), np.dtype("int32")) : _Dict_int32_int32,
-	(np.dtype("i4"), np.dtype("i8")) : _Dict_int32_int64,
-	(np.dtype("i4"), np.dtype("int64")) : _Dict_int32_int64,
-	(np.dtype("int32"), np.dtype("i8")) : _Dict_int32_int64,
-	(np.dtype("int32"), np.dtype("int64")) : _Dict_int32_int64,
-	(np.dtype("i4"), np.dtype("?")) : _Dict_int32_bool,
-	(np.dtype("i4"), np.dtype("bool")) : _Dict_int32_bool,
-	(np.dtype("int32"), np.dtype("?")) : _Dict_int32_bool,
-	(np.dtype("int32"), np.dtype("bool")) : _Dict_int32_bool,
-	(np.dtype("i4"), np.dtype("f4")) : _Dict_int32_float32,
-	(np.dtype("i4"), np.dtype("float32")) : _Dict_int32_float32,
-	(np.dtype("int32"), np.dtype("f4")) : _Dict_int32_float32,
-	(np.dtype("int32"), np.dtype("float32")) : _Dict_int32_float32,
-	(np.dtype("i4"), np.dtype("f8")) : _Dict_int32_float64,
-	(np.dtype("i4"), np.dtype("float64")) : _Dict_int32_float64,
-	(np.dtype("int32"), np.dtype("f8")) : _Dict_int32_float64,
-	(np.dtype("int32"), np.dtype("float64")) : _Dict_int32_float64,
-	(np.dtype("i4"), np.dtype("U")) : _Dict_int32_str,
-	(np.dtype("int32"), np.dtype("U")) : _Dict_int32_str,
-	(np.dtype("i8"), np.dtype("u1")) : _Dict_int64_uint8,
-	(np.dtype("i8"), np.dtype("uint8")) : _Dict_int64_uint8,
-	(np.dtype("int64"), np.dtype("u1")) : _Dict_int64_uint8,
-	(np.dtype("int64"), np.dtype("uint8")) : _Dict_int64_uint8,
-	(np.dtype("i8"), np.dtype("u2")) : _Dict_int64_uint16,
-	(np.dtype("i8"), np.dtype("uint16")) : _Dict_int64_uint16,
-	(np.dtype("int64"), np.dtype("u2")) : _Dict_int64_uint16,
-	(np.dtype("int64"), np.dtype("uint16")) : _Dict_int64_uint16,
-	(np.dtype("i8"), np.dtype("u4")) : _Dict_int64_uint32,
-	(np.dtype("i8"), np.dtype("uint32")) : _Dict_int64_uint32,
-	(np.dtype("int64"), np.dtype("u4")) : _Dict_int64_uint32,
-	(np.dtype("int64"), np.dtype("uint32")) : _Dict_int64_uint32,
-	(np.dtype("i8"), np.dtype("u8")) : _Dict_int64_uint64,
-	(np.dtype("i8"), np.dtype("uint64")) : _Dict_int64_uint64,
-	(np.dtype("int64"), np.dtype("u8")) : _Dict_int64_uint64,
-	(np.dtype("int64"), np.dtype("uint64")) : _Dict_int64_uint64,
-	(np.dtype("i8"), np.dtype("i1")) : _Dict_int64_int8,
-	(np.dtype("i8"), np.dtype("int8")) : _Dict_int64_int8,
-	(np.dtype("int64"), np.dtype("i1")) : _Dict_int64_int8,
-	(np.dtype("int64"), np.dtype("int8")) : _Dict_int64_int8,
-	(np.dtype("i8"), np.dtype("i2")) : _Dict_int64_int16,
-	(np.dtype("i8"), np.dtype("int16")) : _Dict_int64_int16,
-	(np.dtype("int64"), np.dtype("i2")) : _Dict_int64_int16,
-	(np.dtype("int64"), np.dtype("int16")) : _Dict_int64_int16,
-	(np.dtype("i8"), np.dtype("i4")) : _Dict_int64_int32,
-	(np.dtype("i8"), np.dtype("int32")) : _Dict_int64_int32,
-	(np.dtype("int64"), np.dtype("i4")) : _Dict_int64_int32,
-	(np.dtype("int64"), np.dtype("int32")) : _Dict_int64_int32,
-	(np.dtype("i8"), np.dtype("i8")) : _Dict_int64_int64,
-	(np.dtype("i8"), np.dtype("int64")) : _Dict_int64_int64,
-	(np.dtype("int64"), np.dtype("i8")) : _Dict_int64_int64,
-	(np.dtype("int64"), np.dtype("int64")) : _Dict_int64_int64,
-	(np.dtype("i8"), np.dtype("?")) : _Dict_int64_bool,
-	(np.dtype("i8"), np.dtype("bool")) : _Dict_int64_bool,
-	(np.dtype("int64"), np.dtype("?")) : _Dict_int64_bool,
-	(np.dtype("int64"), np.dtype("bool")) : _Dict_int64_bool,
-	(np.dtype("i8"), np.dtype("f4")) : _Dict_int64_float32,
-	(np.dtype("i8"), np.dtype("float32")) : _Dict_int64_float32,
-	(np.dtype("int64"), np.dtype("f4")) : _Dict_int64_float32,
-	(np.dtype("int64"), np.dtype("float32")) : _Dict_int64_float32,
-	(np.dtype("i8"), np.dtype("f8")) : _Dict_int64_float64,
-	(np.dtype("i8"), np.dtype("float64")) : _Dict_int64_float64,
-	(np.dtype("int64"), np.dtype("f8")) : _Dict_int64_float64,
-	(np.dtype("int64"), np.dtype("float64")) : _Dict_int64_float64,
-	(np.dtype("i8"), np.dtype("U")) : _Dict_int64_str,
-	(np.dtype("int64"), np.dtype("U")) : _Dict_int64_str,
-	(np.dtype("U"), np.dtype("u1")) : _Dict_str_uint8,
-	(np.dtype("U"), np.dtype("uint8")) : _Dict_str_uint8,
-	(np.dtype("U"), np.dtype("u2")) : _Dict_str_uint16,
-	(np.dtype("U"), np.dtype("uint16")) : _Dict_str_uint16,
-	(np.dtype("U"), np.dtype("u4")) : _Dict_str_uint32,
-	(np.dtype("U"), np.dtype("uint32")) : _Dict_str_uint32,
-	(np.dtype("U"), np.dtype("u8")) : _Dict_str_uint64,
-	(np.dtype("U"), np.dtype("uint64")) : _Dict_str_uint64,
-	(np.dtype("U"), np.dtype("i1")) : _Dict_str_int8,
-	(np.dtype("U"), np.dtype("int8")) : _Dict_str_int8,
-	(np.dtype("U"), np.dtype("i2")) : _Dict_str_int16,
-	(np.dtype("U"), np.dtype("int16")) : _Dict_str_int16,
-	(np.dtype("U"), np.dtype("i4")) : _Dict_str_int32,
-	(np.dtype("U"), np.dtype("int32")) : _Dict_str_int32,
-	(np.dtype("U"), np.dtype("i8")) : _Dict_str_int64,
-	(np.dtype("U"), np.dtype("int64")) : _Dict_str_int64,
-	(np.dtype("U"), np.dtype("?")) : _Dict_str_bool,
-	(np.dtype("U"), np.dtype("bool")) : _Dict_str_bool,
-	(np.dtype("U"), np.dtype("f4")) : _Dict_str_float32,
-	(np.dtype("U"), np.dtype("float32")) : _Dict_str_float32,
-	(np.dtype("U"), np.dtype("f8")) : _Dict_str_float64,
-	(np.dtype("U"), np.dtype("float64")) : _Dict_str_float64,
-	(np.dtype("U"), np.dtype("U")) : _Dict_str_str,
+	(np.dtype("U4"), np.dtype("U1")) : Dict_str4_str1,
+	(np.dtype("U4"), np.dtype("U2")) : Dict_str4_str2,
+	(np.dtype("U4"), np.dtype("U4")) : Dict_str4_str4,
+	(np.dtype("U4"), np.dtype("U8")) : Dict_str4_str8,
+	(np.dtype("U4"), np.dtype("U16")) : Dict_str4_str16,
+	(np.dtype("U4"), np.dtype("U32")) : Dict_str4_str32,
+	(np.dtype("U4"), np.dtype("u1")) : Dict_str4_uint8,
+	(np.dtype("U4"), np.dtype("uint8")) : Dict_str4_uint8,
+	(np.dtype("U4"), np.dtype("u2")) : Dict_str4_uint16,
+	(np.dtype("U4"), np.dtype("uint16")) : Dict_str4_uint16,
+	(np.dtype("U4"), np.dtype("u4")) : Dict_str4_uint32,
+	(np.dtype("U4"), np.dtype("uint32")) : Dict_str4_uint32,
+	(np.dtype("U4"), np.dtype("u8")) : Dict_str4_uint64,
+	(np.dtype("U4"), np.dtype("uint64")) : Dict_str4_uint64,
+	(np.dtype("U4"), np.dtype("i1")) : Dict_str4_int8,
+	(np.dtype("U4"), np.dtype("int8")) : Dict_str4_int8,
+	(np.dtype("U4"), np.dtype("i2")) : Dict_str4_int16,
+	(np.dtype("U4"), np.dtype("int16")) : Dict_str4_int16,
+	(np.dtype("U4"), np.dtype("i4")) : Dict_str4_int32,
+	(np.dtype("U4"), np.dtype("int32")) : Dict_str4_int32,
+	(np.dtype("U4"), np.dtype("i8")) : Dict_str4_int64,
+	(np.dtype("U4"), np.dtype("int64")) : Dict_str4_int64,
+	(np.dtype("U4"), np.dtype("f4")) : Dict_str4_float32,
+	(np.dtype("U4"), np.dtype("float32")) : Dict_str4_float32,
+	(np.dtype("U4"), np.dtype("f8")) : Dict_str4_float64,
+	(np.dtype("U4"), np.dtype("float64")) : Dict_str4_float64,
+	(np.dtype("U4"), np.dtype("?")) : Dict_str4_bool,
+	(np.dtype("U4"), np.dtype("bool")) : Dict_str4_bool,
+	(np.dtype("U8"), np.dtype("U1")) : Dict_str8_str1,
+	(np.dtype("U8"), np.dtype("U2")) : Dict_str8_str2,
+	(np.dtype("U8"), np.dtype("U4")) : Dict_str8_str4,
+	(np.dtype("U8"), np.dtype("U8")) : Dict_str8_str8,
+	(np.dtype("U8"), np.dtype("U16")) : Dict_str8_str16,
+	(np.dtype("U8"), np.dtype("U32")) : Dict_str8_str32,
+	(np.dtype("U8"), np.dtype("u1")) : Dict_str8_uint8,
+	(np.dtype("U8"), np.dtype("uint8")) : Dict_str8_uint8,
+	(np.dtype("U8"), np.dtype("u2")) : Dict_str8_uint16,
+	(np.dtype("U8"), np.dtype("uint16")) : Dict_str8_uint16,
+	(np.dtype("U8"), np.dtype("u4")) : Dict_str8_uint32,
+	(np.dtype("U8"), np.dtype("uint32")) : Dict_str8_uint32,
+	(np.dtype("U8"), np.dtype("u8")) : Dict_str8_uint64,
+	(np.dtype("U8"), np.dtype("uint64")) : Dict_str8_uint64,
+	(np.dtype("U8"), np.dtype("i1")) : Dict_str8_int8,
+	(np.dtype("U8"), np.dtype("int8")) : Dict_str8_int8,
+	(np.dtype("U8"), np.dtype("i2")) : Dict_str8_int16,
+	(np.dtype("U8"), np.dtype("int16")) : Dict_str8_int16,
+	(np.dtype("U8"), np.dtype("i4")) : Dict_str8_int32,
+	(np.dtype("U8"), np.dtype("int32")) : Dict_str8_int32,
+	(np.dtype("U8"), np.dtype("i8")) : Dict_str8_int64,
+	(np.dtype("U8"), np.dtype("int64")) : Dict_str8_int64,
+	(np.dtype("U8"), np.dtype("f4")) : Dict_str8_float32,
+	(np.dtype("U8"), np.dtype("float32")) : Dict_str8_float32,
+	(np.dtype("U8"), np.dtype("f8")) : Dict_str8_float64,
+	(np.dtype("U8"), np.dtype("float64")) : Dict_str8_float64,
+	(np.dtype("U8"), np.dtype("?")) : Dict_str8_bool,
+	(np.dtype("U8"), np.dtype("bool")) : Dict_str8_bool,
+	(np.dtype("u4"), np.dtype("U1")) : Dict_uint32_str1,
+	(np.dtype("uint32"), np.dtype("U1")) : Dict_uint32_str1,
+	(np.dtype("u4"), np.dtype("U2")) : Dict_uint32_str2,
+	(np.dtype("uint32"), np.dtype("U2")) : Dict_uint32_str2,
+	(np.dtype("u4"), np.dtype("U4")) : Dict_uint32_str4,
+	(np.dtype("uint32"), np.dtype("U4")) : Dict_uint32_str4,
+	(np.dtype("u4"), np.dtype("U8")) : Dict_uint32_str8,
+	(np.dtype("uint32"), np.dtype("U8")) : Dict_uint32_str8,
+	(np.dtype("u4"), np.dtype("U16")) : Dict_uint32_str16,
+	(np.dtype("uint32"), np.dtype("U16")) : Dict_uint32_str16,
+	(np.dtype("u4"), np.dtype("U32")) : Dict_uint32_str32,
+	(np.dtype("uint32"), np.dtype("U32")) : Dict_uint32_str32,
+	(np.dtype("u4"), np.dtype("u1")) : Dict_uint32_uint8,
+	(np.dtype("u4"), np.dtype("uint8")) : Dict_uint32_uint8,
+	(np.dtype("uint32"), np.dtype("u1")) : Dict_uint32_uint8,
+	(np.dtype("uint32"), np.dtype("uint8")) : Dict_uint32_uint8,
+	(np.dtype("u4"), np.dtype("u2")) : Dict_uint32_uint16,
+	(np.dtype("u4"), np.dtype("uint16")) : Dict_uint32_uint16,
+	(np.dtype("uint32"), np.dtype("u2")) : Dict_uint32_uint16,
+	(np.dtype("uint32"), np.dtype("uint16")) : Dict_uint32_uint16,
+	(np.dtype("u4"), np.dtype("u4")) : Dict_uint32_uint32,
+	(np.dtype("u4"), np.dtype("uint32")) : Dict_uint32_uint32,
+	(np.dtype("uint32"), np.dtype("u4")) : Dict_uint32_uint32,
+	(np.dtype("uint32"), np.dtype("uint32")) : Dict_uint32_uint32,
+	(np.dtype("u4"), np.dtype("u8")) : Dict_uint32_uint64,
+	(np.dtype("u4"), np.dtype("uint64")) : Dict_uint32_uint64,
+	(np.dtype("uint32"), np.dtype("u8")) : Dict_uint32_uint64,
+	(np.dtype("uint32"), np.dtype("uint64")) : Dict_uint32_uint64,
+	(np.dtype("u4"), np.dtype("i1")) : Dict_uint32_int8,
+	(np.dtype("u4"), np.dtype("int8")) : Dict_uint32_int8,
+	(np.dtype("uint32"), np.dtype("i1")) : Dict_uint32_int8,
+	(np.dtype("uint32"), np.dtype("int8")) : Dict_uint32_int8,
+	(np.dtype("u4"), np.dtype("i2")) : Dict_uint32_int16,
+	(np.dtype("u4"), np.dtype("int16")) : Dict_uint32_int16,
+	(np.dtype("uint32"), np.dtype("i2")) : Dict_uint32_int16,
+	(np.dtype("uint32"), np.dtype("int16")) : Dict_uint32_int16,
+	(np.dtype("u4"), np.dtype("i4")) : Dict_uint32_int32,
+	(np.dtype("u4"), np.dtype("int32")) : Dict_uint32_int32,
+	(np.dtype("uint32"), np.dtype("i4")) : Dict_uint32_int32,
+	(np.dtype("uint32"), np.dtype("int32")) : Dict_uint32_int32,
+	(np.dtype("u4"), np.dtype("i8")) : Dict_uint32_int64,
+	(np.dtype("u4"), np.dtype("int64")) : Dict_uint32_int64,
+	(np.dtype("uint32"), np.dtype("i8")) : Dict_uint32_int64,
+	(np.dtype("uint32"), np.dtype("int64")) : Dict_uint32_int64,
+	(np.dtype("u4"), np.dtype("f4")) : Dict_uint32_float32,
+	(np.dtype("u4"), np.dtype("float32")) : Dict_uint32_float32,
+	(np.dtype("uint32"), np.dtype("f4")) : Dict_uint32_float32,
+	(np.dtype("uint32"), np.dtype("float32")) : Dict_uint32_float32,
+	(np.dtype("u4"), np.dtype("f8")) : Dict_uint32_float64,
+	(np.dtype("u4"), np.dtype("float64")) : Dict_uint32_float64,
+	(np.dtype("uint32"), np.dtype("f8")) : Dict_uint32_float64,
+	(np.dtype("uint32"), np.dtype("float64")) : Dict_uint32_float64,
+	(np.dtype("u4"), np.dtype("?")) : Dict_uint32_bool,
+	(np.dtype("u4"), np.dtype("bool")) : Dict_uint32_bool,
+	(np.dtype("uint32"), np.dtype("?")) : Dict_uint32_bool,
+	(np.dtype("uint32"), np.dtype("bool")) : Dict_uint32_bool,
+	(np.dtype("u8"), np.dtype("U1")) : Dict_uint64_str1,
+	(np.dtype("uint64"), np.dtype("U1")) : Dict_uint64_str1,
+	(np.dtype("u8"), np.dtype("U2")) : Dict_uint64_str2,
+	(np.dtype("uint64"), np.dtype("U2")) : Dict_uint64_str2,
+	(np.dtype("u8"), np.dtype("U4")) : Dict_uint64_str4,
+	(np.dtype("uint64"), np.dtype("U4")) : Dict_uint64_str4,
+	(np.dtype("u8"), np.dtype("U8")) : Dict_uint64_str8,
+	(np.dtype("uint64"), np.dtype("U8")) : Dict_uint64_str8,
+	(np.dtype("u8"), np.dtype("U16")) : Dict_uint64_str16,
+	(np.dtype("uint64"), np.dtype("U16")) : Dict_uint64_str16,
+	(np.dtype("u8"), np.dtype("U32")) : Dict_uint64_str32,
+	(np.dtype("uint64"), np.dtype("U32")) : Dict_uint64_str32,
+	(np.dtype("u8"), np.dtype("u1")) : Dict_uint64_uint8,
+	(np.dtype("u8"), np.dtype("uint8")) : Dict_uint64_uint8,
+	(np.dtype("uint64"), np.dtype("u1")) : Dict_uint64_uint8,
+	(np.dtype("uint64"), np.dtype("uint8")) : Dict_uint64_uint8,
+	(np.dtype("u8"), np.dtype("u2")) : Dict_uint64_uint16,
+	(np.dtype("u8"), np.dtype("uint16")) : Dict_uint64_uint16,
+	(np.dtype("uint64"), np.dtype("u2")) : Dict_uint64_uint16,
+	(np.dtype("uint64"), np.dtype("uint16")) : Dict_uint64_uint16,
+	(np.dtype("u8"), np.dtype("u4")) : Dict_uint64_uint32,
+	(np.dtype("u8"), np.dtype("uint32")) : Dict_uint64_uint32,
+	(np.dtype("uint64"), np.dtype("u4")) : Dict_uint64_uint32,
+	(np.dtype("uint64"), np.dtype("uint32")) : Dict_uint64_uint32,
+	(np.dtype("u8"), np.dtype("u8")) : Dict_uint64_uint64,
+	(np.dtype("u8"), np.dtype("uint64")) : Dict_uint64_uint64,
+	(np.dtype("uint64"), np.dtype("u8")) : Dict_uint64_uint64,
+	(np.dtype("uint64"), np.dtype("uint64")) : Dict_uint64_uint64,
+	(np.dtype("u8"), np.dtype("i1")) : Dict_uint64_int8,
+	(np.dtype("u8"), np.dtype("int8")) : Dict_uint64_int8,
+	(np.dtype("uint64"), np.dtype("i1")) : Dict_uint64_int8,
+	(np.dtype("uint64"), np.dtype("int8")) : Dict_uint64_int8,
+	(np.dtype("u8"), np.dtype("i2")) : Dict_uint64_int16,
+	(np.dtype("u8"), np.dtype("int16")) : Dict_uint64_int16,
+	(np.dtype("uint64"), np.dtype("i2")) : Dict_uint64_int16,
+	(np.dtype("uint64"), np.dtype("int16")) : Dict_uint64_int16,
+	(np.dtype("u8"), np.dtype("i4")) : Dict_uint64_int32,
+	(np.dtype("u8"), np.dtype("int32")) : Dict_uint64_int32,
+	(np.dtype("uint64"), np.dtype("i4")) : Dict_uint64_int32,
+	(np.dtype("uint64"), np.dtype("int32")) : Dict_uint64_int32,
+	(np.dtype("u8"), np.dtype("i8")) : Dict_uint64_int64,
+	(np.dtype("u8"), np.dtype("int64")) : Dict_uint64_int64,
+	(np.dtype("uint64"), np.dtype("i8")) : Dict_uint64_int64,
+	(np.dtype("uint64"), np.dtype("int64")) : Dict_uint64_int64,
+	(np.dtype("u8"), np.dtype("f4")) : Dict_uint64_float32,
+	(np.dtype("u8"), np.dtype("float32")) : Dict_uint64_float32,
+	(np.dtype("uint64"), np.dtype("f4")) : Dict_uint64_float32,
+	(np.dtype("uint64"), np.dtype("float32")) : Dict_uint64_float32,
+	(np.dtype("u8"), np.dtype("f8")) : Dict_uint64_float64,
+	(np.dtype("u8"), np.dtype("float64")) : Dict_uint64_float64,
+	(np.dtype("uint64"), np.dtype("f8")) : Dict_uint64_float64,
+	(np.dtype("uint64"), np.dtype("float64")) : Dict_uint64_float64,
+	(np.dtype("u8"), np.dtype("?")) : Dict_uint64_bool,
+	(np.dtype("u8"), np.dtype("bool")) : Dict_uint64_bool,
+	(np.dtype("uint64"), np.dtype("?")) : Dict_uint64_bool,
+	(np.dtype("uint64"), np.dtype("bool")) : Dict_uint64_bool,
+	(np.dtype("i4"), np.dtype("U1")) : Dict_int32_str1,
+	(np.dtype("int32"), np.dtype("U1")) : Dict_int32_str1,
+	(np.dtype("i4"), np.dtype("U2")) : Dict_int32_str2,
+	(np.dtype("int32"), np.dtype("U2")) : Dict_int32_str2,
+	(np.dtype("i4"), np.dtype("U4")) : Dict_int32_str4,
+	(np.dtype("int32"), np.dtype("U4")) : Dict_int32_str4,
+	(np.dtype("i4"), np.dtype("U8")) : Dict_int32_str8,
+	(np.dtype("int32"), np.dtype("U8")) : Dict_int32_str8,
+	(np.dtype("i4"), np.dtype("U16")) : Dict_int32_str16,
+	(np.dtype("int32"), np.dtype("U16")) : Dict_int32_str16,
+	(np.dtype("i4"), np.dtype("U32")) : Dict_int32_str32,
+	(np.dtype("int32"), np.dtype("U32")) : Dict_int32_str32,
+	(np.dtype("i4"), np.dtype("u1")) : Dict_int32_uint8,
+	(np.dtype("i4"), np.dtype("uint8")) : Dict_int32_uint8,
+	(np.dtype("int32"), np.dtype("u1")) : Dict_int32_uint8,
+	(np.dtype("int32"), np.dtype("uint8")) : Dict_int32_uint8,
+	(np.dtype("i4"), np.dtype("u2")) : Dict_int32_uint16,
+	(np.dtype("i4"), np.dtype("uint16")) : Dict_int32_uint16,
+	(np.dtype("int32"), np.dtype("u2")) : Dict_int32_uint16,
+	(np.dtype("int32"), np.dtype("uint16")) : Dict_int32_uint16,
+	(np.dtype("i4"), np.dtype("u4")) : Dict_int32_uint32,
+	(np.dtype("i4"), np.dtype("uint32")) : Dict_int32_uint32,
+	(np.dtype("int32"), np.dtype("u4")) : Dict_int32_uint32,
+	(np.dtype("int32"), np.dtype("uint32")) : Dict_int32_uint32,
+	(np.dtype("i4"), np.dtype("u8")) : Dict_int32_uint64,
+	(np.dtype("i4"), np.dtype("uint64")) : Dict_int32_uint64,
+	(np.dtype("int32"), np.dtype("u8")) : Dict_int32_uint64,
+	(np.dtype("int32"), np.dtype("uint64")) : Dict_int32_uint64,
+	(np.dtype("i4"), np.dtype("i1")) : Dict_int32_int8,
+	(np.dtype("i4"), np.dtype("int8")) : Dict_int32_int8,
+	(np.dtype("int32"), np.dtype("i1")) : Dict_int32_int8,
+	(np.dtype("int32"), np.dtype("int8")) : Dict_int32_int8,
+	(np.dtype("i4"), np.dtype("i2")) : Dict_int32_int16,
+	(np.dtype("i4"), np.dtype("int16")) : Dict_int32_int16,
+	(np.dtype("int32"), np.dtype("i2")) : Dict_int32_int16,
+	(np.dtype("int32"), np.dtype("int16")) : Dict_int32_int16,
+	(np.dtype("i4"), np.dtype("i4")) : Dict_int32_int32,
+	(np.dtype("i4"), np.dtype("int32")) : Dict_int32_int32,
+	(np.dtype("int32"), np.dtype("i4")) : Dict_int32_int32,
+	(np.dtype("int32"), np.dtype("int32")) : Dict_int32_int32,
+	(np.dtype("i4"), np.dtype("i8")) : Dict_int32_int64,
+	(np.dtype("i4"), np.dtype("int64")) : Dict_int32_int64,
+	(np.dtype("int32"), np.dtype("i8")) : Dict_int32_int64,
+	(np.dtype("int32"), np.dtype("int64")) : Dict_int32_int64,
+	(np.dtype("i4"), np.dtype("f4")) : Dict_int32_float32,
+	(np.dtype("i4"), np.dtype("float32")) : Dict_int32_float32,
+	(np.dtype("int32"), np.dtype("f4")) : Dict_int32_float32,
+	(np.dtype("int32"), np.dtype("float32")) : Dict_int32_float32,
+	(np.dtype("i4"), np.dtype("f8")) : Dict_int32_float64,
+	(np.dtype("i4"), np.dtype("float64")) : Dict_int32_float64,
+	(np.dtype("int32"), np.dtype("f8")) : Dict_int32_float64,
+	(np.dtype("int32"), np.dtype("float64")) : Dict_int32_float64,
+	(np.dtype("i4"), np.dtype("?")) : Dict_int32_bool,
+	(np.dtype("i4"), np.dtype("bool")) : Dict_int32_bool,
+	(np.dtype("int32"), np.dtype("?")) : Dict_int32_bool,
+	(np.dtype("int32"), np.dtype("bool")) : Dict_int32_bool,
+	(np.dtype("i8"), np.dtype("U1")) : Dict_int64_str1,
+	(np.dtype("int64"), np.dtype("U1")) : Dict_int64_str1,
+	(np.dtype("i8"), np.dtype("U2")) : Dict_int64_str2,
+	(np.dtype("int64"), np.dtype("U2")) : Dict_int64_str2,
+	(np.dtype("i8"), np.dtype("U4")) : Dict_int64_str4,
+	(np.dtype("int64"), np.dtype("U4")) : Dict_int64_str4,
+	(np.dtype("i8"), np.dtype("U8")) : Dict_int64_str8,
+	(np.dtype("int64"), np.dtype("U8")) : Dict_int64_str8,
+	(np.dtype("i8"), np.dtype("U16")) : Dict_int64_str16,
+	(np.dtype("int64"), np.dtype("U16")) : Dict_int64_str16,
+	(np.dtype("i8"), np.dtype("U32")) : Dict_int64_str32,
+	(np.dtype("int64"), np.dtype("U32")) : Dict_int64_str32,
+	(np.dtype("i8"), np.dtype("u1")) : Dict_int64_uint8,
+	(np.dtype("i8"), np.dtype("uint8")) : Dict_int64_uint8,
+	(np.dtype("int64"), np.dtype("u1")) : Dict_int64_uint8,
+	(np.dtype("int64"), np.dtype("uint8")) : Dict_int64_uint8,
+	(np.dtype("i8"), np.dtype("u2")) : Dict_int64_uint16,
+	(np.dtype("i8"), np.dtype("uint16")) : Dict_int64_uint16,
+	(np.dtype("int64"), np.dtype("u2")) : Dict_int64_uint16,
+	(np.dtype("int64"), np.dtype("uint16")) : Dict_int64_uint16,
+	(np.dtype("i8"), np.dtype("u4")) : Dict_int64_uint32,
+	(np.dtype("i8"), np.dtype("uint32")) : Dict_int64_uint32,
+	(np.dtype("int64"), np.dtype("u4")) : Dict_int64_uint32,
+	(np.dtype("int64"), np.dtype("uint32")) : Dict_int64_uint32,
+	(np.dtype("i8"), np.dtype("u8")) : Dict_int64_uint64,
+	(np.dtype("i8"), np.dtype("uint64")) : Dict_int64_uint64,
+	(np.dtype("int64"), np.dtype("u8")) : Dict_int64_uint64,
+	(np.dtype("int64"), np.dtype("uint64")) : Dict_int64_uint64,
+	(np.dtype("i8"), np.dtype("i1")) : Dict_int64_int8,
+	(np.dtype("i8"), np.dtype("int8")) : Dict_int64_int8,
+	(np.dtype("int64"), np.dtype("i1")) : Dict_int64_int8,
+	(np.dtype("int64"), np.dtype("int8")) : Dict_int64_int8,
+	(np.dtype("i8"), np.dtype("i2")) : Dict_int64_int16,
+	(np.dtype("i8"), np.dtype("int16")) : Dict_int64_int16,
+	(np.dtype("int64"), np.dtype("i2")) : Dict_int64_int16,
+	(np.dtype("int64"), np.dtype("int16")) : Dict_int64_int16,
+	(np.dtype("i8"), np.dtype("i4")) : Dict_int64_int32,
+	(np.dtype("i8"), np.dtype("int32")) : Dict_int64_int32,
+	(np.dtype("int64"), np.dtype("i4")) : Dict_int64_int32,
+	(np.dtype("int64"), np.dtype("int32")) : Dict_int64_int32,
+	(np.dtype("i8"), np.dtype("i8")) : Dict_int64_int64,
+	(np.dtype("i8"), np.dtype("int64")) : Dict_int64_int64,
+	(np.dtype("int64"), np.dtype("i8")) : Dict_int64_int64,
+	(np.dtype("int64"), np.dtype("int64")) : Dict_int64_int64,
+	(np.dtype("i8"), np.dtype("f4")) : Dict_int64_float32,
+	(np.dtype("i8"), np.dtype("float32")) : Dict_int64_float32,
+	(np.dtype("int64"), np.dtype("f4")) : Dict_int64_float32,
+	(np.dtype("int64"), np.dtype("float32")) : Dict_int64_float32,
+	(np.dtype("i8"), np.dtype("f8")) : Dict_int64_float64,
+	(np.dtype("i8"), np.dtype("float64")) : Dict_int64_float64,
+	(np.dtype("int64"), np.dtype("f8")) : Dict_int64_float64,
+	(np.dtype("int64"), np.dtype("float64")) : Dict_int64_float64,
+	(np.dtype("i8"), np.dtype("?")) : Dict_int64_bool,
+	(np.dtype("i8"), np.dtype("bool")) : Dict_int64_bool,
+	(np.dtype("int64"), np.dtype("?")) : Dict_int64_bool,
+	(np.dtype("int64"), np.dtype("bool")) : Dict_int64_bool,
 }
