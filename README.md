@@ -3,10 +3,10 @@ A Fast and Memory Efficient Hash Map for Python
 
 The goal of GetPy is a simple to use and high performance python dictionary which integrates smoothly into the NumPy/SciPy ecosystem.
 
-## About GetPy
+## About
 GetPy is a thin and robust binding to the parallel_hashmap which is the current state of the art for minimal memory overhead and fast runtime speed. The binding layer is supported by PyBind11 which is fast to compile and simple to extend. Serialization is handled by Cereal which supports streaming binary serialization, a critical feature for the large hash tables this is designed to support.
 
-## How to use GetPy
+## How To Use
 The `getpy.Dict` object is designed to maintain a similar interface to the standard python dictionary. There are some key differences though, which are necessary for performance reasons.
 
 1) `gp.Dict.__init__` has two arguments `key_type` and `value_type`. Those arguments are defined with a preset combinations of `np.dtype`s.  The full list of supported `np.dtype` combinations is found by `gp._types`. Most of the future work on sparsepy will be expanding this list of supported types.
