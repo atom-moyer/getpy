@@ -2,6 +2,8 @@
 A Fast and Memory Efficient Hash Map for Python
 
 The goal of GetPy is a simple to use and high performance python dictionary which integrates smoothly into the NumPy/SciPy ecosystem.
+## Installation
+`pip install git+https://github.com/atom-moyer/getpy.git`
 
 ## About
 GetPy is a thin and robust binding to the parallel_hashmap which is the current state of the art for minimal memory overhead and fast runtime speed. The binding layer is supported by PyBind11 which is fast to compile and simple to extend. Serialization is handled by Cereal which supports streaming binary serialization, a critical feature for the large hash tables this is designed to support.
