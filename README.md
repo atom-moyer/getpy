@@ -1,7 +1,8 @@
 # GetPy
-A Fast and Memory Efficient Hash Map for Python
+## A Fast and Memory Efficient Hash Map for Python
 
 The goal of GetPy (gp) is a simple to use and high performance python dictionary which integrates smoothly into the NumPy/SciPy ecosystem.
+
 ## Installation
 `pip install git+https://github.com/atom-moyer/getpy.git`
 
