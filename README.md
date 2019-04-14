@@ -6,7 +6,7 @@ The goal of GetPy is a simple to use and high performance python dictionary whic
 `pip install git+https://github.com/atom-moyer/getpy.git`
 
 ## About
-GetPy is a thin and robust binding to the parallel_hashmap which is the current state of the art for minimal memory overhead and fast runtime speed. The binding layer is supported by PyBind11 which is fast to compile and simple to extend. Serialization is handled by Cereal which supports streaming binary serialization, a critical feature for the large hash tables this is designed to support.
+GetPy is a thin and robust binding to The Parallel Hashmap, https://github.com/greg7mdp/parallel-hashmap.git, which is the current state of the art for minimal memory overhead and fast runtime speed. The binding layer is supported by PyBind11, https://github.com/pybind/pybind11.git, which is fast to compile and simple to extend. Serialization is handled by Cereal which supports streaming binary serialization, a critical feature for the large hash tables this is designed to support.,
 
 ## How To Use
 The `getpy.Dict` object is designed to maintain a similar interface to the standard python dictionary. There are some key differences though, which are necessary for performance reasons.
