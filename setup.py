@@ -5,7 +5,7 @@ import sys
 import setuptools
 import glob
 
-__version__ = '0.9.0'
+__version__ = '0.9.1'
 
 with open("README.md", "r") as readme_file:
     readme = readme_file.read()
@@ -20,7 +20,7 @@ ext_modules = [
   Extension(
     "_getpy",
     glob.glob('src/*.cpp'),
-    include_dirs = ['lib/parallel-hashmap', 'lib/pybind11/include', 'lib/cereal/include'],
+    include_dirs = ['lib/parallel-hashmap', 'lib/pybind11/include', 'lib/cereal/include', 'lib/half'],
     language = 'c++',
     extra_compile_args = extra_compile_args_dict[sys.platform],
     extra_link_args = ['-lz'],

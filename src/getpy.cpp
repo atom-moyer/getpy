@@ -33,33 +33,25 @@ struct Dict {
     Dict () {}
 
 
-    Value __getitem__ ( const Key & key ) {
-        return __dict.at(key);
-    }
-
-    py::array_t<Value> __getitem_vec__ ( py::array_t<Key> & key_array ) {
+    py::array_t<Value> __getitem__ ( py::array_t<Key> & key_array ) {
         py::buffer_info key_array_buffer = key_array.request();
         auto * key_array_ptr = (Key *) key_array_buffer.ptr;
 
         auto result_array = py::array_t<Value> ( key_array_buffer.shape[0] );
         py::buffer_info result_array_buffer = result_array.request();
         auto * result_array_ptr = (Value *) result_array_buffer.ptr;
-        
+
         for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++)
-            result_array_ptr[idx] = __getitem__( key_array_ptr[idx] );
+            result_array_ptr[idx] = __dict.at( key_array_ptr[idx] );
 
         return result_array;
     }
 
 
-    void __setitem__ ( const Key & key, const Value & value ) {
-        __dict.emplace(key, value);
-    }
-
-    void __setitem_vec__ ( py::array_t<Key> & key_array, py::array_t<Value> & value_array ) {
+    void __setitem__ ( py::array_t<Key> & key_array, py::array_t<Value> & value_array ) {
         py::buffer_info key_array_buffer = key_array.request();
         auto * key_array_ptr = (Key *) key_array_buffer.ptr;
-        
+
         py::buffer_info value_array_buffer = value_array.request();
         auto * value_array_ptr = (Value *) value_array_buffer.ptr;
 
@@ -67,33 +59,21 @@ struct Dict {
             throw std::runtime_error("Size of first dimension must match.");
 
         for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++) {
-            __setitem__( key_array_ptr[idx], value_array_ptr[idx] );
+            __dict.emplace( key_array_ptr[idx], value_array_ptr[idx] );
         }
     }
 
 
-    void __delitem__ ( const Key & key ) {
-        __dict.erase(key);
-    }
-
-    void __delitem_vec__ ( py::array_t<Key> & key_array ) {
+    void __delitem__ ( py::array_t<Key> & key_array ) {
         py::buffer_info key_array_buffer = key_array.request();
         auto * key_array_ptr = (Key *) key_array_buffer.ptr;
 
         for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++)
-            __delitem__( key_array_ptr[idx] );
+            __dict.erase( key_array_ptr[idx] );
     }
 
 
-    bool __contains__ ( const Key & key ) {
-        if (__dict.count(key)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    py::array_t<bool> __contains_vec__ ( py::array_t<Key> & key_array ) {
+    py::array_t<bool> __contains__ ( py::array_t<Key> & key_array ) {
         py::buffer_info key_array_buffer = key_array.request();
         auto * key_array_ptr = (Key *) key_array_buffer.ptr;
 
@@ -101,13 +81,18 @@ struct Dict {
         py::buffer_info result_array_buffer = result_array.request();
         auto * result_array_ptr = (bool *) result_array_buffer.ptr;
 
-        for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++)
-            result_array_ptr[idx] = __contains__( key_array_ptr[idx] );
+        for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++) {
+            if ( __dict.count( key_array_ptr[idx] ) ) {
+                result_array_ptr[idx] = true;
+            } else {
+                result_array_ptr[idx] = false;
+            }
+        }
 
         return result_array;
     }
 
-    
+
     int __len__ () {
         return __dict.size();
     }
@@ -146,16 +131,9 @@ void declare_dict(const py::module& m, const std::string& class_name) {
         .def(py::init<>())
 
         .def("__getitem__", &Class::__getitem__)
-        .def("__getitem_vec__", &Class::__getitem_vec__)
-
         .def("__setitem__", &Class::__setitem__)
-        .def("__setitem_vec__", &Class::__setitem_vec__)
-
         .def("__delitem__", &Class::__delitem__)
-        .def("__delitem_vec__", &Class::__delitem_vec__)
-
         .def("__contains__", &Class::__contains__)
-        .def("__contains_vec__", &Class::__contains_vec__)
 
         .def("dump", &Class::dump)
         .def("load", &Class::load)
