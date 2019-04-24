@@ -24,7 +24,7 @@ class Dict(MutableMapping):
 
 
     def __repr__(self):
-        return f'Key Type: {self.key_type}, Value Type: {self.value_type}, Default Value: {self.default_value}'
+        return f'Dict Type: {self.dict_type}, Key Type: {self.key_type}, Value Type: {self.value_type}, Default Value: {self.default_value}'
 
 
     def __getitem__(self, key):
@@ -38,8 +38,7 @@ class Dict(MutableMapping):
         if isinstance(key, np.ndarray):
             self.__dict.__setitem__(key, value)
         else:
-            self.__dict.__setitem__(np.array([key], dtype=self.key_type),
-                                   np.array([value], dtype=self.value_type))
+            self.__dict.__setitem__(np.array([key], dtype=self.key_type), np.array([value], dtype=self.value_type))
 
 
     def __delitem__(self, key):

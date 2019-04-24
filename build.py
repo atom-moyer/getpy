@@ -2,8 +2,6 @@ import itertools
 
 import numpy as np
 
-amino_acids = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L',
-               'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
 
 key_types = [
     'str4',
@@ -37,32 +35,32 @@ value_types = [
 
     'bool',
 
-    # 'pair_str1_str1',
-    # 'pair_str2_str2',
-    # 'pair_str4_str4',
-    # 'pair_str8_str8',
-    # 'pair_str16_str16',
-    # 'pair_str32_str32',
-    #
-    # 'pair_uint8_uint8',
-    # 'pair_uint16_uint16',
-    # 'pair_uint32_uint32',
-    # 'pair_uint64_uint64',
-    #
-    # 'pair_int8_int8',
-    # 'pair_int16_int16',
-    # 'pair_int32_int32',
-    # 'pair_int64_int64',
-    #
-    # 'pair_float32_float32',
-    # 'pair_float64_float64',
-    # 
-    # 'rparray',
-    #
-    # 'rotation_uint16',
-    # 'translation_uint16',
-    #
-    # 'pair_rotation_uint16_translation_uint16',
+    'pair_str1_str1',
+    'pair_str2_str2',
+    'pair_str4_str4',
+    'pair_str8_str8',
+    'pair_str16_str16',
+    'pair_str32_str32',
+
+    'pair_uint8_uint8',
+    'pair_uint16_uint16',
+    'pair_uint32_uint32',
+    'pair_uint64_uint64',
+
+    'pair_int8_int8',
+    'pair_int16_int16',
+    'pair_int32_int32',
+    'pair_int64_int64',
+
+    'pair_float32_float32',
+    'pair_float64_float64',
+
+    'rparray',
+
+    'rotation_uint16',
+    'translation_uint16',
+
+    'pair_rotation_uint16_translation_uint16',
 ]
 
 
@@ -112,7 +110,7 @@ cpp_types = {
     'pair_float32_float32' : 'pair_float32_float32',
     'pair_float64_float64' : 'pair_float64_float64',
 
-    'rparray' : 'std::array<uint8_t, 50>',
+    'rparray' : 'rparray', # 'std::array<uint8_t, 50>',
 
     'rotation_uint16' : 'rotation_uint16',
     'translation_uint16' : 'translation_uint16',
@@ -164,7 +162,7 @@ np_types = {
     'pair_float32_float32' : [{'names' : ['first', 'second'], 'formats' : ['f4', 'f4']}],
     'pair_float64_float64' : [{'names' : ['first', 'second'], 'formats' : ['f8', 'f8']}],
 
-    'rparray' : ['50u1'],
+    'rparray' : [{'names' : ['data'], 'formats' : ['50u1']}], # ['50u1'],
 
     'rotation_uint16' : [{'names' : ['a', 'b', 'c', 'd'], 'formats' : ['u2', 'u2', 'u2', 'u2']}],
     'translation_uint16' : [{'names' : ['x', 'y', 'z', 's'], 'formats' : ['u2', 'u2', 'u2', 'u2']}],
@@ -175,9 +173,9 @@ np_types = {
 }
 
 
-# rparray_struct_def = ' '.join([f'uint8_t v{i};' for i in range(50)])
-rotation_uint16_struct_def = ('uint16_t a; uint16_t b; uint16_t c; uint16_t d;')
-translation_uint16_struct_def = ('uint16_t x; uint16_t y; uint16_t z; uint16_t s;')
+rparray_struct_def = 'std::array<uint8_t, 50> data;'
+rotation_uint16_struct_def = 'uint16_t a; uint16_t b; uint16_t c; uint16_t d;'
+translation_uint16_struct_def = 'uint16_t x; uint16_t y; uint16_t z; uint16_t s;'
 
 struct_types = {
     'pair_str1_str1' : 'struct pair_str1_str1 { std::array<char, 1> first; std::array<char, 1> second; };',
@@ -200,7 +198,7 @@ struct_types = {
     'pair_float32_float32' : 'struct pair_float32_float32 { float first; float second; };',
     'pair_float64_float64' : 'struct pair_float64_float64 { double first; double second; };',
 
-    # 'rparray' : f'struct rparray {{ {rparray_struct_def} }};',
+    'rparray' : f'struct rparray {{ {rparray_struct_def} }};',
 
     'rotation_uint16' : f'struct rotation_uint16 {{ {rotation_uint16_struct_def} }};',
     'translation_uint16' : f'struct translation_uint16 {{ {translation_uint16_struct_def} }};',
@@ -222,7 +220,7 @@ def write_struct_types(getpy_file, type_):
     getpy_file.write(f'{struct_types[type_]}\n')
 
 
-# rparray_serialization_def = ', '.join([f'rparray.v{i}' for i in range(50)])
+rparray_serialization_def = 'rparray.data'
 rotation_serialization_def = 'rotation.a, rotation.b, rotation.c, rotation.d'
 translation_serialization_def = 'translation.x, translation.y, translation.z, translation.s'
 
@@ -230,8 +228,8 @@ translation_serialization_def = 'translation.x, translation.y, translation.z, tr
 def write_struct_serialization(getpy_file, type_):
     if type_.startswith('pair'):
         getpy_file.write(f'template<class Archive> void serialize(Archive & archive, {type_} & pair) {{ archive( pair.first, pair.second ); }}\n')
-    # elif type_.startswith('rparray'):
-    #     getpy_file.write(f'template<class Archive> void serialize(Archive & archive, {type_} & rparray) {{ archive( {rparray_serialization_def} ); }}\n')
+    elif type_.startswith('rparray'):
+        getpy_file.write(f'template<class Archive> void serialize(Archive & archive, {type_} & rparray) {{ archive( {rparray_serialization_def} ); }}\n')
     elif type_.startswith('rotation'):
         getpy_file.write(f'template<class Archive> void serialize(Archive & archive, {type_} & rotation) {{ archive( {rotation_serialization_def} ); }}\n')
     elif type_.startswith('translation'):
@@ -240,15 +238,15 @@ def write_struct_serialization(getpy_file, type_):
         pass
 
 
-rparray_pybind11_def = ', '.join([f'v{i}' for i in range(50)])
+rparray_pybind11_def = 'data'
 rotation_pybind11_def = ('a, b, c, d')
 translation_pybind11_def = ('x, y, z, s')
 
 def write_numpy_dtype(getpy_file, type_):
     if type_.startswith('pair'):
         getpy_file.write(f'    PYBIND11_NUMPY_DTYPE({cpp_types[type_]}, first, second );\n')
-    # elif type_.startswith('rparray'):
-    #     getpy_file.write(f'    PYBIND11_NUMPY_DTYPE({cpp_types[type_]}, {rparray_pybind11_def} );\n')
+    elif type_.startswith('rparray'):
+        getpy_file.write(f'    PYBIND11_NUMPY_DTYPE({cpp_types[type_]}, {rparray_pybind11_def} );\n')
     elif type_.startswith('rotation'):
         getpy_file.write(f'    PYBIND11_NUMPY_DTYPE({cpp_types[type_]}, {rotation_pybind11_def} );\n')
     elif type_.startswith('translation'):
