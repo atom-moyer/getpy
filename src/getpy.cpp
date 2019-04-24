@@ -32,6 +32,7 @@ template <typename Key, typename Value>
 struct Dict {
     Dict () {}
 
+    Dict ( Value default_value ) : default_value ( default_value ) {}
 
     py::array_t<Value> __getitem__ ( py::array_t<Key> & key_array ) {
         py::buffer_info key_array_buffer = key_array.request();
@@ -41,8 +42,17 @@ struct Dict {
         py::buffer_info result_array_buffer = result_array.request();
         auto * result_array_ptr = (Value *) result_array_buffer.ptr;
 
-        for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++)
-            result_array_ptr[idx] = __dict.at( key_array_ptr[idx] );
+        for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++) {
+            auto search = __dict.find( key_array_ptr[idx] );
+
+            if ( search != __dict.end() ) {
+                result_array_ptr[idx] = search->second;
+            } else if ( default_value )  {
+                result_array_ptr[idx] = *default_value;
+            } else {
+                throw std::runtime_error("Key Error: Key not found and default value is not defined.");
+            }
+        }
 
         return result_array;
     }
@@ -82,7 +92,9 @@ struct Dict {
         auto * result_array_ptr = (bool *) result_array_buffer.ptr;
 
         for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++) {
-            if ( __dict.count( key_array_ptr[idx] ) ) {
+            auto search = __dict.find( key_array_ptr[idx] );
+
+            if ( search != __dict.end() ) {
                 result_array_ptr[idx] = true;
             } else {
                 result_array_ptr[idx] = false;
@@ -118,7 +130,7 @@ struct Dict {
         }
     }
 
-
+    std::optional<Value> default_value;
     phmap::parallel_flat_hash_map<Key, Value> __dict;
 };
 
@@ -129,6 +141,7 @@ void declare_dict(const py::module& m, const std::string& class_name) {
 
     py::class_<Class>(m, class_name.c_str())
         .def(py::init<>())
+        .def(py::init<const Value &>())
 
         .def("__getitem__", &Class::__getitem__)
         .def("__setitem__", &Class::__setitem__)

@@ -5,15 +5,15 @@ import sys
 import setuptools
 import glob
 
-__version__ = '0.9.1'
+__version__ = '0.9.3'
 
 with open("README.md", "r") as readme_file:
     readme = readme_file.read()
 
 extra_compile_args_dict = {
-    'linux' : ['-w', '-ftemplate-backtrace-limit=0', '-std=c++14'],
-    'linux2' : ['-w', '-ftemplate-backtrace-limit=0', '-std=c++14'],
-    'darwin' : ['-w', '-ftemplate-backtrace-limit=0', '-std=c++14', '-stdlib=libc++'],
+    'linux' : ['-w', '-ftemplate-backtrace-limit=0', '-std=c++17'],
+    'linux2' : ['-w', '-ftemplate-backtrace-limit=0', '-std=c++17'],
+    'darwin' : ['-w', '-ftemplate-backtrace-limit=0', '-std=c++17', '-stdlib=libc++'],
 }
 
 ext_modules = [
