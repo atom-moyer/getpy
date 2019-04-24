@@ -25,7 +25,7 @@ import numpy as np
 import getpy as gp
 
 key_type = np.dtype('u8')
-value_type = np.int64
+value_type = np.uint64
 
 gp_dict = gp.Dict(key_type, value_type)
 
@@ -41,6 +41,11 @@ del gp_dict[42]
 assert 42 not in gp_dict
 assert 41 not in gp_dict
 assert len(gp_dict) == 0
+
+assert gp_dict.key_type == np.dtype('u8')
+assert gp_dict.value_type == np.dtype('u8')
+assert gp_dict.dict_type.__name__ == 'Dict_uint64_uint64'
+assert gp_dict.default_value == None
 ```
 
 ### Vectorized Example
@@ -49,12 +54,12 @@ import numpy as np
 import getpy as gp
 
 key_type = np.dtype('u8')
-value_type = np.int64
+value_type = np.dtype('u8')
 
 gp_dict = gp.Dict(key_type, value_type)
 
-keys = np.random.randint(1000, size=200, dtype=key_type)
-values = np.random.randint(1000, size=200, dtype=value_type)
+keys = np.random.randint(1, 1000, size=200, dtype=key_type)
+values = np.random.randint(1, 1000, size=200, dtype=value_type)
 
 gp_dict[keys] = values
 
@@ -64,11 +69,42 @@ keys_and_values = [(key, value) for key, value in gp_dict.items()]
 select_keys = np.random.choice(keys, size=100)
 select_values = gp_dict[select_keys]
 
-random_keys = np.random.randint(1000, size=500, dtype=key_type)
+random_keys = np.random.randint(1, 1000, size=500, dtype=key_type)
 random_keys_mask = gp_dict.__contains__(random_keys)
 
 mask_keys = random_keys[random_keys_mask]
 mask_values = gp_dict[mask_keys]
+```
+
+### Vectorized Example With Default Value
+```python
+import numpy as np
+import getpy as gp
+
+key_type = np.dtype('u8')
+value_type = np.dtype('u8')
+
+gp_dict = gp.Dict(key_type, value_type, default_value=0)
+
+keys = np.random.randint(1, 1000, size=200, dtype=key_type)
+values = np.random.randint(1, 1000, size=200, dtype=value_type)
+
+gp_dict[keys] = values
+
+keys = [key for key in gp_dict]
+keys_and_values = [(key, value) for key, value in gp_dict.items()]
+
+select_keys = np.random.choice(keys, size=100)
+select_values = gp_dict[select_keys]
+
+random_keys = np.random.randint(1, 1000, size=500, dtype=key_type)
+random_values_with_defaults = gp_dict[random_keys]
+
+for random_key, random_value in zip(random_keys, random_values_with_defaults):
+    if random_key not in gp_dict:
+        assert random_value == 0
+    else:
+        assert random_value != 0
 ```
 
 ### Serialization Example
