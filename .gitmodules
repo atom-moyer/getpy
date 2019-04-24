@@ -1,6 +1,6 @@
 [submodule "lib/pybind11"]
 	path = lib/pybind11
-	url = https://github.com/pybind/pybind11.git
+	url = https://github.com/atom-moyer/pybind11.git
 [submodule "lib/cereal"]
 	path = lib/cereal
 	url = https://github.com/USCiLab/cereal.git
