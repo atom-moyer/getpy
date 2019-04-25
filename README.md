@@ -25,35 +25,6 @@ import numpy as np
 import getpy as gp
 
 key_type = np.dtype('u8')
-value_type = np.uint64
-
-gp_dict = gp.Dict(key_type, value_type)
-
-gp_dict[42] = 1337
-
-assert gp_dict[42] == 1337
-assert 42 in gp_dict
-assert 41 not in gp_dict
-assert len(gp_dict) == 1
-
-del gp_dict[42]
-
-assert 42 not in gp_dict
-assert 41 not in gp_dict
-assert len(gp_dict) == 0
-
-assert gp_dict.key_type == np.dtype('u8')
-assert gp_dict.value_type == np.dtype('u8')
-assert gp_dict.dict_type.__name__ == 'Dict_uint64_uint64'
-assert gp_dict.default_value == None
-```
-
-### Vectorized Example
-```python
-import numpy as np
-import getpy as gp
-
-key_type = np.dtype('u8')
 value_type = np.dtype('u8')
 
 gp_dict = gp.Dict(key_type, value_type)
@@ -63,20 +34,20 @@ values = np.random.randint(1, 1000, size=200, dtype=value_type)
 
 gp_dict[keys] = values
 
-keys = [key for key in gp_dict]
-keys_and_values = [(key, value) for key, value in gp_dict.items()]
+iterated_keys = [key for key in gp_dict]
+iterated_keys_and_values = [(key, value) for key, value in gp_dict.items()]
 
-select_keys = np.random.choice(keys, size=100)
+select_keys = np.random.choice(keys, size=100).astype(key_type)
 select_values = gp_dict[select_keys]
 
-random_keys = np.random.randint(1, 1000, size=500, dtype=key_type)
+random_keys = np.random.randint(1, 1000, size=500).astype(key_type)
 random_keys_mask = gp_dict.__contains__(random_keys)
 
 mask_keys = random_keys[random_keys_mask]
 mask_values = gp_dict[mask_keys]
 ```
 
-### Vectorized Example With Default Value
+### Simple Example With Default Value
 ```python
 import numpy as np
 import getpy as gp
@@ -91,20 +62,46 @@ values = np.random.randint(1, 1000, size=200, dtype=value_type)
 
 gp_dict[keys] = values
 
-keys = [key for key in gp_dict]
-keys_and_values = [(key, value) for key, value in gp_dict.items()]
+iterated_keys = [key for key in gp_dict]
+iterated_keys_and_values = [(key, value) for key, value in gp_dict.items()]
 
 select_keys = np.random.choice(keys, size=100)
 select_values = gp_dict[select_keys]
 
 random_keys = np.random.randint(1, 1000, size=500, dtype=key_type)
+random_keys_mask = gp_dict.__contains__(random_keys)
 random_values_with_defaults = gp_dict[random_keys]
 
-for random_key, random_value in zip(random_keys, random_values_with_defaults):
-    if random_key not in gp_dict:
+for random_key_mask, random_value in zip(random_keys_mask, random_values_with_defaults):
+    if not random_key_mask:
         assert random_value == 0
     else:
         assert random_value != 0
+```
+
+### Complex Example With Structured Dtype
+```python
+key_type = np.dtype('u8')
+value_type = gp.types['rparray']
+
+gp_dict = gp.Dict(key_type, value_type)
+
+keys = np.random.randint(1, 1000, size=200, dtype=key_type)
+values = np.packbits([np.array([True, False, True, False, True, False, True, False,
+                                True, True, True, True, True, True, True, True]*25, dtype=np.bool)]*200, axis=1).view(value_type)
+gp_dict[keys] = values
+
+# keys = [key for key in gp_dict]
+# keys_and_values = [(key, value) for key, value in gp_dict.items()]
+
+select_keys = np.random.choice(keys, size=100)
+select_values = gp_dict[select_keys]
+
+random_keys = np.random.randint(1, 1000, size=500, dtype=key_type)
+random_keys_mask = gp_dict.__contains__(random_keys)
+
+mask_keys = random_keys[random_keys_mask]
+mask_values = gp_dict[mask_keys]
 ```
 
 ### Serialization Example
@@ -166,6 +163,10 @@ types = {
     'pair_int64_int64' : np.dtype({'names': ['first', 'second'], 'formats': ['i8', 'i8']}),
     'pair_float32_float32' : np.dtype({'names': ['first', 'second'], 'formats': ['f4', 'f4']}),
     'pair_float64_float64' : np.dtype({'names': ['first', 'second'], 'formats': ['f8', 'f8']}),
+    'rparray' : np.dtype({'names': ['data'], 'formats': ['50u1']}),
+    'rotation_uint16' : np.dtype({'names': ['a', 'b', 'c', 'd'], 'formats': ['u2', 'u2', 'u2', 'u2']}),
+    'translation_uint16' : np.dtype({'names': ['x', 'y', 'z', 's'], 'formats': ['u2', 'u2', 'u2', 'u2']}),
+    'pair_rotation_uint16_translation_uint16' : np.dtype({'names': ['first', 'second'], 'formats': [{'names': ['a', 'b', 'c', 'd'], 'formats': ['u2', 'u2', 'u2', 'u2']}, {'names': ['x', 'y', 'z', 's'], 'formats': ['u2', 'u2', 'u2', 'u2']}]}),
 }
 
 dict_types = {
@@ -202,8 +203,10 @@ dict_types = {
     (types['str4'], types['pair_int64_int64']) : _gp.Dict_str4_pair_int64_int64,
     (types['str4'], types['pair_float32_float32']) : _gp.Dict_str4_pair_float32_float32,
     (types['str4'], types['pair_float64_float64']) : _gp.Dict_str4_pair_float64_float64,
-    (types['str4'], types['rtarray20_uint8']) : _gp.Dict_str4_rtarray20_uint8,
-    (types['str4'], types['rpmatrix400_uint8']) : _gp.Dict_str4_rpmatrix400_uint8,
+    (types['str4'], types['rparray']) : _gp.Dict_str4_rparray,
+    (types['str4'], types['rotation_uint16']) : _gp.Dict_str4_rotation_uint16,
+    (types['str4'], types['translation_uint16']) : _gp.Dict_str4_translation_uint16,
+    (types['str4'], types['pair_rotation_uint16_translation_uint16']) : _gp.Dict_str4_pair_rotation_uint16_translation_uint16,
     (types['str8'], types['str1']) : _gp.Dict_str8_str1,
     (types['str8'], types['str2']) : _gp.Dict_str8_str2,
     (types['str8'], types['str4']) : _gp.Dict_str8_str4,
@@ -237,8 +240,10 @@ dict_types = {
     (types['str8'], types['pair_int64_int64']) : _gp.Dict_str8_pair_int64_int64,
     (types['str8'], types['pair_float32_float32']) : _gp.Dict_str8_pair_float32_float32,
     (types['str8'], types['pair_float64_float64']) : _gp.Dict_str8_pair_float64_float64,
-    (types['str8'], types['rtarray20_uint8']) : _gp.Dict_str8_rtarray20_uint8,
-    (types['str8'], types['rpmatrix400_uint8']) : _gp.Dict_str8_rpmatrix400_uint8,
+    (types['str8'], types['rparray']) : _gp.Dict_str8_rparray,
+    (types['str8'], types['rotation_uint16']) : _gp.Dict_str8_rotation_uint16,
+    (types['str8'], types['translation_uint16']) : _gp.Dict_str8_translation_uint16,
+    (types['str8'], types['pair_rotation_uint16_translation_uint16']) : _gp.Dict_str8_pair_rotation_uint16_translation_uint16,
     (types['uint32'], types['str1']) : _gp.Dict_uint32_str1,
     (types['uint32'], types['str2']) : _gp.Dict_uint32_str2,
     (types['uint32'], types['str4']) : _gp.Dict_uint32_str4,
@@ -272,8 +277,10 @@ dict_types = {
     (types['uint32'], types['pair_int64_int64']) : _gp.Dict_uint32_pair_int64_int64,
     (types['uint32'], types['pair_float32_float32']) : _gp.Dict_uint32_pair_float32_float32,
     (types['uint32'], types['pair_float64_float64']) : _gp.Dict_uint32_pair_float64_float64,
-    (types['uint32'], types['rtarray20_uint8']) : _gp.Dict_uint32_rtarray20_uint8,
-    (types['uint32'], types['rpmatrix400_uint8']) : _gp.Dict_uint32_rpmatrix400_uint8,
+    (types['uint32'], types['rparray']) : _gp.Dict_uint32_rparray,
+    (types['uint32'], types['rotation_uint16']) : _gp.Dict_uint32_rotation_uint16,
+    (types['uint32'], types['translation_uint16']) : _gp.Dict_uint32_translation_uint16,
+    (types['uint32'], types['pair_rotation_uint16_translation_uint16']) : _gp.Dict_uint32_pair_rotation_uint16_translation_uint16,
     (types['uint64'], types['str1']) : _gp.Dict_uint64_str1,
     (types['uint64'], types['str2']) : _gp.Dict_uint64_str2,
     (types['uint64'], types['str4']) : _gp.Dict_uint64_str4,
@@ -307,7 +314,9 @@ dict_types = {
     (types['uint64'], types['pair_int64_int64']) : _gp.Dict_uint64_pair_int64_int64,
     (types['uint64'], types['pair_float32_float32']) : _gp.Dict_uint64_pair_float32_float32,
     (types['uint64'], types['pair_float64_float64']) : _gp.Dict_uint64_pair_float64_float64,
-    (types['uint64'], types['rtarray20_uint8']) : _gp.Dict_uint64_rtarray20_uint8,
-    (types['uint64'], types['rpmatrix400_uint8']) : _gp.Dict_uint64_rpmatrix400_uint8,
+    (types['uint64'], types['rparray']) : _gp.Dict_uint64_rparray,
+    (types['uint64'], types['rotation_uint16']) : _gp.Dict_uint64_rotation_uint16,
+    (types['uint64'], types['translation_uint16']) : _gp.Dict_uint64_translation_uint16,
+    (types['uint64'], types['pair_rotation_uint16_translation_uint16']) : _gp.Dict_uint64_pair_rotation_uint16_translation_uint16,
 }
 ```
