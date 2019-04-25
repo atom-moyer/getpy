@@ -10,89 +10,6 @@ slow = pytest.mark.slow
 
 
 @standard
-def test_getpy_methods():
-    key_type = np.dtype('u8')
-    value_type = np.uint64
-
-    gp_dict = gp.Dict(key_type, value_type)
-
-    gp_dict[42] = 1337
-
-    assert gp_dict[42] == 1337
-    assert 42 in gp_dict
-    assert 41 not in gp_dict
-    assert len(gp_dict) == 1
-
-    del gp_dict[42]
-
-    assert 42 not in gp_dict
-    assert 41 not in gp_dict
-    assert len(gp_dict) == 0
-
-    assert gp_dict.key_type == np.dtype('u8')
-    assert gp_dict.value_type == np.dtype('u8')
-    assert gp_dict.dict_type.__name__ == 'Dict_uint64_uint64'
-    assert gp_dict.default_value == None
-
-
-@standard
-def test_getpy_methods_with_default():
-    key_type = np.dtype('u8')
-    value_type = np.dtype('u8')
-
-    gp_dict = gp.Dict(key_type, value_type, default_value=0)
-
-    gp_dict[42] = 1337
-
-    assert gp_dict[42] == 1337
-    assert gp_dict[41] == 0
-    assert 42 in gp_dict
-    assert 41 not in gp_dict
-    assert len(gp_dict) == 1
-
-    del gp_dict[42]
-
-    assert 42 not in gp_dict
-    assert 41 not in gp_dict
-    assert len(gp_dict) == 0
-
-    assert gp_dict.key_type == np.dtype('u8')
-    assert gp_dict.value_type == np.dtype('u8')
-    assert gp_dict.dict_type.__name__ == 'Dict_uint64_uint64'
-    assert gp_dict.default_value == 0
-
-
-@standard
-def test_getpy_methods_with_array_dtype():
-    key_type = np.dtype('u8')
-    value_type = gp.types['rparray']
-
-    gp_dict = gp.Dict(key_type, value_type)
-
-    value = np.packbits(np.array([True, False, True, False, True, False, True, False,
-                                  True, True, True, True, True, True, True, True]*25, dtype=np.bool)).view(value_type)
-
-
-    gp_dict[42] = value
-
-    assert np.array_equiv(gp_dict[42], value)
-    assert 42 in gp_dict
-    assert 41 not in gp_dict
-    assert len(gp_dict) == 1
-
-    del gp_dict[42]
-
-    assert 42 not in gp_dict
-    assert 41 not in gp_dict
-    assert len(gp_dict) == 0
-
-    assert gp_dict.key_type == np.dtype('u8')
-    assert gp_dict.value_type == gp.types['rparray']
-    assert gp_dict.dict_type.__name__ == 'Dict_uint64_rparray'
-    assert gp_dict.default_value == None
-
-
-@standard
 def test_getpy_vectorized_methods():
     key_type = np.dtype('u8')
     value_type = np.dtype('u8')
@@ -104,13 +21,13 @@ def test_getpy_vectorized_methods():
 
     gp_dict[keys] = values
 
-    keys = [key for key in gp_dict]
-    keys_and_values = [(key, value) for key, value in gp_dict.items()]
+    iterated_keys = [key for key in gp_dict]
+    iterated_keys_and_values = [(key, value) for key, value in gp_dict.items()]
 
-    select_keys = np.random.choice(keys, size=100)
+    select_keys = np.random.choice(keys, size=100).astype(key_type)
     select_values = gp_dict[select_keys]
 
-    random_keys = np.random.randint(1, 1000, size=500, dtype=key_type)
+    random_keys = np.random.randint(1, 1000, size=500).astype(key_type)
     random_keys_mask = gp_dict.__contains__(random_keys)
 
     mask_keys = random_keys[random_keys_mask]
@@ -129,17 +46,18 @@ def test_getpy_vectorized_methods_with_default():
 
     gp_dict[keys] = values
 
-    keys = [key for key in gp_dict]
-    keys_and_values = [(key, value) for key, value in gp_dict.items()]
+    iterated_keys = [key for key in gp_dict]
+    iterated_keys_and_values = [(key, value) for key, value in gp_dict.items()]
 
     select_keys = np.random.choice(keys, size=100)
     select_values = gp_dict[select_keys]
 
     random_keys = np.random.randint(1, 1000, size=500, dtype=key_type)
+    random_keys_mask = gp_dict.__contains__(random_keys)
     random_values_with_defaults = gp_dict[random_keys]
 
-    for random_key, random_value in zip(random_keys, random_values_with_defaults):
-        if random_key not in gp_dict:
+    for random_key_mask, random_value in zip(random_keys_mask, random_values_with_defaults):
+        if not random_key_mask:
             assert random_value == 0
         else:
             assert random_value != 0
@@ -259,7 +177,7 @@ def test_getpy_big_dict_uint64_lookup():
 
 
 @standard
-@pytest.mark.timeout(2)
+@pytest.mark.timeout(5)
 def test_getpy_very_big_dict_uint32_uint32():
     key_type = np.dtype('u4')
     value_type = np.dtype('u4')
@@ -274,7 +192,7 @@ def test_getpy_very_big_dict_uint32_uint32():
 
 
 @standard
-@pytest.mark.timeout(2)
+@pytest.mark.timeout(5)
 def test_getpy_very_big_dict_uint64_uint64():
     key_type = np.dtype('u8')
     value_type = np.dtype('u8')

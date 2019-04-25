@@ -28,31 +28,23 @@ class Dict(MutableMapping):
 
 
     def __getitem__(self, key):
-        if isinstance(key, np.ndarray):
-            return self.__dict.__getitem__(key)
-        else:
-            return self.__dict.__getitem__(np.array([key], dtype=self.key_type))
+        self.type_check_key(key)
+        return self.__dict.__getitem__(key)
 
 
     def __setitem__(self, key, value):
-        if isinstance(key, np.ndarray):
-            self.__dict.__setitem__(key, value)
-        else:
-            self.__dict.__setitem__(np.array([key], dtype=self.key_type), np.array([value], dtype=self.value_type))
+        self.type_check_key(key); self.type_check_value(value)
+        return self.__dict.__setitem__(key, value)
 
 
     def __delitem__(self, key):
-        if isinstance(key, np.ndarray):
-            self.__dict.__delitem__(key)
-        else:
-            self.__dict.__delitem__(np.array([key], dtype=self.key_type))
+        self.type_check_key(key)
+        return self.__dict.__delitem__(key)
 
 
     def __contains__(self, key):
-        if isinstance(key, np.ndarray):
-            return self.__dict.__contains__(key)
-        else:
-            return self.__dict.__contains__(np.array([key], dtype=self.key_type))
+        self.type_check_key(key)
+        return self.__dict.__contains__(key)
 
 
     def __len__(self):
@@ -94,3 +86,21 @@ class Dict(MutableMapping):
     @property
     def default_value(self):
         return self.__default_value
+
+
+    def type_check_key(self, key):
+        if not isinstance(key, np.ndarray):
+            raise TypeError(f'Given key ({key}) is not an np.ndarray.')
+        elif key.dtype != self.__key_type:
+            raise TypeError(f'Given key dtype ({key.dtype}) is not the dict key dtype ({self.__key_type})')
+        else:
+            pass
+
+
+    def type_check_value(self, value):
+        if not isinstance(value, np.ndarray):
+            raise TypeError(f'Given value ({value}) is not an np.ndarray.')
+        elif value.dtype != self.__value_type:
+            raise TypeError(f'Given value dtype ({value.dtype}) is not the dict value dtype ({self.__value_type})')
+        else:
+            pass
