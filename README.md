@@ -1,6 +1,6 @@
 # GetPy - A Simple, Fast, and Small Hash Map for Python
 
-The goal of GetPy (gp) is to fill the need for high performance python dictionary which integrates smoothly into the NumPy ecosystem.
+The goal of GetPy is to fill the need for high performance python dictionary which integrates smoothly into the NumPy ecosystem.
 
 ## Installation
 `pip install git+https://github.com/atom-moyer/getpy.git`
