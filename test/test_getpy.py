@@ -71,8 +71,8 @@ def test_getpy_vectorized_methods_with_array_dtype():
     gp_dict = gp.Dict(key_type, value_type)
 
     keys = np.random.randint(1, 1000, size=200, dtype=key_type)
-    values = np.packbits([np.array([True, False, True, False, True, False, True, False,
-                                    True, True, True, True, True, True, True, True]*25, dtype=np.bool)]*200, axis=1).view(value_type)
+    values = np.packbits([np.array([1, 0, 1, 0, 1, 0, 1, 0,
+                                    1, 1, 1, 1, 1, 1, 1, 1]*25, dtype=np.bool)]*200, axis=1).view(value_type)
     gp_dict[keys] = values
 
     # keys = [key for key in gp_dict]
