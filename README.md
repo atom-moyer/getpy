@@ -79,7 +79,7 @@ for random_key_mask, random_value in zip(random_keys_mask, random_values_with_de
         assert random_value != 0
 ```
 
-### Complex Example With Structured Dtype
+### Complex Example With Structured dtype
 ```python
 key_type = np.dtype('u8')
 value_type = gp.types['rparray']
