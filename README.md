@@ -11,11 +11,11 @@ GetPy is a thin and robust binding to The Parallel Hashmap (https://github.com/g
 ## How To Use
 The `gp.Dict` object is designed to maintain a similar interface to the standard python dictionary. There are some key differences though, which are necessary for performance reasons.
 
-1) `gp.Dict.__init__` has two arguments `key_type` and `value_type`. Those arguments are defined with a preset combinations of `np.dtype`s.  The full list of supported type combinations is found at `gp.dict_types`. Most of the future work on sparsepy will be expanding this list of supported types.
+1) `gp.Dict.__init__` has three arguments `key_type`, `value_type`, and `default_value`. The type arguments are define which compiled data structure will be used under the hood, and the full list of preset combinations of `np.dtype`s is found with `gp.dict_types`. Most of the future work on sparsepy will be expanding this list of supported types. You can also specify a `default_value` at construction which must be castable to the `value_type`. This is the value returned by the dictionary if a key is not found.
 
-2) All of `getpy.Dict` methods support vectorization. Therefore, methods like `gp.Dict.__getitem__`, `gp.Dict.__setitem__`, and `gp.Dict.__contains__` can be performed with `np.ndarray`.  That allows the performance critical for-loop to happen within the compiled c++.
+2) All of `getpy.Dict` methods only supports a vectorized interface. Therefore, methods like `gp.Dict.__getitem__`, `gp.Dict.__setitem__`, and `gp.Dict.__contains__` must be performed with an `np.ndarray`.  That allows the performance critical for-loop to happen within the compiled c++. If you arguments are not `np.ndarray`s or their `dtype` does not match the defined `dtype` of the dict, you will be thrown a type error. GetPy will never implicitly cast any arguments.
 
-3) `gp.Dict.__getitem__` will throw an error if you attempt to retrieve a key that does not exist. Instead, you should first run `gp.__contains__` on your key/array of keys, and then retrieve values corresponding to keys that exist. This is necessary for the vectorization support.
+3) `gp.Dict.__getitem__` will throw an error if you attempt to retrieve a key that does not exist, and you have not specified a default value at construction. Instead, you should first run `gp.__contains__` on your key/array of keys, and then retrieve values corresponding to keys that exist. This is necessary for the vectorization support.
 
 ## Examples
 
