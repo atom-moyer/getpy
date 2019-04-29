@@ -3,18 +3,7 @@ import itertools
 import numpy as np
 
 
-key_types = [
-    'str4',
-    'str8',
-
-    'uint32',
-    'uint64',
-]
-
-
-value_types = [
-    'str1',
-    'str2',
+basic_types = [
     'str4',
     'str8',
     'str16',
@@ -32,44 +21,10 @@ value_types = [
 
     'float32',
     'float64',
-
-    'bool',
-
-    'pair_str1_str1',
-    'pair_str2_str2',
-    'pair_str4_str4',
-    'pair_str8_str8',
-    'pair_str16_str16',
-    'pair_str32_str32',
-
-    'pair_uint8_uint8',
-    'pair_uint16_uint16',
-    'pair_uint32_uint32',
-    'pair_uint64_uint64',
-
-    'pair_int8_int8',
-    'pair_int16_int16',
-    'pair_int32_int32',
-    'pair_int64_int64',
-
-    'pair_float32_float32',
-    'pair_float64_float64',
-
-    'rparray',
-
-    'rotation_uint16',
-    'translation_uint16',
-
-    'pair_rotation_uint16_translation_uint16',
 ]
 
 
-assert all([type_ in value_types for type_ in key_types])
-
-
-cpp_types = {
-    'str1' : 'std::array<char, 1>',
-    'str2' : 'std::array<char, 2>',
+basic_cpp_types = {
     'str4' : 'std::array<char, 4>',
     'str8' : 'std::array<char, 8>',
     'str16' : 'std::array<char, 16>',
@@ -87,123 +42,76 @@ cpp_types = {
 
     'float32' : 'float',
     'float64' : 'double',
+}
 
-    'bool' : 'bool',
 
-    'pair_str1_str1' : 'pair_str1_str1',
-    'pair_str2_str2' : 'pair_str2_str2',
-    'pair_str4_str4' : 'pair_str4_str4',
-    'pair_str8_str8' : 'pair_str8_str8',
-    'pair_str16_str16' : 'pair_str16_str16',
-    'pair_str32_str32' : 'pair_str32_str32',
+basic_np_types = {
+    'str4' : 'U4',
+    'str8' : 'U8',
+    'str16' : 'U16',
+    'str32' : 'U32',
 
-    'pair_int8_int8' : 'pair_int8_int8',
-    'pair_int16_int16' : 'pair_int16_int16',
-    'pair_int32_int32' : 'pair_int32_int32',
-    'pair_int64_int64' : 'pair_int64_int64',
+    'int8' : 'i1',
+    'int16' : 'i2',
+    'int32' : 'i4',
+    'int64' : 'i8',
 
-    'pair_uint8_uint8' : 'pair_uint8_uint8',
-    'pair_uint16_uint16' : 'pair_uint16_uint16',
-    'pair_uint32_uint32' : 'pair_uint32_uint32',
-    'pair_uint64_uint64' : 'pair_uint64_uint64',
+    'uint8' : 'u1',
+    'uint16' : 'u2',
+    'uint32' : 'u4',
+    'uint64' : 'u8',
 
-    'pair_float32_float32' : 'pair_float32_float32',
-    'pair_float64_float64' : 'pair_float64_float64',
+    'float32' : 'f4',
+    'float64' : 'f8',
+}
 
-    'rparray' : 'rparray', # 'std::array<uint8_t, 50>',
 
-    'rotation_uint16' : 'rotation_uint16',
-    'translation_uint16' : 'translation_uint16',
+key_types = [
+    'str4',
+    'str8',
 
-    'pair_rotation_uint16_translation_uint16' : 'pair_rotation_uint16_translation_uint16',
+    'uint32',
+    'uint64',
+
+    'int32',
+    'int64',
+]
+
+
+value_types = [
+    *[basic_type for basic_type in basic_types],
+
+    *[f'pair_{bt}_{bt}' for bt in basic_types],
+
+    *[f'bytearray{i}' for i in [2,4,8,10,16,20,30,32,40,50]],
+]
+
+
+assert all([type_ in value_types for type_ in key_types])
+
+
+cpp_types = {
+    **{basic_type : basic_cpp_types[basic_type] for basic_type in basic_types},
+
+    **{f'pair_{bt}_{bt}' : f'pair_{bt}_{bt}' for bt in basic_types},
+
+    **{f'bytearray{i}' : f'bytearray{i}' for i in [2,4,8,10,16,20,30,32,40,50]},
 }
 
 
 np_types = {
-    'str1' : ['U1'],
-    'str2' : ['U2'],
-    'str4' : ['U4'],
-    'str8' : ['U8'],
-    'str16' : ['U16'],
-    'str32' : ['U32'],
+    **{basic_type : basic_np_types[basic_type] for basic_type in basic_types},
 
-    'int8' : ['i1'],
-    'int16' : ['i2'],
-    'int32' : ['i4'],
-    'int64' : ['i8'],
+    **{f'pair_{bt}_{bt}' : {'names' : ['first', 'second'], 'formats' : [basic_np_types[bt], basic_np_types[bt]]} for bt in basic_types},
 
-    'uint8' : ['u1'],
-    'uint16' : ['u2'],
-    'uint32' : ['u4'],
-    'uint64' : ['u8'],
-
-    'float32' : ['f4'],
-    'float64' : ['f8'],
-
-    'bool' : ['?'],
-
-    'pair_str1_str1' : [{'names' : ['first', 'second'], 'formats' : ['U1', 'U1']}],
-    'pair_str2_str2' : [{'names' : ['first', 'second'], 'formats' : ['U2', 'U2']}],
-    'pair_str4_str4' : [{'names' : ['first', 'second'], 'formats' : ['U4', 'U4']}],
-    'pair_str8_str8' : [{'names' : ['first', 'second'], 'formats' : ['U8', 'U8']}],
-    'pair_str16_str16' : [{'names' : ['first', 'second'], 'formats' : ['U16', 'U16']}],
-    'pair_str32_str32' : [{'names' : ['first', 'second'], 'formats' : ['U32', 'U32']}],
-
-    'pair_int8_int8' : [{'names' : ['first', 'second'], 'formats' : ['i1', 'i1']}],
-    'pair_int16_int16' : [{'names' : ['first', 'second'], 'formats' : ['i2', 'i2']}],
-    'pair_int32_int32' : [{'names' : ['first', 'second'], 'formats' : ['i4', 'i4']}],
-    'pair_int64_int64' : [{'names' : ['first', 'second'], 'formats' : ['i8', 'i8']}],
-
-    'pair_uint8_uint8' : [{'names' : ['first', 'second'], 'formats' : ['u1', 'u1']}],
-    'pair_uint16_uint16' : [{'names' : ['first', 'second'], 'formats' : ['u2', 'u2']}],
-    'pair_uint32_uint32' : [{'names' : ['first', 'second'], 'formats' : ['u4', 'u4']}],
-    'pair_uint64_uint64' : [{'names' : ['first', 'second'], 'formats' : ['u8', 'u8']}],
-
-    'pair_float32_float32' : [{'names' : ['first', 'second'], 'formats' : ['f4', 'f4']}],
-    'pair_float64_float64' : [{'names' : ['first', 'second'], 'formats' : ['f8', 'f8']}],
-
-    'rparray' : [{'names' : ['data'], 'formats' : ['50u1']}], # ['50u1'],
-
-    'rotation_uint16' : [{'names' : ['a', 'b', 'c', 'd'], 'formats' : ['u2', 'u2', 'u2', 'u2']}],
-    'translation_uint16' : [{'names' : ['x', 'y', 'z', 's'], 'formats' : ['u2', 'u2', 'u2', 'u2']}],
-
-    'pair_rotation_uint16_translation_uint16' : [{'names' : ['first', 'second'],
-                                                  'formats' : [{'names' : ['a', 'b', 'c', 'd'], 'formats' : ['u2', 'u2', 'u2', 'u2']},
-                                                               {'names' : ['x', 'y', 'z', 's'], 'formats' : ['u2', 'u2', 'u2', 'u2']}]}]
+    **{f'bytearray{i}' : {'names' : ['bytearray'], 'formats' : [f'{i}u1']} for i in [2,4,8,10,16,20,30,32,40,50]},
 }
 
 
-rparray_struct_def = 'std::array<uint8_t, 50> data;'
-rotation_uint16_struct_def = 'uint16_t a; uint16_t b; uint16_t c; uint16_t d;'
-translation_uint16_struct_def = 'uint16_t x; uint16_t y; uint16_t z; uint16_t s;'
-
 struct_types = {
-    'pair_str1_str1' : 'struct pair_str1_str1 { std::array<char, 1> first; std::array<char, 1> second; };',
-    'pair_str2_str2' : 'struct pair_str2_str2 { std::array<char, 2> first; std::array<char, 2> second; };',
-    'pair_str4_str4' : 'struct pair_str4_str4 { std::array<char, 4> first; std::array<char, 4> second; };',
-    'pair_str8_str8' : 'struct pair_str8_str8 { std::array<char, 8> first; std::array<char, 8> second; };',
-    'pair_str16_str16' : 'struct pair_str16_str16 { std::array<char, 16> first; std::array<char, 16> second; };',
-    'pair_str32_str32' : 'struct pair_str32_str32 { std::array<char, 32> first; std::array<char, 32> second; };',
+    **{f'pair_{bt}_{bt}' : f'struct pair_{bt}_{bt} {{ {basic_cpp_types[bt]} first; {basic_cpp_types[bt]} second; }};' for bt in basic_types},
 
-    'pair_int8_int8' : 'struct pair_int8_int8 { int8_t first; int8_t second; };',
-    'pair_int16_int16' : 'struct pair_int16_int16 { int16_t first; int16_t second; };',
-    'pair_int32_int32' : 'struct pair_int32_int32 { int32_t first; int32_t second; };',
-    'pair_int64_int64' : 'struct pair_int64_int64 { int64_t first; int64_t second; };',
-
-    'pair_uint8_uint8' : 'struct pair_uint8_uint8 { uint8_t first; uint8_t second; };',
-    'pair_uint16_uint16' : 'struct pair_uint16_uint16 { uint16_t first; uint16_t second; };',
-    'pair_uint32_uint32' : 'struct pair_uint32_uint32 { uint32_t first; uint32_t second; };',
-    'pair_uint64_uint64' : 'struct pair_uint64_uint64 { uint64_t first; uint64_t second; };',
-
-    'pair_float32_float32' : 'struct pair_float32_float32 { float first; float second; };',
-    'pair_float64_float64' : 'struct pair_float64_float64 { double first; double second; };',
-
-    'rparray' : f'struct rparray {{ {rparray_struct_def} }};',
-
-    'rotation_uint16' : f'struct rotation_uint16 {{ {rotation_uint16_struct_def} }};',
-    'translation_uint16' : f'struct translation_uint16 {{ {translation_uint16_struct_def} }};',
-
-    'pair_rotation_uint16_translation_uint16' : 'struct pair_rotation_uint16_translation_uint16 { rotation_uint16 first; translation_uint16 second; };',
+    **{f'bytearray{i}' : f'struct bytearray{i} {{ std::array<uint8_t, {i}> bytearray; }};' for i in [2,4,8,10,16,20,30,32,40,50]},
 }
 
 
@@ -220,37 +128,20 @@ def write_struct_types(getpy_file, type_):
     getpy_file.write(f'{struct_types[type_]}\n')
 
 
-rparray_serialization_def = 'rparray.data'
-rotation_serialization_def = 'rotation.a, rotation.b, rotation.c, rotation.d'
-translation_serialization_def = 'translation.x, translation.y, translation.z, translation.s'
-
-
 def write_struct_serialization(getpy_file, type_):
     if type_.startswith('pair'):
         getpy_file.write(f'template<class Archive> void serialize(Archive & archive, {type_} & pair) {{ archive( pair.first, pair.second ); }}\n')
-    elif type_.startswith('rparray'):
-        getpy_file.write(f'template<class Archive> void serialize(Archive & archive, {type_} & rparray) {{ archive( {rparray_serialization_def} ); }}\n')
-    elif type_.startswith('rotation'):
-        getpy_file.write(f'template<class Archive> void serialize(Archive & archive, {type_} & rotation) {{ archive( {rotation_serialization_def} ); }}\n')
-    elif type_.startswith('translation'):
-        getpy_file.write(f'template<class Archive> void serialize(Archive & archive, {type_} & translation) {{ archive( {translation_serialization_def} ); }}\n')
+    elif type_.startswith('bytearray'):
+        getpy_file.write(f'template<class Archive> void serialize(Archive & archive, {type_} & bytearray) {{ archive( bytearray.bytearray ); }}\n')
     else:
         pass
 
 
-rparray_pybind11_def = 'data'
-rotation_pybind11_def = ('a, b, c, d')
-translation_pybind11_def = ('x, y, z, s')
-
 def write_numpy_dtype(getpy_file, type_):
     if type_.startswith('pair'):
         getpy_file.write(f'    PYBIND11_NUMPY_DTYPE({cpp_types[type_]}, first, second );\n')
-    elif type_.startswith('rparray'):
-        getpy_file.write(f'    PYBIND11_NUMPY_DTYPE({cpp_types[type_]}, {rparray_pybind11_def} );\n')
-    elif type_.startswith('rotation'):
-        getpy_file.write(f'    PYBIND11_NUMPY_DTYPE({cpp_types[type_]}, {rotation_pybind11_def} );\n')
-    elif type_.startswith('translation'):
-        getpy_file.write(f'    PYBIND11_NUMPY_DTYPE({cpp_types[type_]}, {translation_pybind11_def} );\n')
+    elif type_.startswith('bytearray'):
+        getpy_file.write(f'    PYBIND11_NUMPY_DTYPE({cpp_types[type_]}, bytearray );\n')
     else:
         pass
 
@@ -261,11 +152,10 @@ def write_declare_dict(getpy_file, key_type, value_type):
 
 
 def write_types_dict(getpy_file, type_):
-    for vt in np_types[type_]:
-        if isinstance(vt, dict):
-            getpy_file.write(f"    '{type_}' : np.dtype({vt}),\n")
-        else:
-            getpy_file.write(f"    '{type_}' : np.dtype('{vt}'),\n")
+    if isinstance(np_types[type_], dict):
+        getpy_file.write(f"    '{type_}' : np.dtype({np_types[type_]}),\n")
+    else:
+        getpy_file.write(f"    '{type_}' : np.dtype('{np_types[type_]}'),\n")
 
 
 def write_getpy_cpp(key_types, value_types):

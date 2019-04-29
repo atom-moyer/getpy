@@ -2,12 +2,6 @@
 
 #include <pybind11/pybind11.h>
 
-struct pair_str1_str1 { std::array<char, 1> first; std::array<char, 1> second; };
-template<class Archive> void serialize(Archive & archive, pair_str1_str1 & pair) { archive( pair.first, pair.second ); }
-
-struct pair_str2_str2 { std::array<char, 2> first; std::array<char, 2> second; };
-template<class Archive> void serialize(Archive & archive, pair_str2_str2 & pair) { archive( pair.first, pair.second ); }
-
 struct pair_str4_str4 { std::array<char, 4> first; std::array<char, 4> second; };
 template<class Archive> void serialize(Archive & archive, pair_str4_str4 & pair) { archive( pair.first, pair.second ); }
 
@@ -50,24 +44,40 @@ template<class Archive> void serialize(Archive & archive, pair_float32_float32 &
 struct pair_float64_float64 { double first; double second; };
 template<class Archive> void serialize(Archive & archive, pair_float64_float64 & pair) { archive( pair.first, pair.second ); }
 
-struct rparray { std::array<uint8_t, 50> data; };
-template<class Archive> void serialize(Archive & archive, rparray & rparray) { archive( rparray.data ); }
+struct bytearray2 { std::array<uint8_t, 2> bytearray; };
+template<class Archive> void serialize(Archive & archive, bytearray2 & bytearray) { archive( bytearray.bytearray ); }
 
-struct rotation_uint16 { uint16_t a; uint16_t b; uint16_t c; uint16_t d; };
-template<class Archive> void serialize(Archive & archive, rotation_uint16 & rotation) { archive( rotation.a, rotation.b, rotation.c, rotation.d ); }
+struct bytearray4 { std::array<uint8_t, 4> bytearray; };
+template<class Archive> void serialize(Archive & archive, bytearray4 & bytearray) { archive( bytearray.bytearray ); }
 
-struct translation_uint16 { uint16_t x; uint16_t y; uint16_t z; uint16_t s; };
-template<class Archive> void serialize(Archive & archive, translation_uint16 & translation) { archive( translation.x, translation.y, translation.z, translation.s ); }
+struct bytearray8 { std::array<uint8_t, 8> bytearray; };
+template<class Archive> void serialize(Archive & archive, bytearray8 & bytearray) { archive( bytearray.bytearray ); }
 
-struct pair_rotation_uint16_translation_uint16 { rotation_uint16 first; translation_uint16 second; };
-template<class Archive> void serialize(Archive & archive, pair_rotation_uint16_translation_uint16 & pair) { archive( pair.first, pair.second ); }
+struct bytearray10 { std::array<uint8_t, 10> bytearray; };
+template<class Archive> void serialize(Archive & archive, bytearray10 & bytearray) { archive( bytearray.bytearray ); }
+
+struct bytearray16 { std::array<uint8_t, 16> bytearray; };
+template<class Archive> void serialize(Archive & archive, bytearray16 & bytearray) { archive( bytearray.bytearray ); }
+
+struct bytearray20 { std::array<uint8_t, 20> bytearray; };
+template<class Archive> void serialize(Archive & archive, bytearray20 & bytearray) { archive( bytearray.bytearray ); }
+
+struct bytearray30 { std::array<uint8_t, 30> bytearray; };
+template<class Archive> void serialize(Archive & archive, bytearray30 & bytearray) { archive( bytearray.bytearray ); }
+
+struct bytearray32 { std::array<uint8_t, 32> bytearray; };
+template<class Archive> void serialize(Archive & archive, bytearray32 & bytearray) { archive( bytearray.bytearray ); }
+
+struct bytearray40 { std::array<uint8_t, 40> bytearray; };
+template<class Archive> void serialize(Archive & archive, bytearray40 & bytearray) { archive( bytearray.bytearray ); }
+
+struct bytearray50 { std::array<uint8_t, 50> bytearray; };
+template<class Archive> void serialize(Archive & archive, bytearray50 & bytearray) { archive( bytearray.bytearray ); }
 
 
 PYBIND11_MODULE(_getpy, m) {
     m.doc() = "A Fast and Memory Efficient Hash Map for Python";
 
-    PYBIND11_NUMPY_DTYPE(pair_str1_str1, first, second );
-    PYBIND11_NUMPY_DTYPE(pair_str2_str2, first, second );
     PYBIND11_NUMPY_DTYPE(pair_str4_str4, first, second );
     PYBIND11_NUMPY_DTYPE(pair_str8_str8, first, second );
     PYBIND11_NUMPY_DTYPE(pair_str16_str16, first, second );
@@ -82,13 +92,17 @@ PYBIND11_MODULE(_getpy, m) {
     PYBIND11_NUMPY_DTYPE(pair_int64_int64, first, second );
     PYBIND11_NUMPY_DTYPE(pair_float32_float32, first, second );
     PYBIND11_NUMPY_DTYPE(pair_float64_float64, first, second );
-    PYBIND11_NUMPY_DTYPE(rparray, data );
-    PYBIND11_NUMPY_DTYPE(rotation_uint16, a, b, c, d );
-    PYBIND11_NUMPY_DTYPE(translation_uint16, x, y, z, s );
-    PYBIND11_NUMPY_DTYPE(pair_rotation_uint16_translation_uint16, first, second );
+    PYBIND11_NUMPY_DTYPE(bytearray2, bytearray );
+    PYBIND11_NUMPY_DTYPE(bytearray4, bytearray );
+    PYBIND11_NUMPY_DTYPE(bytearray8, bytearray );
+    PYBIND11_NUMPY_DTYPE(bytearray10, bytearray );
+    PYBIND11_NUMPY_DTYPE(bytearray16, bytearray );
+    PYBIND11_NUMPY_DTYPE(bytearray20, bytearray );
+    PYBIND11_NUMPY_DTYPE(bytearray30, bytearray );
+    PYBIND11_NUMPY_DTYPE(bytearray32, bytearray );
+    PYBIND11_NUMPY_DTYPE(bytearray40, bytearray );
+    PYBIND11_NUMPY_DTYPE(bytearray50, bytearray );
 
-    declare_dict<std::array<char, 4>, std::array<char, 1>>(m, "Dict_str4_str1");
-    declare_dict<std::array<char, 4>, std::array<char, 2>>(m, "Dict_str4_str2");
     declare_dict<std::array<char, 4>, std::array<char, 4>>(m, "Dict_str4_str4");
     declare_dict<std::array<char, 4>, std::array<char, 8>>(m, "Dict_str4_str8");
     declare_dict<std::array<char, 4>, std::array<char, 16>>(m, "Dict_str4_str16");
@@ -103,9 +117,6 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<std::array<char, 4>, int64_t>(m, "Dict_str4_int64");
     declare_dict<std::array<char, 4>, float>(m, "Dict_str4_float32");
     declare_dict<std::array<char, 4>, double>(m, "Dict_str4_float64");
-    declare_dict<std::array<char, 4>, bool>(m, "Dict_str4_bool");
-    declare_dict<std::array<char, 4>, pair_str1_str1>(m, "Dict_str4_pair_str1_str1");
-    declare_dict<std::array<char, 4>, pair_str2_str2>(m, "Dict_str4_pair_str2_str2");
     declare_dict<std::array<char, 4>, pair_str4_str4>(m, "Dict_str4_pair_str4_str4");
     declare_dict<std::array<char, 4>, pair_str8_str8>(m, "Dict_str4_pair_str8_str8");
     declare_dict<std::array<char, 4>, pair_str16_str16>(m, "Dict_str4_pair_str16_str16");
@@ -120,12 +131,16 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<std::array<char, 4>, pair_int64_int64>(m, "Dict_str4_pair_int64_int64");
     declare_dict<std::array<char, 4>, pair_float32_float32>(m, "Dict_str4_pair_float32_float32");
     declare_dict<std::array<char, 4>, pair_float64_float64>(m, "Dict_str4_pair_float64_float64");
-    declare_dict<std::array<char, 4>, rparray>(m, "Dict_str4_rparray");
-    declare_dict<std::array<char, 4>, rotation_uint16>(m, "Dict_str4_rotation_uint16");
-    declare_dict<std::array<char, 4>, translation_uint16>(m, "Dict_str4_translation_uint16");
-    declare_dict<std::array<char, 4>, pair_rotation_uint16_translation_uint16>(m, "Dict_str4_pair_rotation_uint16_translation_uint16");
-    declare_dict<std::array<char, 8>, std::array<char, 1>>(m, "Dict_str8_str1");
-    declare_dict<std::array<char, 8>, std::array<char, 2>>(m, "Dict_str8_str2");
+    declare_dict<std::array<char, 4>, bytearray2>(m, "Dict_str4_bytearray2");
+    declare_dict<std::array<char, 4>, bytearray4>(m, "Dict_str4_bytearray4");
+    declare_dict<std::array<char, 4>, bytearray8>(m, "Dict_str4_bytearray8");
+    declare_dict<std::array<char, 4>, bytearray10>(m, "Dict_str4_bytearray10");
+    declare_dict<std::array<char, 4>, bytearray16>(m, "Dict_str4_bytearray16");
+    declare_dict<std::array<char, 4>, bytearray20>(m, "Dict_str4_bytearray20");
+    declare_dict<std::array<char, 4>, bytearray30>(m, "Dict_str4_bytearray30");
+    declare_dict<std::array<char, 4>, bytearray32>(m, "Dict_str4_bytearray32");
+    declare_dict<std::array<char, 4>, bytearray40>(m, "Dict_str4_bytearray40");
+    declare_dict<std::array<char, 4>, bytearray50>(m, "Dict_str4_bytearray50");
     declare_dict<std::array<char, 8>, std::array<char, 4>>(m, "Dict_str8_str4");
     declare_dict<std::array<char, 8>, std::array<char, 8>>(m, "Dict_str8_str8");
     declare_dict<std::array<char, 8>, std::array<char, 16>>(m, "Dict_str8_str16");
@@ -140,9 +155,6 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<std::array<char, 8>, int64_t>(m, "Dict_str8_int64");
     declare_dict<std::array<char, 8>, float>(m, "Dict_str8_float32");
     declare_dict<std::array<char, 8>, double>(m, "Dict_str8_float64");
-    declare_dict<std::array<char, 8>, bool>(m, "Dict_str8_bool");
-    declare_dict<std::array<char, 8>, pair_str1_str1>(m, "Dict_str8_pair_str1_str1");
-    declare_dict<std::array<char, 8>, pair_str2_str2>(m, "Dict_str8_pair_str2_str2");
     declare_dict<std::array<char, 8>, pair_str4_str4>(m, "Dict_str8_pair_str4_str4");
     declare_dict<std::array<char, 8>, pair_str8_str8>(m, "Dict_str8_pair_str8_str8");
     declare_dict<std::array<char, 8>, pair_str16_str16>(m, "Dict_str8_pair_str16_str16");
@@ -157,12 +169,16 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<std::array<char, 8>, pair_int64_int64>(m, "Dict_str8_pair_int64_int64");
     declare_dict<std::array<char, 8>, pair_float32_float32>(m, "Dict_str8_pair_float32_float32");
     declare_dict<std::array<char, 8>, pair_float64_float64>(m, "Dict_str8_pair_float64_float64");
-    declare_dict<std::array<char, 8>, rparray>(m, "Dict_str8_rparray");
-    declare_dict<std::array<char, 8>, rotation_uint16>(m, "Dict_str8_rotation_uint16");
-    declare_dict<std::array<char, 8>, translation_uint16>(m, "Dict_str8_translation_uint16");
-    declare_dict<std::array<char, 8>, pair_rotation_uint16_translation_uint16>(m, "Dict_str8_pair_rotation_uint16_translation_uint16");
-    declare_dict<uint32_t, std::array<char, 1>>(m, "Dict_uint32_str1");
-    declare_dict<uint32_t, std::array<char, 2>>(m, "Dict_uint32_str2");
+    declare_dict<std::array<char, 8>, bytearray2>(m, "Dict_str8_bytearray2");
+    declare_dict<std::array<char, 8>, bytearray4>(m, "Dict_str8_bytearray4");
+    declare_dict<std::array<char, 8>, bytearray8>(m, "Dict_str8_bytearray8");
+    declare_dict<std::array<char, 8>, bytearray10>(m, "Dict_str8_bytearray10");
+    declare_dict<std::array<char, 8>, bytearray16>(m, "Dict_str8_bytearray16");
+    declare_dict<std::array<char, 8>, bytearray20>(m, "Dict_str8_bytearray20");
+    declare_dict<std::array<char, 8>, bytearray30>(m, "Dict_str8_bytearray30");
+    declare_dict<std::array<char, 8>, bytearray32>(m, "Dict_str8_bytearray32");
+    declare_dict<std::array<char, 8>, bytearray40>(m, "Dict_str8_bytearray40");
+    declare_dict<std::array<char, 8>, bytearray50>(m, "Dict_str8_bytearray50");
     declare_dict<uint32_t, std::array<char, 4>>(m, "Dict_uint32_str4");
     declare_dict<uint32_t, std::array<char, 8>>(m, "Dict_uint32_str8");
     declare_dict<uint32_t, std::array<char, 16>>(m, "Dict_uint32_str16");
@@ -177,9 +193,6 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<uint32_t, int64_t>(m, "Dict_uint32_int64");
     declare_dict<uint32_t, float>(m, "Dict_uint32_float32");
     declare_dict<uint32_t, double>(m, "Dict_uint32_float64");
-    declare_dict<uint32_t, bool>(m, "Dict_uint32_bool");
-    declare_dict<uint32_t, pair_str1_str1>(m, "Dict_uint32_pair_str1_str1");
-    declare_dict<uint32_t, pair_str2_str2>(m, "Dict_uint32_pair_str2_str2");
     declare_dict<uint32_t, pair_str4_str4>(m, "Dict_uint32_pair_str4_str4");
     declare_dict<uint32_t, pair_str8_str8>(m, "Dict_uint32_pair_str8_str8");
     declare_dict<uint32_t, pair_str16_str16>(m, "Dict_uint32_pair_str16_str16");
@@ -194,12 +207,16 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<uint32_t, pair_int64_int64>(m, "Dict_uint32_pair_int64_int64");
     declare_dict<uint32_t, pair_float32_float32>(m, "Dict_uint32_pair_float32_float32");
     declare_dict<uint32_t, pair_float64_float64>(m, "Dict_uint32_pair_float64_float64");
-    declare_dict<uint32_t, rparray>(m, "Dict_uint32_rparray");
-    declare_dict<uint32_t, rotation_uint16>(m, "Dict_uint32_rotation_uint16");
-    declare_dict<uint32_t, translation_uint16>(m, "Dict_uint32_translation_uint16");
-    declare_dict<uint32_t, pair_rotation_uint16_translation_uint16>(m, "Dict_uint32_pair_rotation_uint16_translation_uint16");
-    declare_dict<uint64_t, std::array<char, 1>>(m, "Dict_uint64_str1");
-    declare_dict<uint64_t, std::array<char, 2>>(m, "Dict_uint64_str2");
+    declare_dict<uint32_t, bytearray2>(m, "Dict_uint32_bytearray2");
+    declare_dict<uint32_t, bytearray4>(m, "Dict_uint32_bytearray4");
+    declare_dict<uint32_t, bytearray8>(m, "Dict_uint32_bytearray8");
+    declare_dict<uint32_t, bytearray10>(m, "Dict_uint32_bytearray10");
+    declare_dict<uint32_t, bytearray16>(m, "Dict_uint32_bytearray16");
+    declare_dict<uint32_t, bytearray20>(m, "Dict_uint32_bytearray20");
+    declare_dict<uint32_t, bytearray30>(m, "Dict_uint32_bytearray30");
+    declare_dict<uint32_t, bytearray32>(m, "Dict_uint32_bytearray32");
+    declare_dict<uint32_t, bytearray40>(m, "Dict_uint32_bytearray40");
+    declare_dict<uint32_t, bytearray50>(m, "Dict_uint32_bytearray50");
     declare_dict<uint64_t, std::array<char, 4>>(m, "Dict_uint64_str4");
     declare_dict<uint64_t, std::array<char, 8>>(m, "Dict_uint64_str8");
     declare_dict<uint64_t, std::array<char, 16>>(m, "Dict_uint64_str16");
@@ -214,9 +231,6 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<uint64_t, int64_t>(m, "Dict_uint64_int64");
     declare_dict<uint64_t, float>(m, "Dict_uint64_float32");
     declare_dict<uint64_t, double>(m, "Dict_uint64_float64");
-    declare_dict<uint64_t, bool>(m, "Dict_uint64_bool");
-    declare_dict<uint64_t, pair_str1_str1>(m, "Dict_uint64_pair_str1_str1");
-    declare_dict<uint64_t, pair_str2_str2>(m, "Dict_uint64_pair_str2_str2");
     declare_dict<uint64_t, pair_str4_str4>(m, "Dict_uint64_pair_str4_str4");
     declare_dict<uint64_t, pair_str8_str8>(m, "Dict_uint64_pair_str8_str8");
     declare_dict<uint64_t, pair_str16_str16>(m, "Dict_uint64_pair_str16_str16");
@@ -231,8 +245,90 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<uint64_t, pair_int64_int64>(m, "Dict_uint64_pair_int64_int64");
     declare_dict<uint64_t, pair_float32_float32>(m, "Dict_uint64_pair_float32_float32");
     declare_dict<uint64_t, pair_float64_float64>(m, "Dict_uint64_pair_float64_float64");
-    declare_dict<uint64_t, rparray>(m, "Dict_uint64_rparray");
-    declare_dict<uint64_t, rotation_uint16>(m, "Dict_uint64_rotation_uint16");
-    declare_dict<uint64_t, translation_uint16>(m, "Dict_uint64_translation_uint16");
-    declare_dict<uint64_t, pair_rotation_uint16_translation_uint16>(m, "Dict_uint64_pair_rotation_uint16_translation_uint16");
+    declare_dict<uint64_t, bytearray2>(m, "Dict_uint64_bytearray2");
+    declare_dict<uint64_t, bytearray4>(m, "Dict_uint64_bytearray4");
+    declare_dict<uint64_t, bytearray8>(m, "Dict_uint64_bytearray8");
+    declare_dict<uint64_t, bytearray10>(m, "Dict_uint64_bytearray10");
+    declare_dict<uint64_t, bytearray16>(m, "Dict_uint64_bytearray16");
+    declare_dict<uint64_t, bytearray20>(m, "Dict_uint64_bytearray20");
+    declare_dict<uint64_t, bytearray30>(m, "Dict_uint64_bytearray30");
+    declare_dict<uint64_t, bytearray32>(m, "Dict_uint64_bytearray32");
+    declare_dict<uint64_t, bytearray40>(m, "Dict_uint64_bytearray40");
+    declare_dict<uint64_t, bytearray50>(m, "Dict_uint64_bytearray50");
+    declare_dict<int32_t, std::array<char, 4>>(m, "Dict_int32_str4");
+    declare_dict<int32_t, std::array<char, 8>>(m, "Dict_int32_str8");
+    declare_dict<int32_t, std::array<char, 16>>(m, "Dict_int32_str16");
+    declare_dict<int32_t, std::array<char, 32>>(m, "Dict_int32_str32");
+    declare_dict<int32_t, uint8_t>(m, "Dict_int32_uint8");
+    declare_dict<int32_t, uint16_t>(m, "Dict_int32_uint16");
+    declare_dict<int32_t, uint32_t>(m, "Dict_int32_uint32");
+    declare_dict<int32_t, uint64_t>(m, "Dict_int32_uint64");
+    declare_dict<int32_t, int8_t>(m, "Dict_int32_int8");
+    declare_dict<int32_t, int16_t>(m, "Dict_int32_int16");
+    declare_dict<int32_t, int32_t>(m, "Dict_int32_int32");
+    declare_dict<int32_t, int64_t>(m, "Dict_int32_int64");
+    declare_dict<int32_t, float>(m, "Dict_int32_float32");
+    declare_dict<int32_t, double>(m, "Dict_int32_float64");
+    declare_dict<int32_t, pair_str4_str4>(m, "Dict_int32_pair_str4_str4");
+    declare_dict<int32_t, pair_str8_str8>(m, "Dict_int32_pair_str8_str8");
+    declare_dict<int32_t, pair_str16_str16>(m, "Dict_int32_pair_str16_str16");
+    declare_dict<int32_t, pair_str32_str32>(m, "Dict_int32_pair_str32_str32");
+    declare_dict<int32_t, pair_uint8_uint8>(m, "Dict_int32_pair_uint8_uint8");
+    declare_dict<int32_t, pair_uint16_uint16>(m, "Dict_int32_pair_uint16_uint16");
+    declare_dict<int32_t, pair_uint32_uint32>(m, "Dict_int32_pair_uint32_uint32");
+    declare_dict<int32_t, pair_uint64_uint64>(m, "Dict_int32_pair_uint64_uint64");
+    declare_dict<int32_t, pair_int8_int8>(m, "Dict_int32_pair_int8_int8");
+    declare_dict<int32_t, pair_int16_int16>(m, "Dict_int32_pair_int16_int16");
+    declare_dict<int32_t, pair_int32_int32>(m, "Dict_int32_pair_int32_int32");
+    declare_dict<int32_t, pair_int64_int64>(m, "Dict_int32_pair_int64_int64");
+    declare_dict<int32_t, pair_float32_float32>(m, "Dict_int32_pair_float32_float32");
+    declare_dict<int32_t, pair_float64_float64>(m, "Dict_int32_pair_float64_float64");
+    declare_dict<int32_t, bytearray2>(m, "Dict_int32_bytearray2");
+    declare_dict<int32_t, bytearray4>(m, "Dict_int32_bytearray4");
+    declare_dict<int32_t, bytearray8>(m, "Dict_int32_bytearray8");
+    declare_dict<int32_t, bytearray10>(m, "Dict_int32_bytearray10");
+    declare_dict<int32_t, bytearray16>(m, "Dict_int32_bytearray16");
+    declare_dict<int32_t, bytearray20>(m, "Dict_int32_bytearray20");
+    declare_dict<int32_t, bytearray30>(m, "Dict_int32_bytearray30");
+    declare_dict<int32_t, bytearray32>(m, "Dict_int32_bytearray32");
+    declare_dict<int32_t, bytearray40>(m, "Dict_int32_bytearray40");
+    declare_dict<int32_t, bytearray50>(m, "Dict_int32_bytearray50");
+    declare_dict<int64_t, std::array<char, 4>>(m, "Dict_int64_str4");
+    declare_dict<int64_t, std::array<char, 8>>(m, "Dict_int64_str8");
+    declare_dict<int64_t, std::array<char, 16>>(m, "Dict_int64_str16");
+    declare_dict<int64_t, std::array<char, 32>>(m, "Dict_int64_str32");
+    declare_dict<int64_t, uint8_t>(m, "Dict_int64_uint8");
+    declare_dict<int64_t, uint16_t>(m, "Dict_int64_uint16");
+    declare_dict<int64_t, uint32_t>(m, "Dict_int64_uint32");
+    declare_dict<int64_t, uint64_t>(m, "Dict_int64_uint64");
+    declare_dict<int64_t, int8_t>(m, "Dict_int64_int8");
+    declare_dict<int64_t, int16_t>(m, "Dict_int64_int16");
+    declare_dict<int64_t, int32_t>(m, "Dict_int64_int32");
+    declare_dict<int64_t, int64_t>(m, "Dict_int64_int64");
+    declare_dict<int64_t, float>(m, "Dict_int64_float32");
+    declare_dict<int64_t, double>(m, "Dict_int64_float64");
+    declare_dict<int64_t, pair_str4_str4>(m, "Dict_int64_pair_str4_str4");
+    declare_dict<int64_t, pair_str8_str8>(m, "Dict_int64_pair_str8_str8");
+    declare_dict<int64_t, pair_str16_str16>(m, "Dict_int64_pair_str16_str16");
+    declare_dict<int64_t, pair_str32_str32>(m, "Dict_int64_pair_str32_str32");
+    declare_dict<int64_t, pair_uint8_uint8>(m, "Dict_int64_pair_uint8_uint8");
+    declare_dict<int64_t, pair_uint16_uint16>(m, "Dict_int64_pair_uint16_uint16");
+    declare_dict<int64_t, pair_uint32_uint32>(m, "Dict_int64_pair_uint32_uint32");
+    declare_dict<int64_t, pair_uint64_uint64>(m, "Dict_int64_pair_uint64_uint64");
+    declare_dict<int64_t, pair_int8_int8>(m, "Dict_int64_pair_int8_int8");
+    declare_dict<int64_t, pair_int16_int16>(m, "Dict_int64_pair_int16_int16");
+    declare_dict<int64_t, pair_int32_int32>(m, "Dict_int64_pair_int32_int32");
+    declare_dict<int64_t, pair_int64_int64>(m, "Dict_int64_pair_int64_int64");
+    declare_dict<int64_t, pair_float32_float32>(m, "Dict_int64_pair_float32_float32");
+    declare_dict<int64_t, pair_float64_float64>(m, "Dict_int64_pair_float64_float64");
+    declare_dict<int64_t, bytearray2>(m, "Dict_int64_bytearray2");
+    declare_dict<int64_t, bytearray4>(m, "Dict_int64_bytearray4");
+    declare_dict<int64_t, bytearray8>(m, "Dict_int64_bytearray8");
+    declare_dict<int64_t, bytearray10>(m, "Dict_int64_bytearray10");
+    declare_dict<int64_t, bytearray16>(m, "Dict_int64_bytearray16");
+    declare_dict<int64_t, bytearray20>(m, "Dict_int64_bytearray20");
+    declare_dict<int64_t, bytearray30>(m, "Dict_int64_bytearray30");
+    declare_dict<int64_t, bytearray32>(m, "Dict_int64_bytearray32");
+    declare_dict<int64_t, bytearray40>(m, "Dict_int64_bytearray40");
+    declare_dict<int64_t, bytearray50>(m, "Dict_int64_bytearray50");
 }
