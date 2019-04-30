@@ -34,7 +34,27 @@ class Dict(MutableMapping):
 
     def __setitem__(self, key, value):
         self.type_check_key(key); self.type_check_value(value)
-        return self.__dict.__setitem__(key, value)
+        self.__dict.__setitem__(key, value)
+
+
+    def iadd(self, key, value):
+        self.type_check_key(key); self.type_check_value(value)
+        self.__dict.iadd(key, value)
+
+
+    def isub(self, key, value):
+        self.type_check_key(key); self.type_check_value(value)
+        self.__dict.isub(key, value)
+
+
+    def ior(self, key, value):
+        self.type_check_key(key); self.type_check_value(value)
+        self.__dict.ior(key, value)
+
+
+    def iand(self, key, value):
+        self.type_check_key(key); self.type_check_value(value)
+        self.__dict.iand(key, value)
 
 
     def __delitem__(self, key):
@@ -42,9 +62,10 @@ class Dict(MutableMapping):
         return self.__dict.__delitem__(key)
 
 
-    def __contains__(self, key):
+    def contains(self, key):
         self.type_check_key(key)
-        return self.__dict.__contains__(key)
+        return self.__dict.contains(key)
+    __contains__ = contains
 
 
     def __len__(self):

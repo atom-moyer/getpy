@@ -3,6 +3,9 @@ import itertools
 import numpy as np
 
 
+bytearray_lengths = [2,4,8,10,16,20,30,32,40,50]
+
+
 basic_types = [
     'str4',
     'str8',
@@ -83,7 +86,7 @@ value_types = [
 
     *[f'pair_{bt}_{bt}' for bt in basic_types],
 
-    *[f'bytearray{i}' for i in [2,4,8,10,16,20,30,32,40,50]],
+    *[f'bytearray{i}' for i in bytearray_lengths],
 ]
 
 
@@ -95,7 +98,7 @@ cpp_types = {
 
     **{f'pair_{bt}_{bt}' : f'pair_{bt}_{bt}' for bt in basic_types},
 
-    **{f'bytearray{i}' : f'bytearray{i}' for i in [2,4,8,10,16,20,30,32,40,50]},
+    **{f'bytearray{i}' : f'bytearray{i}' for i in bytearray_lengths},
 }
 
 
@@ -104,14 +107,14 @@ np_types = {
 
     **{f'pair_{bt}_{bt}' : {'names' : ['first', 'second'], 'formats' : [basic_np_types[bt], basic_np_types[bt]]} for bt in basic_types},
 
-    **{f'bytearray{i}' : {'names' : ['bytearray'], 'formats' : [f'{i}u1']} for i in [2,4,8,10,16,20,30,32,40,50]},
+    **{f'bytearray{i}' : {'names' : ['bytearray'], 'formats' : [f'{i}u1']} for i in bytearray_lengths},
 }
 
 
 struct_types = {
     **{f'pair_{bt}_{bt}' : f'struct pair_{bt}_{bt} {{ {basic_cpp_types[bt]} first; {basic_cpp_types[bt]} second; }};' for bt in basic_types},
 
-    **{f'bytearray{i}' : f'struct bytearray{i} {{ std::array<uint8_t, {i}> bytearray; }};' for i in [2,4,8,10,16,20,30,32,40,50]},
+    **{f'bytearray{i}' : f'struct bytearray{i} {{ std::array<uint8_t, {i}> bytearray; }};' for i in bytearray_lengths},
 }
 
 
@@ -131,8 +134,31 @@ def write_struct_types(getpy_file, type_):
 def write_struct_serialization(getpy_file, type_):
     if type_.startswith('pair'):
         getpy_file.write(f'template<class Archive> void serialize(Archive & archive, {type_} & pair) {{ archive( pair.first, pair.second ); }}\n')
+
     elif type_.startswith('bytearray'):
         getpy_file.write(f'template<class Archive> void serialize(Archive & archive, {type_} & bytearray) {{ archive( bytearray.bytearray ); }}\n')
+
+    else:
+        pass
+
+
+def write_struct_operators(getpy_file, type_):
+    if type_.startswith('pair'):
+        getpy_file.write(f'{type_} & operator += ( {type_} & a, {type_} b ) {{ a.first += b.first; a.second += b.second; }}\n')
+        getpy_file.write(f'{type_} & operator -= ( {type_} & a, {type_} b ) {{ a.first -= b.first; a.second -= b.second; }}\n')
+
+        if 'float' not in type_:
+            getpy_file.write(f'{type_} & operator |= ( {type_} & a, {type_} b ) {{ a.first |= b.first; a.second |= b.second; }}\n')
+            getpy_file.write(f'{type_} & operator &= ( {type_} & a, {type_} b ) {{ a.first &= b.first; a.second &= b.second; }}\n')
+        else:
+            pass
+
+    elif type_.startswith('bytearray'):
+        getpy_file.write(f'{type_} & operator += ( {type_} & a, {type_} b ) {{ a.bytearray += b.bytearray; }}\n')
+        getpy_file.write(f'{type_} & operator -= ( {type_} & a, {type_} b ) {{ a.bytearray -= b.bytearray; }}\n')
+        getpy_file.write(f'{type_} & operator |= ( {type_} & a, {type_} b ) {{ a.bytearray |= b.bytearray; }}\n')
+        getpy_file.write(f'{type_} & operator &= ( {type_} & a, {type_} b ) {{ a.bytearray &= b.bytearray; }}\n')
+
     else:
         pass
 
@@ -140,15 +166,21 @@ def write_struct_serialization(getpy_file, type_):
 def write_numpy_dtype(getpy_file, type_):
     if type_.startswith('pair'):
         getpy_file.write(f'    PYBIND11_NUMPY_DTYPE({cpp_types[type_]}, first, second );\n')
+
     elif type_.startswith('bytearray'):
         getpy_file.write(f'    PYBIND11_NUMPY_DTYPE({cpp_types[type_]}, bytearray );\n')
+
     else:
         pass
 
 
 def write_declare_dict(getpy_file, key_type, value_type):
     class_name = create_class_name(key_type, value_type)
-    getpy_file.write(f'    declare_dict<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "{class_name}");\n')
+
+    if 'float' in value_type:
+        getpy_file.write(f'    declare_dict_without_bitwise_operations<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "{class_name}");\n')
+    else:
+        getpy_file.write(f'    declare_dict<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "{class_name}");\n')
 
 
 def write_types_dict(getpy_file, type_):
@@ -171,6 +203,7 @@ def write_getpy_cpp(key_types, value_types):
             if type_ in struct_types:
                 write_struct_types(getpy_file, type_)
                 write_struct_serialization(getpy_file, type_)
+                write_struct_operators(getpy_file, type_)
                 getpy_file.write('\n')
             else:
                 pass
