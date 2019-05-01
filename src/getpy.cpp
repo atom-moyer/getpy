@@ -211,7 +211,7 @@ struct Dict {
     }
 
 
-    int __len__ () {
+    long __len__ () {
         return __dict.size();
     }
 
