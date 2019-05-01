@@ -24,6 +24,18 @@ struct Dict {
     Dict ( Value default_value ) : default_value ( default_value ) {}
 
 
+    Dict ( py::array_t<Value> complex_default_value ) {
+        py::buffer_info complex_default_value_buffer = complex_default_value.request();
+
+        if ( complex_default_value_buffer.ndim != 1 | complex_default_value_buffer.shape[0] != 1 )
+            throw std::runtime_error("The default value for complex dtypes must be set with one value.");
+
+        auto * complex_default_value_ptr = (Value *) complex_default_value_buffer.ptr;
+
+        default_value = complex_default_value_ptr[0];
+    }
+
+
     py::array_t<Value> __getitem__ ( py::array_t<Key> & key_array ) {
         py::buffer_info key_array_buffer = key_array.request();
         auto * key_array_ptr = (Key *) key_array_buffer.ptr;
@@ -249,7 +261,8 @@ void declare_dict(const py::module& m, const std::string& class_name) {
 
   py::class_<Class>(m, class_name.c_str())
       .def(py::init<>())
-      .def(py::init<const Value &>())
+      .def(py::init<Value &>())
+      .def(py::init<py::array_t<Value> &>())
 
       .def("__getitem__", &Class::__getitem__)
       .def("__setitem__", &Class::__setitem__)

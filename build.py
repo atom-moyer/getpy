@@ -3,7 +3,7 @@ import itertools
 import numpy as np
 
 
-bytearray_lengths = [2,4,8,10,16,20,30,32,40,50]
+bytearray_lengths = [2,3,4,5,6,7,8,9,10,16,20,30,32,40,50,60,64,80,100,128]
 
 
 basic_types = [
