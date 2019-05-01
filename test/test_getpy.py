@@ -85,35 +85,6 @@ def test_getpy_vectorized_methods_with_default():
 
 
 @standard
-def test_getpy_vectorized_methods_with_pair_dtype():
-    key_type = np.dtype('u8')
-    value_type = gp.types['pair_uint64_uint64']
-
-    gp_dict = gp.Dict(key_type, value_type)
-
-    keys = np.random.randint(1, 1000, size=200, dtype=key_type)
-    values = np.array([[1, 0]]*200, dtype=np.dtype('u8')).view(value_type)
-    gp_dict[keys] = values
-
-    # keys = [key for key in gp_dict]
-    # keys_and_values = [(key, value) for key, value in gp_dict.items()]
-
-    select_keys = np.random.choice(keys, size=100)
-    select_values = gp_dict[select_keys]
-
-    random_keys = np.random.randint(1, 1000, size=500, dtype=key_type)
-    random_keys_mask = gp_dict.contains(random_keys)
-
-    mask_keys = random_keys[random_keys_mask]
-    mask_values = gp_dict[mask_keys]
-
-    gp_dict.iadd(keys, values)
-    gp_dict.isub(keys, values)
-    gp_dict.ior(keys, values)
-    gp_dict.iand(keys, values)
-
-
-@standard
 def test_getpy_vectorized_methods_with_bytearray_dtype():
     key_type = np.dtype('u8')
     value_type = gp.types['bytearray50']
@@ -213,22 +184,6 @@ def test_getpy_big_dict_uint64_uint64():
         gp_dict[keys] = values
 
 
-@standard
-@pytest.mark.timeout(1)
-def test_getpy_big_dict_uint64_pair_uint32_uint32():
-    key_type = np.dtype('u8')
-    value_type = gp.types['pair_uint32_uint32']
-
-    gp_dict = gp.Dict(key_type, value_type)
-
-    values = np.array([[1, 0]]*10**4, dtype=np.dtype('u4')).view(value_type)
-
-    for i in range(10**2):
-        keys = np.random.randint(10**15, size=10**4, dtype=key_type)
-        gp_dict[keys] = values
-
-
-@standard
 @pytest.mark.timeout(1)
 def test_getpy_big_dict_uint64_bytearray8():
     key_type = np.dtype('u8')
@@ -285,21 +240,6 @@ def test_getpy_very_big_dict_uint64_uint64():
     gp_dict = gp.Dict(key_type, value_type)
 
     values = np.random.randint(10**15, size=10**5, dtype=value_type)
-
-    for i in range(10**2):
-        keys = np.random.randint(10**15, size=10**5, dtype=key_type)
-        gp_dict[keys] = values
-
-
-@standard
-@pytest.mark.timeout(5)
-def test_getpy_very_big_dict_uint64_pair_uint32_uint32():
-    key_type = np.dtype('u8')
-    value_type = gp.types['pair_uint32_uint32']
-
-    gp_dict = gp.Dict(key_type, value_type)
-
-    values = np.array([[1, 0]]*10**5, dtype=np.dtype('u4')).view(value_type)
 
     for i in range(10**2):
         keys = np.random.randint(10**15, size=10**5, dtype=key_type)

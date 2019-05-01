@@ -2,283 +2,101 @@
 
 #include <pybind11/pybind11.h>
 
-struct pair_str4_str4 { std::array<char, 4> first; std::array<char, 4> second; };
-template<class Archive> void serialize(Archive & archive, pair_str4_str4 & pair) { archive( pair.first, pair.second ); }
-pair_str4_str4 & operator += ( pair_str4_str4 & a, pair_str4_str4 b ) { a.first += b.first; a.second += b.second; }
-pair_str4_str4 & operator -= ( pair_str4_str4 & a, pair_str4_str4 b ) { a.first -= b.first; a.second -= b.second; }
-pair_str4_str4 & operator |= ( pair_str4_str4 & a, pair_str4_str4 b ) { a.first |= b.first; a.second |= b.second; }
-pair_str4_str4 & operator &= ( pair_str4_str4 & a, pair_str4_str4 b ) { a.first &= b.first; a.second &= b.second; }
-
-struct pair_str8_str8 { std::array<char, 8> first; std::array<char, 8> second; };
-template<class Archive> void serialize(Archive & archive, pair_str8_str8 & pair) { archive( pair.first, pair.second ); }
-pair_str8_str8 & operator += ( pair_str8_str8 & a, pair_str8_str8 b ) { a.first += b.first; a.second += b.second; }
-pair_str8_str8 & operator -= ( pair_str8_str8 & a, pair_str8_str8 b ) { a.first -= b.first; a.second -= b.second; }
-pair_str8_str8 & operator |= ( pair_str8_str8 & a, pair_str8_str8 b ) { a.first |= b.first; a.second |= b.second; }
-pair_str8_str8 & operator &= ( pair_str8_str8 & a, pair_str8_str8 b ) { a.first &= b.first; a.second &= b.second; }
-
-struct pair_str16_str16 { std::array<char, 16> first; std::array<char, 16> second; };
-template<class Archive> void serialize(Archive & archive, pair_str16_str16 & pair) { archive( pair.first, pair.second ); }
-pair_str16_str16 & operator += ( pair_str16_str16 & a, pair_str16_str16 b ) { a.first += b.first; a.second += b.second; }
-pair_str16_str16 & operator -= ( pair_str16_str16 & a, pair_str16_str16 b ) { a.first -= b.first; a.second -= b.second; }
-pair_str16_str16 & operator |= ( pair_str16_str16 & a, pair_str16_str16 b ) { a.first |= b.first; a.second |= b.second; }
-pair_str16_str16 & operator &= ( pair_str16_str16 & a, pair_str16_str16 b ) { a.first &= b.first; a.second &= b.second; }
-
-struct pair_str32_str32 { std::array<char, 32> first; std::array<char, 32> second; };
-template<class Archive> void serialize(Archive & archive, pair_str32_str32 & pair) { archive( pair.first, pair.second ); }
-pair_str32_str32 & operator += ( pair_str32_str32 & a, pair_str32_str32 b ) { a.first += b.first; a.second += b.second; }
-pair_str32_str32 & operator -= ( pair_str32_str32 & a, pair_str32_str32 b ) { a.first -= b.first; a.second -= b.second; }
-pair_str32_str32 & operator |= ( pair_str32_str32 & a, pair_str32_str32 b ) { a.first |= b.first; a.second |= b.second; }
-pair_str32_str32 & operator &= ( pair_str32_str32 & a, pair_str32_str32 b ) { a.first &= b.first; a.second &= b.second; }
-
-struct pair_uint8_uint8 { uint8_t first; uint8_t second; };
-template<class Archive> void serialize(Archive & archive, pair_uint8_uint8 & pair) { archive( pair.first, pair.second ); }
-pair_uint8_uint8 & operator += ( pair_uint8_uint8 & a, pair_uint8_uint8 b ) { a.first += b.first; a.second += b.second; }
-pair_uint8_uint8 & operator -= ( pair_uint8_uint8 & a, pair_uint8_uint8 b ) { a.first -= b.first; a.second -= b.second; }
-pair_uint8_uint8 & operator |= ( pair_uint8_uint8 & a, pair_uint8_uint8 b ) { a.first |= b.first; a.second |= b.second; }
-pair_uint8_uint8 & operator &= ( pair_uint8_uint8 & a, pair_uint8_uint8 b ) { a.first &= b.first; a.second &= b.second; }
-
-struct pair_uint16_uint16 { uint16_t first; uint16_t second; };
-template<class Archive> void serialize(Archive & archive, pair_uint16_uint16 & pair) { archive( pair.first, pair.second ); }
-pair_uint16_uint16 & operator += ( pair_uint16_uint16 & a, pair_uint16_uint16 b ) { a.first += b.first; a.second += b.second; }
-pair_uint16_uint16 & operator -= ( pair_uint16_uint16 & a, pair_uint16_uint16 b ) { a.first -= b.first; a.second -= b.second; }
-pair_uint16_uint16 & operator |= ( pair_uint16_uint16 & a, pair_uint16_uint16 b ) { a.first |= b.first; a.second |= b.second; }
-pair_uint16_uint16 & operator &= ( pair_uint16_uint16 & a, pair_uint16_uint16 b ) { a.first &= b.first; a.second &= b.second; }
-
-struct pair_uint32_uint32 { uint32_t first; uint32_t second; };
-template<class Archive> void serialize(Archive & archive, pair_uint32_uint32 & pair) { archive( pair.first, pair.second ); }
-pair_uint32_uint32 & operator += ( pair_uint32_uint32 & a, pair_uint32_uint32 b ) { a.first += b.first; a.second += b.second; }
-pair_uint32_uint32 & operator -= ( pair_uint32_uint32 & a, pair_uint32_uint32 b ) { a.first -= b.first; a.second -= b.second; }
-pair_uint32_uint32 & operator |= ( pair_uint32_uint32 & a, pair_uint32_uint32 b ) { a.first |= b.first; a.second |= b.second; }
-pair_uint32_uint32 & operator &= ( pair_uint32_uint32 & a, pair_uint32_uint32 b ) { a.first &= b.first; a.second &= b.second; }
-
-struct pair_uint64_uint64 { uint64_t first; uint64_t second; };
-template<class Archive> void serialize(Archive & archive, pair_uint64_uint64 & pair) { archive( pair.first, pair.second ); }
-pair_uint64_uint64 & operator += ( pair_uint64_uint64 & a, pair_uint64_uint64 b ) { a.first += b.first; a.second += b.second; }
-pair_uint64_uint64 & operator -= ( pair_uint64_uint64 & a, pair_uint64_uint64 b ) { a.first -= b.first; a.second -= b.second; }
-pair_uint64_uint64 & operator |= ( pair_uint64_uint64 & a, pair_uint64_uint64 b ) { a.first |= b.first; a.second |= b.second; }
-pair_uint64_uint64 & operator &= ( pair_uint64_uint64 & a, pair_uint64_uint64 b ) { a.first &= b.first; a.second &= b.second; }
-
-struct pair_int8_int8 { int8_t first; int8_t second; };
-template<class Archive> void serialize(Archive & archive, pair_int8_int8 & pair) { archive( pair.first, pair.second ); }
-pair_int8_int8 & operator += ( pair_int8_int8 & a, pair_int8_int8 b ) { a.first += b.first; a.second += b.second; }
-pair_int8_int8 & operator -= ( pair_int8_int8 & a, pair_int8_int8 b ) { a.first -= b.first; a.second -= b.second; }
-pair_int8_int8 & operator |= ( pair_int8_int8 & a, pair_int8_int8 b ) { a.first |= b.first; a.second |= b.second; }
-pair_int8_int8 & operator &= ( pair_int8_int8 & a, pair_int8_int8 b ) { a.first &= b.first; a.second &= b.second; }
-
-struct pair_int16_int16 { int16_t first; int16_t second; };
-template<class Archive> void serialize(Archive & archive, pair_int16_int16 & pair) { archive( pair.first, pair.second ); }
-pair_int16_int16 & operator += ( pair_int16_int16 & a, pair_int16_int16 b ) { a.first += b.first; a.second += b.second; }
-pair_int16_int16 & operator -= ( pair_int16_int16 & a, pair_int16_int16 b ) { a.first -= b.first; a.second -= b.second; }
-pair_int16_int16 & operator |= ( pair_int16_int16 & a, pair_int16_int16 b ) { a.first |= b.first; a.second |= b.second; }
-pair_int16_int16 & operator &= ( pair_int16_int16 & a, pair_int16_int16 b ) { a.first &= b.first; a.second &= b.second; }
-
-struct pair_int32_int32 { int32_t first; int32_t second; };
-template<class Archive> void serialize(Archive & archive, pair_int32_int32 & pair) { archive( pair.first, pair.second ); }
-pair_int32_int32 & operator += ( pair_int32_int32 & a, pair_int32_int32 b ) { a.first += b.first; a.second += b.second; }
-pair_int32_int32 & operator -= ( pair_int32_int32 & a, pair_int32_int32 b ) { a.first -= b.first; a.second -= b.second; }
-pair_int32_int32 & operator |= ( pair_int32_int32 & a, pair_int32_int32 b ) { a.first |= b.first; a.second |= b.second; }
-pair_int32_int32 & operator &= ( pair_int32_int32 & a, pair_int32_int32 b ) { a.first &= b.first; a.second &= b.second; }
-
-struct pair_int64_int64 { int64_t first; int64_t second; };
-template<class Archive> void serialize(Archive & archive, pair_int64_int64 & pair) { archive( pair.first, pair.second ); }
-pair_int64_int64 & operator += ( pair_int64_int64 & a, pair_int64_int64 b ) { a.first += b.first; a.second += b.second; }
-pair_int64_int64 & operator -= ( pair_int64_int64 & a, pair_int64_int64 b ) { a.first -= b.first; a.second -= b.second; }
-pair_int64_int64 & operator |= ( pair_int64_int64 & a, pair_int64_int64 b ) { a.first |= b.first; a.second |= b.second; }
-pair_int64_int64 & operator &= ( pair_int64_int64 & a, pair_int64_int64 b ) { a.first &= b.first; a.second &= b.second; }
-
-struct pair_float32_float32 { float first; float second; };
-template<class Archive> void serialize(Archive & archive, pair_float32_float32 & pair) { archive( pair.first, pair.second ); }
-pair_float32_float32 & operator += ( pair_float32_float32 & a, pair_float32_float32 b ) { a.first += b.first; a.second += b.second; }
-pair_float32_float32 & operator -= ( pair_float32_float32 & a, pair_float32_float32 b ) { a.first -= b.first; a.second -= b.second; }
-
-struct pair_float64_float64 { double first; double second; };
-template<class Archive> void serialize(Archive & archive, pair_float64_float64 & pair) { archive( pair.first, pair.second ); }
-pair_float64_float64 & operator += ( pair_float64_float64 & a, pair_float64_float64 b ) { a.first += b.first; a.second += b.second; }
-pair_float64_float64 & operator -= ( pair_float64_float64 & a, pair_float64_float64 b ) { a.first -= b.first; a.second -= b.second; }
-
-struct bytearray2 { std::array<uint8_t, 2> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray2 & bytearray) { archive( bytearray.bytearray ); }
-bytearray2 & operator += ( bytearray2 & a, bytearray2 b ) { a.bytearray += b.bytearray; }
-bytearray2 & operator -= ( bytearray2 & a, bytearray2 b ) { a.bytearray -= b.bytearray; }
-bytearray2 & operator |= ( bytearray2 & a, bytearray2 b ) { a.bytearray |= b.bytearray; }
-bytearray2 & operator &= ( bytearray2 & a, bytearray2 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray3 { std::array<uint8_t, 3> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray3 & bytearray) { archive( bytearray.bytearray ); }
-bytearray3 & operator += ( bytearray3 & a, bytearray3 b ) { a.bytearray += b.bytearray; }
-bytearray3 & operator -= ( bytearray3 & a, bytearray3 b ) { a.bytearray -= b.bytearray; }
-bytearray3 & operator |= ( bytearray3 & a, bytearray3 b ) { a.bytearray |= b.bytearray; }
-bytearray3 & operator &= ( bytearray3 & a, bytearray3 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray4 { std::array<uint8_t, 4> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray4 & bytearray) { archive( bytearray.bytearray ); }
-bytearray4 & operator += ( bytearray4 & a, bytearray4 b ) { a.bytearray += b.bytearray; }
-bytearray4 & operator -= ( bytearray4 & a, bytearray4 b ) { a.bytearray -= b.bytearray; }
-bytearray4 & operator |= ( bytearray4 & a, bytearray4 b ) { a.bytearray |= b.bytearray; }
-bytearray4 & operator &= ( bytearray4 & a, bytearray4 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray5 { std::array<uint8_t, 5> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray5 & bytearray) { archive( bytearray.bytearray ); }
-bytearray5 & operator += ( bytearray5 & a, bytearray5 b ) { a.bytearray += b.bytearray; }
-bytearray5 & operator -= ( bytearray5 & a, bytearray5 b ) { a.bytearray -= b.bytearray; }
-bytearray5 & operator |= ( bytearray5 & a, bytearray5 b ) { a.bytearray |= b.bytearray; }
-bytearray5 & operator &= ( bytearray5 & a, bytearray5 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray6 { std::array<uint8_t, 6> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray6 & bytearray) { archive( bytearray.bytearray ); }
-bytearray6 & operator += ( bytearray6 & a, bytearray6 b ) { a.bytearray += b.bytearray; }
-bytearray6 & operator -= ( bytearray6 & a, bytearray6 b ) { a.bytearray -= b.bytearray; }
-bytearray6 & operator |= ( bytearray6 & a, bytearray6 b ) { a.bytearray |= b.bytearray; }
-bytearray6 & operator &= ( bytearray6 & a, bytearray6 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray7 { std::array<uint8_t, 7> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray7 & bytearray) { archive( bytearray.bytearray ); }
-bytearray7 & operator += ( bytearray7 & a, bytearray7 b ) { a.bytearray += b.bytearray; }
-bytearray7 & operator -= ( bytearray7 & a, bytearray7 b ) { a.bytearray -= b.bytearray; }
-bytearray7 & operator |= ( bytearray7 & a, bytearray7 b ) { a.bytearray |= b.bytearray; }
-bytearray7 & operator &= ( bytearray7 & a, bytearray7 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray8 { std::array<uint8_t, 8> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray8 & bytearray) { archive( bytearray.bytearray ); }
-bytearray8 & operator += ( bytearray8 & a, bytearray8 b ) { a.bytearray += b.bytearray; }
-bytearray8 & operator -= ( bytearray8 & a, bytearray8 b ) { a.bytearray -= b.bytearray; }
-bytearray8 & operator |= ( bytearray8 & a, bytearray8 b ) { a.bytearray |= b.bytearray; }
-bytearray8 & operator &= ( bytearray8 & a, bytearray8 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray9 { std::array<uint8_t, 9> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray9 & bytearray) { archive( bytearray.bytearray ); }
-bytearray9 & operator += ( bytearray9 & a, bytearray9 b ) { a.bytearray += b.bytearray; }
-bytearray9 & operator -= ( bytearray9 & a, bytearray9 b ) { a.bytearray -= b.bytearray; }
-bytearray9 & operator |= ( bytearray9 & a, bytearray9 b ) { a.bytearray |= b.bytearray; }
-bytearray9 & operator &= ( bytearray9 & a, bytearray9 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray10 { std::array<uint8_t, 10> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray10 & bytearray) { archive( bytearray.bytearray ); }
-bytearray10 & operator += ( bytearray10 & a, bytearray10 b ) { a.bytearray += b.bytearray; }
-bytearray10 & operator -= ( bytearray10 & a, bytearray10 b ) { a.bytearray -= b.bytearray; }
-bytearray10 & operator |= ( bytearray10 & a, bytearray10 b ) { a.bytearray |= b.bytearray; }
-bytearray10 & operator &= ( bytearray10 & a, bytearray10 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray16 { std::array<uint8_t, 16> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray16 & bytearray) { archive( bytearray.bytearray ); }
-bytearray16 & operator += ( bytearray16 & a, bytearray16 b ) { a.bytearray += b.bytearray; }
-bytearray16 & operator -= ( bytearray16 & a, bytearray16 b ) { a.bytearray -= b.bytearray; }
-bytearray16 & operator |= ( bytearray16 & a, bytearray16 b ) { a.bytearray |= b.bytearray; }
-bytearray16 & operator &= ( bytearray16 & a, bytearray16 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray20 { std::array<uint8_t, 20> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray20 & bytearray) { archive( bytearray.bytearray ); }
-bytearray20 & operator += ( bytearray20 & a, bytearray20 b ) { a.bytearray += b.bytearray; }
-bytearray20 & operator -= ( bytearray20 & a, bytearray20 b ) { a.bytearray -= b.bytearray; }
-bytearray20 & operator |= ( bytearray20 & a, bytearray20 b ) { a.bytearray |= b.bytearray; }
-bytearray20 & operator &= ( bytearray20 & a, bytearray20 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray30 { std::array<uint8_t, 30> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray30 & bytearray) { archive( bytearray.bytearray ); }
-bytearray30 & operator += ( bytearray30 & a, bytearray30 b ) { a.bytearray += b.bytearray; }
-bytearray30 & operator -= ( bytearray30 & a, bytearray30 b ) { a.bytearray -= b.bytearray; }
-bytearray30 & operator |= ( bytearray30 & a, bytearray30 b ) { a.bytearray |= b.bytearray; }
-bytearray30 & operator &= ( bytearray30 & a, bytearray30 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray32 { std::array<uint8_t, 32> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray32 & bytearray) { archive( bytearray.bytearray ); }
-bytearray32 & operator += ( bytearray32 & a, bytearray32 b ) { a.bytearray += b.bytearray; }
-bytearray32 & operator -= ( bytearray32 & a, bytearray32 b ) { a.bytearray -= b.bytearray; }
-bytearray32 & operator |= ( bytearray32 & a, bytearray32 b ) { a.bytearray |= b.bytearray; }
-bytearray32 & operator &= ( bytearray32 & a, bytearray32 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray40 { std::array<uint8_t, 40> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray40 & bytearray) { archive( bytearray.bytearray ); }
-bytearray40 & operator += ( bytearray40 & a, bytearray40 b ) { a.bytearray += b.bytearray; }
-bytearray40 & operator -= ( bytearray40 & a, bytearray40 b ) { a.bytearray -= b.bytearray; }
-bytearray40 & operator |= ( bytearray40 & a, bytearray40 b ) { a.bytearray |= b.bytearray; }
-bytearray40 & operator &= ( bytearray40 & a, bytearray40 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray50 { std::array<uint8_t, 50> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray50 & bytearray) { archive( bytearray.bytearray ); }
-bytearray50 & operator += ( bytearray50 & a, bytearray50 b ) { a.bytearray += b.bytearray; }
-bytearray50 & operator -= ( bytearray50 & a, bytearray50 b ) { a.bytearray -= b.bytearray; }
-bytearray50 & operator |= ( bytearray50 & a, bytearray50 b ) { a.bytearray |= b.bytearray; }
-bytearray50 & operator &= ( bytearray50 & a, bytearray50 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray60 { std::array<uint8_t, 60> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray60 & bytearray) { archive( bytearray.bytearray ); }
-bytearray60 & operator += ( bytearray60 & a, bytearray60 b ) { a.bytearray += b.bytearray; }
-bytearray60 & operator -= ( bytearray60 & a, bytearray60 b ) { a.bytearray -= b.bytearray; }
-bytearray60 & operator |= ( bytearray60 & a, bytearray60 b ) { a.bytearray |= b.bytearray; }
-bytearray60 & operator &= ( bytearray60 & a, bytearray60 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray64 { std::array<uint8_t, 64> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray64 & bytearray) { archive( bytearray.bytearray ); }
-bytearray64 & operator += ( bytearray64 & a, bytearray64 b ) { a.bytearray += b.bytearray; }
-bytearray64 & operator -= ( bytearray64 & a, bytearray64 b ) { a.bytearray -= b.bytearray; }
-bytearray64 & operator |= ( bytearray64 & a, bytearray64 b ) { a.bytearray |= b.bytearray; }
-bytearray64 & operator &= ( bytearray64 & a, bytearray64 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray80 { std::array<uint8_t, 80> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray80 & bytearray) { archive( bytearray.bytearray ); }
-bytearray80 & operator += ( bytearray80 & a, bytearray80 b ) { a.bytearray += b.bytearray; }
-bytearray80 & operator -= ( bytearray80 & a, bytearray80 b ) { a.bytearray -= b.bytearray; }
-bytearray80 & operator |= ( bytearray80 & a, bytearray80 b ) { a.bytearray |= b.bytearray; }
-bytearray80 & operator &= ( bytearray80 & a, bytearray80 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray100 { std::array<uint8_t, 100> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray100 & bytearray) { archive( bytearray.bytearray ); }
-bytearray100 & operator += ( bytearray100 & a, bytearray100 b ) { a.bytearray += b.bytearray; }
-bytearray100 & operator -= ( bytearray100 & a, bytearray100 b ) { a.bytearray -= b.bytearray; }
-bytearray100 & operator |= ( bytearray100 & a, bytearray100 b ) { a.bytearray |= b.bytearray; }
-bytearray100 & operator &= ( bytearray100 & a, bytearray100 b ) { a.bytearray &= b.bytearray; }
-
-struct bytearray128 { std::array<uint8_t, 128> bytearray; };
-template<class Archive> void serialize(Archive & archive, bytearray128 & bytearray) { archive( bytearray.bytearray ); }
-bytearray128 & operator += ( bytearray128 & a, bytearray128 b ) { a.bytearray += b.bytearray; }
-bytearray128 & operator -= ( bytearray128 & a, bytearray128 b ) { a.bytearray -= b.bytearray; }
-bytearray128 & operator |= ( bytearray128 & a, bytearray128 b ) { a.bytearray |= b.bytearray; }
-bytearray128 & operator &= ( bytearray128 & a, bytearray128 b ) { a.bytearray &= b.bytearray; }
-
+using bytearray1 = bytearray<uint8_t, 1>;
+using bytearray2 = bytearray<uint8_t, 2>;
+using bytearray3 = bytearray<uint8_t, 3>;
+using bytearray4 = bytearray<uint8_t, 4>;
+using bytearray5 = bytearray<uint8_t, 5>;
+using bytearray6 = bytearray<uint8_t, 6>;
+using bytearray7 = bytearray<uint8_t, 7>;
+using bytearray8 = bytearray<uint8_t, 8>;
+using bytearray9 = bytearray<uint8_t, 9>;
+using bytearray10 = bytearray<uint8_t, 10>;
+using bytearray11 = bytearray<uint8_t, 11>;
+using bytearray12 = bytearray<uint8_t, 12>;
+using bytearray13 = bytearray<uint8_t, 13>;
+using bytearray14 = bytearray<uint8_t, 14>;
+using bytearray15 = bytearray<uint8_t, 15>;
+using bytearray16 = bytearray<uint8_t, 16>;
+using bytearray20 = bytearray<uint8_t, 20>;
+using bytearray30 = bytearray<uint8_t, 30>;
+using bytearray32 = bytearray<uint8_t, 32>;
+using bytearray40 = bytearray<uint8_t, 40>;
+using bytearray50 = bytearray<uint8_t, 50>;
+using bytearray60 = bytearray<uint8_t, 60>;
+using bytearray64 = bytearray<uint8_t, 64>;
+using bytearray70 = bytearray<uint8_t, 70>;
+using bytearray80 = bytearray<uint8_t, 80>;
+using bytearray90 = bytearray<uint8_t, 90>;
+using bytearray100 = bytearray<uint8_t, 100>;
+using bytearray128 = bytearray<uint8_t, 128>;
+using byte8array1 = bytearray<uint64_t, 1>;
+using byte8array2 = bytearray<uint64_t, 2>;
+using byte8array3 = bytearray<uint64_t, 3>;
+using byte8array4 = bytearray<uint64_t, 4>;
+using byte8array5 = bytearray<uint64_t, 5>;
+using byte8array6 = bytearray<uint64_t, 6>;
+using byte8array7 = bytearray<uint64_t, 7>;
+using byte8array8 = bytearray<uint64_t, 8>;
+using byte8array9 = bytearray<uint64_t, 9>;
+using byte8array10 = bytearray<uint64_t, 10>;
+using byte8array11 = bytearray<uint64_t, 11>;
+using byte8array12 = bytearray<uint64_t, 12>;
+using byte8array13 = bytearray<uint64_t, 13>;
+using byte8array14 = bytearray<uint64_t, 14>;
+using byte8array15 = bytearray<uint64_t, 15>;
+using byte8array16 = bytearray<uint64_t, 16>;
 
 PYBIND11_MODULE(_getpy, m) {
     m.doc() = "A Fast and Memory Efficient Hash Map for Python";
 
-    PYBIND11_NUMPY_DTYPE(pair_str4_str4, first, second );
-    PYBIND11_NUMPY_DTYPE(pair_str8_str8, first, second );
-    PYBIND11_NUMPY_DTYPE(pair_str16_str16, first, second );
-    PYBIND11_NUMPY_DTYPE(pair_str32_str32, first, second );
-    PYBIND11_NUMPY_DTYPE(pair_uint8_uint8, first, second );
-    PYBIND11_NUMPY_DTYPE(pair_uint16_uint16, first, second );
-    PYBIND11_NUMPY_DTYPE(pair_uint32_uint32, first, second );
-    PYBIND11_NUMPY_DTYPE(pair_uint64_uint64, first, second );
-    PYBIND11_NUMPY_DTYPE(pair_int8_int8, first, second );
-    PYBIND11_NUMPY_DTYPE(pair_int16_int16, first, second );
-    PYBIND11_NUMPY_DTYPE(pair_int32_int32, first, second );
-    PYBIND11_NUMPY_DTYPE(pair_int64_int64, first, second );
-    PYBIND11_NUMPY_DTYPE(pair_float32_float32, first, second );
-    PYBIND11_NUMPY_DTYPE(pair_float64_float64, first, second );
-    PYBIND11_NUMPY_DTYPE(bytearray2, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray3, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray4, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray5, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray6, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray7, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray8, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray9, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray10, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray16, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray20, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray30, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray32, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray40, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray50, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray60, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray64, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray80, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray100, bytearray );
-    PYBIND11_NUMPY_DTYPE(bytearray128, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray1, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray2, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray3, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray4, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray5, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray6, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray7, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray8, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray9, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray10, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray11, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray12, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray13, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray14, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray15, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray16, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray20, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray30, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray32, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray40, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray50, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray60, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray64, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray70, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray80, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray90, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray100, bytearray );
+    PYBIND11_NUMPY_DTYPE( bytearray128, bytearray );
+    PYBIND11_NUMPY_DTYPE( byte8array1, bytearray );
+    PYBIND11_NUMPY_DTYPE( byte8array2, bytearray );
+    PYBIND11_NUMPY_DTYPE( byte8array3, bytearray );
+    PYBIND11_NUMPY_DTYPE( byte8array4, bytearray );
+    PYBIND11_NUMPY_DTYPE( byte8array5, bytearray );
+    PYBIND11_NUMPY_DTYPE( byte8array6, bytearray );
+    PYBIND11_NUMPY_DTYPE( byte8array7, bytearray );
+    PYBIND11_NUMPY_DTYPE( byte8array8, bytearray );
+    PYBIND11_NUMPY_DTYPE( byte8array9, bytearray );
+    PYBIND11_NUMPY_DTYPE( byte8array10, bytearray );
+    PYBIND11_NUMPY_DTYPE( byte8array11, bytearray );
+    PYBIND11_NUMPY_DTYPE( byte8array12, bytearray );
+    PYBIND11_NUMPY_DTYPE( byte8array13, bytearray );
+    PYBIND11_NUMPY_DTYPE( byte8array14, bytearray );
+    PYBIND11_NUMPY_DTYPE( byte8array15, bytearray );
+    PYBIND11_NUMPY_DTYPE( byte8array16, bytearray );
 
     declare_dict<std::array<char, 4>, std::array<char, 4>>(m, "Dict_str4_str4");
     declare_dict<std::array<char, 4>, std::array<char, 8>>(m, "Dict_str4_str8");
-    declare_dict<std::array<char, 4>, std::array<char, 16>>(m, "Dict_str4_str16");
-    declare_dict<std::array<char, 4>, std::array<char, 32>>(m, "Dict_str4_str32");
     declare_dict<std::array<char, 4>, uint8_t>(m, "Dict_str4_uint8");
     declare_dict<std::array<char, 4>, uint16_t>(m, "Dict_str4_uint16");
     declare_dict<std::array<char, 4>, uint32_t>(m, "Dict_str4_uint32");
@@ -289,20 +107,7 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<std::array<char, 4>, int64_t>(m, "Dict_str4_int64");
     declare_dict_without_bitwise_operations<std::array<char, 4>, float>(m, "Dict_str4_float32");
     declare_dict_without_bitwise_operations<std::array<char, 4>, double>(m, "Dict_str4_float64");
-    declare_dict<std::array<char, 4>, pair_str4_str4>(m, "Dict_str4_pair_str4_str4");
-    declare_dict<std::array<char, 4>, pair_str8_str8>(m, "Dict_str4_pair_str8_str8");
-    declare_dict<std::array<char, 4>, pair_str16_str16>(m, "Dict_str4_pair_str16_str16");
-    declare_dict<std::array<char, 4>, pair_str32_str32>(m, "Dict_str4_pair_str32_str32");
-    declare_dict<std::array<char, 4>, pair_uint8_uint8>(m, "Dict_str4_pair_uint8_uint8");
-    declare_dict<std::array<char, 4>, pair_uint16_uint16>(m, "Dict_str4_pair_uint16_uint16");
-    declare_dict<std::array<char, 4>, pair_uint32_uint32>(m, "Dict_str4_pair_uint32_uint32");
-    declare_dict<std::array<char, 4>, pair_uint64_uint64>(m, "Dict_str4_pair_uint64_uint64");
-    declare_dict<std::array<char, 4>, pair_int8_int8>(m, "Dict_str4_pair_int8_int8");
-    declare_dict<std::array<char, 4>, pair_int16_int16>(m, "Dict_str4_pair_int16_int16");
-    declare_dict<std::array<char, 4>, pair_int32_int32>(m, "Dict_str4_pair_int32_int32");
-    declare_dict<std::array<char, 4>, pair_int64_int64>(m, "Dict_str4_pair_int64_int64");
-    declare_dict_without_bitwise_operations<std::array<char, 4>, pair_float32_float32>(m, "Dict_str4_pair_float32_float32");
-    declare_dict_without_bitwise_operations<std::array<char, 4>, pair_float64_float64>(m, "Dict_str4_pair_float64_float64");
+    declare_dict<std::array<char, 4>, bytearray1>(m, "Dict_str4_bytearray1");
     declare_dict<std::array<char, 4>, bytearray2>(m, "Dict_str4_bytearray2");
     declare_dict<std::array<char, 4>, bytearray3>(m, "Dict_str4_bytearray3");
     declare_dict<std::array<char, 4>, bytearray4>(m, "Dict_str4_bytearray4");
@@ -312,6 +117,11 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<std::array<char, 4>, bytearray8>(m, "Dict_str4_bytearray8");
     declare_dict<std::array<char, 4>, bytearray9>(m, "Dict_str4_bytearray9");
     declare_dict<std::array<char, 4>, bytearray10>(m, "Dict_str4_bytearray10");
+    declare_dict<std::array<char, 4>, bytearray11>(m, "Dict_str4_bytearray11");
+    declare_dict<std::array<char, 4>, bytearray12>(m, "Dict_str4_bytearray12");
+    declare_dict<std::array<char, 4>, bytearray13>(m, "Dict_str4_bytearray13");
+    declare_dict<std::array<char, 4>, bytearray14>(m, "Dict_str4_bytearray14");
+    declare_dict<std::array<char, 4>, bytearray15>(m, "Dict_str4_bytearray15");
     declare_dict<std::array<char, 4>, bytearray16>(m, "Dict_str4_bytearray16");
     declare_dict<std::array<char, 4>, bytearray20>(m, "Dict_str4_bytearray20");
     declare_dict<std::array<char, 4>, bytearray30>(m, "Dict_str4_bytearray30");
@@ -320,13 +130,29 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<std::array<char, 4>, bytearray50>(m, "Dict_str4_bytearray50");
     declare_dict<std::array<char, 4>, bytearray60>(m, "Dict_str4_bytearray60");
     declare_dict<std::array<char, 4>, bytearray64>(m, "Dict_str4_bytearray64");
+    declare_dict<std::array<char, 4>, bytearray70>(m, "Dict_str4_bytearray70");
     declare_dict<std::array<char, 4>, bytearray80>(m, "Dict_str4_bytearray80");
+    declare_dict<std::array<char, 4>, bytearray90>(m, "Dict_str4_bytearray90");
     declare_dict<std::array<char, 4>, bytearray100>(m, "Dict_str4_bytearray100");
     declare_dict<std::array<char, 4>, bytearray128>(m, "Dict_str4_bytearray128");
+    declare_dict<std::array<char, 4>, byte8array1>(m, "Dict_str4_byte8array1");
+    declare_dict<std::array<char, 4>, byte8array2>(m, "Dict_str4_byte8array2");
+    declare_dict<std::array<char, 4>, byte8array3>(m, "Dict_str4_byte8array3");
+    declare_dict<std::array<char, 4>, byte8array4>(m, "Dict_str4_byte8array4");
+    declare_dict<std::array<char, 4>, byte8array5>(m, "Dict_str4_byte8array5");
+    declare_dict<std::array<char, 4>, byte8array6>(m, "Dict_str4_byte8array6");
+    declare_dict<std::array<char, 4>, byte8array7>(m, "Dict_str4_byte8array7");
+    declare_dict<std::array<char, 4>, byte8array8>(m, "Dict_str4_byte8array8");
+    declare_dict<std::array<char, 4>, byte8array9>(m, "Dict_str4_byte8array9");
+    declare_dict<std::array<char, 4>, byte8array10>(m, "Dict_str4_byte8array10");
+    declare_dict<std::array<char, 4>, byte8array11>(m, "Dict_str4_byte8array11");
+    declare_dict<std::array<char, 4>, byte8array12>(m, "Dict_str4_byte8array12");
+    declare_dict<std::array<char, 4>, byte8array13>(m, "Dict_str4_byte8array13");
+    declare_dict<std::array<char, 4>, byte8array14>(m, "Dict_str4_byte8array14");
+    declare_dict<std::array<char, 4>, byte8array15>(m, "Dict_str4_byte8array15");
+    declare_dict<std::array<char, 4>, byte8array16>(m, "Dict_str4_byte8array16");
     declare_dict<std::array<char, 8>, std::array<char, 4>>(m, "Dict_str8_str4");
     declare_dict<std::array<char, 8>, std::array<char, 8>>(m, "Dict_str8_str8");
-    declare_dict<std::array<char, 8>, std::array<char, 16>>(m, "Dict_str8_str16");
-    declare_dict<std::array<char, 8>, std::array<char, 32>>(m, "Dict_str8_str32");
     declare_dict<std::array<char, 8>, uint8_t>(m, "Dict_str8_uint8");
     declare_dict<std::array<char, 8>, uint16_t>(m, "Dict_str8_uint16");
     declare_dict<std::array<char, 8>, uint32_t>(m, "Dict_str8_uint32");
@@ -337,20 +163,7 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<std::array<char, 8>, int64_t>(m, "Dict_str8_int64");
     declare_dict_without_bitwise_operations<std::array<char, 8>, float>(m, "Dict_str8_float32");
     declare_dict_without_bitwise_operations<std::array<char, 8>, double>(m, "Dict_str8_float64");
-    declare_dict<std::array<char, 8>, pair_str4_str4>(m, "Dict_str8_pair_str4_str4");
-    declare_dict<std::array<char, 8>, pair_str8_str8>(m, "Dict_str8_pair_str8_str8");
-    declare_dict<std::array<char, 8>, pair_str16_str16>(m, "Dict_str8_pair_str16_str16");
-    declare_dict<std::array<char, 8>, pair_str32_str32>(m, "Dict_str8_pair_str32_str32");
-    declare_dict<std::array<char, 8>, pair_uint8_uint8>(m, "Dict_str8_pair_uint8_uint8");
-    declare_dict<std::array<char, 8>, pair_uint16_uint16>(m, "Dict_str8_pair_uint16_uint16");
-    declare_dict<std::array<char, 8>, pair_uint32_uint32>(m, "Dict_str8_pair_uint32_uint32");
-    declare_dict<std::array<char, 8>, pair_uint64_uint64>(m, "Dict_str8_pair_uint64_uint64");
-    declare_dict<std::array<char, 8>, pair_int8_int8>(m, "Dict_str8_pair_int8_int8");
-    declare_dict<std::array<char, 8>, pair_int16_int16>(m, "Dict_str8_pair_int16_int16");
-    declare_dict<std::array<char, 8>, pair_int32_int32>(m, "Dict_str8_pair_int32_int32");
-    declare_dict<std::array<char, 8>, pair_int64_int64>(m, "Dict_str8_pair_int64_int64");
-    declare_dict_without_bitwise_operations<std::array<char, 8>, pair_float32_float32>(m, "Dict_str8_pair_float32_float32");
-    declare_dict_without_bitwise_operations<std::array<char, 8>, pair_float64_float64>(m, "Dict_str8_pair_float64_float64");
+    declare_dict<std::array<char, 8>, bytearray1>(m, "Dict_str8_bytearray1");
     declare_dict<std::array<char, 8>, bytearray2>(m, "Dict_str8_bytearray2");
     declare_dict<std::array<char, 8>, bytearray3>(m, "Dict_str8_bytearray3");
     declare_dict<std::array<char, 8>, bytearray4>(m, "Dict_str8_bytearray4");
@@ -360,6 +173,11 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<std::array<char, 8>, bytearray8>(m, "Dict_str8_bytearray8");
     declare_dict<std::array<char, 8>, bytearray9>(m, "Dict_str8_bytearray9");
     declare_dict<std::array<char, 8>, bytearray10>(m, "Dict_str8_bytearray10");
+    declare_dict<std::array<char, 8>, bytearray11>(m, "Dict_str8_bytearray11");
+    declare_dict<std::array<char, 8>, bytearray12>(m, "Dict_str8_bytearray12");
+    declare_dict<std::array<char, 8>, bytearray13>(m, "Dict_str8_bytearray13");
+    declare_dict<std::array<char, 8>, bytearray14>(m, "Dict_str8_bytearray14");
+    declare_dict<std::array<char, 8>, bytearray15>(m, "Dict_str8_bytearray15");
     declare_dict<std::array<char, 8>, bytearray16>(m, "Dict_str8_bytearray16");
     declare_dict<std::array<char, 8>, bytearray20>(m, "Dict_str8_bytearray20");
     declare_dict<std::array<char, 8>, bytearray30>(m, "Dict_str8_bytearray30");
@@ -368,13 +186,29 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<std::array<char, 8>, bytearray50>(m, "Dict_str8_bytearray50");
     declare_dict<std::array<char, 8>, bytearray60>(m, "Dict_str8_bytearray60");
     declare_dict<std::array<char, 8>, bytearray64>(m, "Dict_str8_bytearray64");
+    declare_dict<std::array<char, 8>, bytearray70>(m, "Dict_str8_bytearray70");
     declare_dict<std::array<char, 8>, bytearray80>(m, "Dict_str8_bytearray80");
+    declare_dict<std::array<char, 8>, bytearray90>(m, "Dict_str8_bytearray90");
     declare_dict<std::array<char, 8>, bytearray100>(m, "Dict_str8_bytearray100");
     declare_dict<std::array<char, 8>, bytearray128>(m, "Dict_str8_bytearray128");
+    declare_dict<std::array<char, 8>, byte8array1>(m, "Dict_str8_byte8array1");
+    declare_dict<std::array<char, 8>, byte8array2>(m, "Dict_str8_byte8array2");
+    declare_dict<std::array<char, 8>, byte8array3>(m, "Dict_str8_byte8array3");
+    declare_dict<std::array<char, 8>, byte8array4>(m, "Dict_str8_byte8array4");
+    declare_dict<std::array<char, 8>, byte8array5>(m, "Dict_str8_byte8array5");
+    declare_dict<std::array<char, 8>, byte8array6>(m, "Dict_str8_byte8array6");
+    declare_dict<std::array<char, 8>, byte8array7>(m, "Dict_str8_byte8array7");
+    declare_dict<std::array<char, 8>, byte8array8>(m, "Dict_str8_byte8array8");
+    declare_dict<std::array<char, 8>, byte8array9>(m, "Dict_str8_byte8array9");
+    declare_dict<std::array<char, 8>, byte8array10>(m, "Dict_str8_byte8array10");
+    declare_dict<std::array<char, 8>, byte8array11>(m, "Dict_str8_byte8array11");
+    declare_dict<std::array<char, 8>, byte8array12>(m, "Dict_str8_byte8array12");
+    declare_dict<std::array<char, 8>, byte8array13>(m, "Dict_str8_byte8array13");
+    declare_dict<std::array<char, 8>, byte8array14>(m, "Dict_str8_byte8array14");
+    declare_dict<std::array<char, 8>, byte8array15>(m, "Dict_str8_byte8array15");
+    declare_dict<std::array<char, 8>, byte8array16>(m, "Dict_str8_byte8array16");
     declare_dict<uint32_t, std::array<char, 4>>(m, "Dict_uint32_str4");
     declare_dict<uint32_t, std::array<char, 8>>(m, "Dict_uint32_str8");
-    declare_dict<uint32_t, std::array<char, 16>>(m, "Dict_uint32_str16");
-    declare_dict<uint32_t, std::array<char, 32>>(m, "Dict_uint32_str32");
     declare_dict<uint32_t, uint8_t>(m, "Dict_uint32_uint8");
     declare_dict<uint32_t, uint16_t>(m, "Dict_uint32_uint16");
     declare_dict<uint32_t, uint32_t>(m, "Dict_uint32_uint32");
@@ -385,20 +219,7 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<uint32_t, int64_t>(m, "Dict_uint32_int64");
     declare_dict_without_bitwise_operations<uint32_t, float>(m, "Dict_uint32_float32");
     declare_dict_without_bitwise_operations<uint32_t, double>(m, "Dict_uint32_float64");
-    declare_dict<uint32_t, pair_str4_str4>(m, "Dict_uint32_pair_str4_str4");
-    declare_dict<uint32_t, pair_str8_str8>(m, "Dict_uint32_pair_str8_str8");
-    declare_dict<uint32_t, pair_str16_str16>(m, "Dict_uint32_pair_str16_str16");
-    declare_dict<uint32_t, pair_str32_str32>(m, "Dict_uint32_pair_str32_str32");
-    declare_dict<uint32_t, pair_uint8_uint8>(m, "Dict_uint32_pair_uint8_uint8");
-    declare_dict<uint32_t, pair_uint16_uint16>(m, "Dict_uint32_pair_uint16_uint16");
-    declare_dict<uint32_t, pair_uint32_uint32>(m, "Dict_uint32_pair_uint32_uint32");
-    declare_dict<uint32_t, pair_uint64_uint64>(m, "Dict_uint32_pair_uint64_uint64");
-    declare_dict<uint32_t, pair_int8_int8>(m, "Dict_uint32_pair_int8_int8");
-    declare_dict<uint32_t, pair_int16_int16>(m, "Dict_uint32_pair_int16_int16");
-    declare_dict<uint32_t, pair_int32_int32>(m, "Dict_uint32_pair_int32_int32");
-    declare_dict<uint32_t, pair_int64_int64>(m, "Dict_uint32_pair_int64_int64");
-    declare_dict_without_bitwise_operations<uint32_t, pair_float32_float32>(m, "Dict_uint32_pair_float32_float32");
-    declare_dict_without_bitwise_operations<uint32_t, pair_float64_float64>(m, "Dict_uint32_pair_float64_float64");
+    declare_dict<uint32_t, bytearray1>(m, "Dict_uint32_bytearray1");
     declare_dict<uint32_t, bytearray2>(m, "Dict_uint32_bytearray2");
     declare_dict<uint32_t, bytearray3>(m, "Dict_uint32_bytearray3");
     declare_dict<uint32_t, bytearray4>(m, "Dict_uint32_bytearray4");
@@ -408,6 +229,11 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<uint32_t, bytearray8>(m, "Dict_uint32_bytearray8");
     declare_dict<uint32_t, bytearray9>(m, "Dict_uint32_bytearray9");
     declare_dict<uint32_t, bytearray10>(m, "Dict_uint32_bytearray10");
+    declare_dict<uint32_t, bytearray11>(m, "Dict_uint32_bytearray11");
+    declare_dict<uint32_t, bytearray12>(m, "Dict_uint32_bytearray12");
+    declare_dict<uint32_t, bytearray13>(m, "Dict_uint32_bytearray13");
+    declare_dict<uint32_t, bytearray14>(m, "Dict_uint32_bytearray14");
+    declare_dict<uint32_t, bytearray15>(m, "Dict_uint32_bytearray15");
     declare_dict<uint32_t, bytearray16>(m, "Dict_uint32_bytearray16");
     declare_dict<uint32_t, bytearray20>(m, "Dict_uint32_bytearray20");
     declare_dict<uint32_t, bytearray30>(m, "Dict_uint32_bytearray30");
@@ -416,13 +242,29 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<uint32_t, bytearray50>(m, "Dict_uint32_bytearray50");
     declare_dict<uint32_t, bytearray60>(m, "Dict_uint32_bytearray60");
     declare_dict<uint32_t, bytearray64>(m, "Dict_uint32_bytearray64");
+    declare_dict<uint32_t, bytearray70>(m, "Dict_uint32_bytearray70");
     declare_dict<uint32_t, bytearray80>(m, "Dict_uint32_bytearray80");
+    declare_dict<uint32_t, bytearray90>(m, "Dict_uint32_bytearray90");
     declare_dict<uint32_t, bytearray100>(m, "Dict_uint32_bytearray100");
     declare_dict<uint32_t, bytearray128>(m, "Dict_uint32_bytearray128");
+    declare_dict<uint32_t, byte8array1>(m, "Dict_uint32_byte8array1");
+    declare_dict<uint32_t, byte8array2>(m, "Dict_uint32_byte8array2");
+    declare_dict<uint32_t, byte8array3>(m, "Dict_uint32_byte8array3");
+    declare_dict<uint32_t, byte8array4>(m, "Dict_uint32_byte8array4");
+    declare_dict<uint32_t, byte8array5>(m, "Dict_uint32_byte8array5");
+    declare_dict<uint32_t, byte8array6>(m, "Dict_uint32_byte8array6");
+    declare_dict<uint32_t, byte8array7>(m, "Dict_uint32_byte8array7");
+    declare_dict<uint32_t, byte8array8>(m, "Dict_uint32_byte8array8");
+    declare_dict<uint32_t, byte8array9>(m, "Dict_uint32_byte8array9");
+    declare_dict<uint32_t, byte8array10>(m, "Dict_uint32_byte8array10");
+    declare_dict<uint32_t, byte8array11>(m, "Dict_uint32_byte8array11");
+    declare_dict<uint32_t, byte8array12>(m, "Dict_uint32_byte8array12");
+    declare_dict<uint32_t, byte8array13>(m, "Dict_uint32_byte8array13");
+    declare_dict<uint32_t, byte8array14>(m, "Dict_uint32_byte8array14");
+    declare_dict<uint32_t, byte8array15>(m, "Dict_uint32_byte8array15");
+    declare_dict<uint32_t, byte8array16>(m, "Dict_uint32_byte8array16");
     declare_dict<uint64_t, std::array<char, 4>>(m, "Dict_uint64_str4");
     declare_dict<uint64_t, std::array<char, 8>>(m, "Dict_uint64_str8");
-    declare_dict<uint64_t, std::array<char, 16>>(m, "Dict_uint64_str16");
-    declare_dict<uint64_t, std::array<char, 32>>(m, "Dict_uint64_str32");
     declare_dict<uint64_t, uint8_t>(m, "Dict_uint64_uint8");
     declare_dict<uint64_t, uint16_t>(m, "Dict_uint64_uint16");
     declare_dict<uint64_t, uint32_t>(m, "Dict_uint64_uint32");
@@ -433,20 +275,7 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<uint64_t, int64_t>(m, "Dict_uint64_int64");
     declare_dict_without_bitwise_operations<uint64_t, float>(m, "Dict_uint64_float32");
     declare_dict_without_bitwise_operations<uint64_t, double>(m, "Dict_uint64_float64");
-    declare_dict<uint64_t, pair_str4_str4>(m, "Dict_uint64_pair_str4_str4");
-    declare_dict<uint64_t, pair_str8_str8>(m, "Dict_uint64_pair_str8_str8");
-    declare_dict<uint64_t, pair_str16_str16>(m, "Dict_uint64_pair_str16_str16");
-    declare_dict<uint64_t, pair_str32_str32>(m, "Dict_uint64_pair_str32_str32");
-    declare_dict<uint64_t, pair_uint8_uint8>(m, "Dict_uint64_pair_uint8_uint8");
-    declare_dict<uint64_t, pair_uint16_uint16>(m, "Dict_uint64_pair_uint16_uint16");
-    declare_dict<uint64_t, pair_uint32_uint32>(m, "Dict_uint64_pair_uint32_uint32");
-    declare_dict<uint64_t, pair_uint64_uint64>(m, "Dict_uint64_pair_uint64_uint64");
-    declare_dict<uint64_t, pair_int8_int8>(m, "Dict_uint64_pair_int8_int8");
-    declare_dict<uint64_t, pair_int16_int16>(m, "Dict_uint64_pair_int16_int16");
-    declare_dict<uint64_t, pair_int32_int32>(m, "Dict_uint64_pair_int32_int32");
-    declare_dict<uint64_t, pair_int64_int64>(m, "Dict_uint64_pair_int64_int64");
-    declare_dict_without_bitwise_operations<uint64_t, pair_float32_float32>(m, "Dict_uint64_pair_float32_float32");
-    declare_dict_without_bitwise_operations<uint64_t, pair_float64_float64>(m, "Dict_uint64_pair_float64_float64");
+    declare_dict<uint64_t, bytearray1>(m, "Dict_uint64_bytearray1");
     declare_dict<uint64_t, bytearray2>(m, "Dict_uint64_bytearray2");
     declare_dict<uint64_t, bytearray3>(m, "Dict_uint64_bytearray3");
     declare_dict<uint64_t, bytearray4>(m, "Dict_uint64_bytearray4");
@@ -456,6 +285,11 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<uint64_t, bytearray8>(m, "Dict_uint64_bytearray8");
     declare_dict<uint64_t, bytearray9>(m, "Dict_uint64_bytearray9");
     declare_dict<uint64_t, bytearray10>(m, "Dict_uint64_bytearray10");
+    declare_dict<uint64_t, bytearray11>(m, "Dict_uint64_bytearray11");
+    declare_dict<uint64_t, bytearray12>(m, "Dict_uint64_bytearray12");
+    declare_dict<uint64_t, bytearray13>(m, "Dict_uint64_bytearray13");
+    declare_dict<uint64_t, bytearray14>(m, "Dict_uint64_bytearray14");
+    declare_dict<uint64_t, bytearray15>(m, "Dict_uint64_bytearray15");
     declare_dict<uint64_t, bytearray16>(m, "Dict_uint64_bytearray16");
     declare_dict<uint64_t, bytearray20>(m, "Dict_uint64_bytearray20");
     declare_dict<uint64_t, bytearray30>(m, "Dict_uint64_bytearray30");
@@ -464,13 +298,29 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<uint64_t, bytearray50>(m, "Dict_uint64_bytearray50");
     declare_dict<uint64_t, bytearray60>(m, "Dict_uint64_bytearray60");
     declare_dict<uint64_t, bytearray64>(m, "Dict_uint64_bytearray64");
+    declare_dict<uint64_t, bytearray70>(m, "Dict_uint64_bytearray70");
     declare_dict<uint64_t, bytearray80>(m, "Dict_uint64_bytearray80");
+    declare_dict<uint64_t, bytearray90>(m, "Dict_uint64_bytearray90");
     declare_dict<uint64_t, bytearray100>(m, "Dict_uint64_bytearray100");
     declare_dict<uint64_t, bytearray128>(m, "Dict_uint64_bytearray128");
+    declare_dict<uint64_t, byte8array1>(m, "Dict_uint64_byte8array1");
+    declare_dict<uint64_t, byte8array2>(m, "Dict_uint64_byte8array2");
+    declare_dict<uint64_t, byte8array3>(m, "Dict_uint64_byte8array3");
+    declare_dict<uint64_t, byte8array4>(m, "Dict_uint64_byte8array4");
+    declare_dict<uint64_t, byte8array5>(m, "Dict_uint64_byte8array5");
+    declare_dict<uint64_t, byte8array6>(m, "Dict_uint64_byte8array6");
+    declare_dict<uint64_t, byte8array7>(m, "Dict_uint64_byte8array7");
+    declare_dict<uint64_t, byte8array8>(m, "Dict_uint64_byte8array8");
+    declare_dict<uint64_t, byte8array9>(m, "Dict_uint64_byte8array9");
+    declare_dict<uint64_t, byte8array10>(m, "Dict_uint64_byte8array10");
+    declare_dict<uint64_t, byte8array11>(m, "Dict_uint64_byte8array11");
+    declare_dict<uint64_t, byte8array12>(m, "Dict_uint64_byte8array12");
+    declare_dict<uint64_t, byte8array13>(m, "Dict_uint64_byte8array13");
+    declare_dict<uint64_t, byte8array14>(m, "Dict_uint64_byte8array14");
+    declare_dict<uint64_t, byte8array15>(m, "Dict_uint64_byte8array15");
+    declare_dict<uint64_t, byte8array16>(m, "Dict_uint64_byte8array16");
     declare_dict<int32_t, std::array<char, 4>>(m, "Dict_int32_str4");
     declare_dict<int32_t, std::array<char, 8>>(m, "Dict_int32_str8");
-    declare_dict<int32_t, std::array<char, 16>>(m, "Dict_int32_str16");
-    declare_dict<int32_t, std::array<char, 32>>(m, "Dict_int32_str32");
     declare_dict<int32_t, uint8_t>(m, "Dict_int32_uint8");
     declare_dict<int32_t, uint16_t>(m, "Dict_int32_uint16");
     declare_dict<int32_t, uint32_t>(m, "Dict_int32_uint32");
@@ -481,20 +331,7 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<int32_t, int64_t>(m, "Dict_int32_int64");
     declare_dict_without_bitwise_operations<int32_t, float>(m, "Dict_int32_float32");
     declare_dict_without_bitwise_operations<int32_t, double>(m, "Dict_int32_float64");
-    declare_dict<int32_t, pair_str4_str4>(m, "Dict_int32_pair_str4_str4");
-    declare_dict<int32_t, pair_str8_str8>(m, "Dict_int32_pair_str8_str8");
-    declare_dict<int32_t, pair_str16_str16>(m, "Dict_int32_pair_str16_str16");
-    declare_dict<int32_t, pair_str32_str32>(m, "Dict_int32_pair_str32_str32");
-    declare_dict<int32_t, pair_uint8_uint8>(m, "Dict_int32_pair_uint8_uint8");
-    declare_dict<int32_t, pair_uint16_uint16>(m, "Dict_int32_pair_uint16_uint16");
-    declare_dict<int32_t, pair_uint32_uint32>(m, "Dict_int32_pair_uint32_uint32");
-    declare_dict<int32_t, pair_uint64_uint64>(m, "Dict_int32_pair_uint64_uint64");
-    declare_dict<int32_t, pair_int8_int8>(m, "Dict_int32_pair_int8_int8");
-    declare_dict<int32_t, pair_int16_int16>(m, "Dict_int32_pair_int16_int16");
-    declare_dict<int32_t, pair_int32_int32>(m, "Dict_int32_pair_int32_int32");
-    declare_dict<int32_t, pair_int64_int64>(m, "Dict_int32_pair_int64_int64");
-    declare_dict_without_bitwise_operations<int32_t, pair_float32_float32>(m, "Dict_int32_pair_float32_float32");
-    declare_dict_without_bitwise_operations<int32_t, pair_float64_float64>(m, "Dict_int32_pair_float64_float64");
+    declare_dict<int32_t, bytearray1>(m, "Dict_int32_bytearray1");
     declare_dict<int32_t, bytearray2>(m, "Dict_int32_bytearray2");
     declare_dict<int32_t, bytearray3>(m, "Dict_int32_bytearray3");
     declare_dict<int32_t, bytearray4>(m, "Dict_int32_bytearray4");
@@ -504,6 +341,11 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<int32_t, bytearray8>(m, "Dict_int32_bytearray8");
     declare_dict<int32_t, bytearray9>(m, "Dict_int32_bytearray9");
     declare_dict<int32_t, bytearray10>(m, "Dict_int32_bytearray10");
+    declare_dict<int32_t, bytearray11>(m, "Dict_int32_bytearray11");
+    declare_dict<int32_t, bytearray12>(m, "Dict_int32_bytearray12");
+    declare_dict<int32_t, bytearray13>(m, "Dict_int32_bytearray13");
+    declare_dict<int32_t, bytearray14>(m, "Dict_int32_bytearray14");
+    declare_dict<int32_t, bytearray15>(m, "Dict_int32_bytearray15");
     declare_dict<int32_t, bytearray16>(m, "Dict_int32_bytearray16");
     declare_dict<int32_t, bytearray20>(m, "Dict_int32_bytearray20");
     declare_dict<int32_t, bytearray30>(m, "Dict_int32_bytearray30");
@@ -512,13 +354,29 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<int32_t, bytearray50>(m, "Dict_int32_bytearray50");
     declare_dict<int32_t, bytearray60>(m, "Dict_int32_bytearray60");
     declare_dict<int32_t, bytearray64>(m, "Dict_int32_bytearray64");
+    declare_dict<int32_t, bytearray70>(m, "Dict_int32_bytearray70");
     declare_dict<int32_t, bytearray80>(m, "Dict_int32_bytearray80");
+    declare_dict<int32_t, bytearray90>(m, "Dict_int32_bytearray90");
     declare_dict<int32_t, bytearray100>(m, "Dict_int32_bytearray100");
     declare_dict<int32_t, bytearray128>(m, "Dict_int32_bytearray128");
+    declare_dict<int32_t, byte8array1>(m, "Dict_int32_byte8array1");
+    declare_dict<int32_t, byte8array2>(m, "Dict_int32_byte8array2");
+    declare_dict<int32_t, byte8array3>(m, "Dict_int32_byte8array3");
+    declare_dict<int32_t, byte8array4>(m, "Dict_int32_byte8array4");
+    declare_dict<int32_t, byte8array5>(m, "Dict_int32_byte8array5");
+    declare_dict<int32_t, byte8array6>(m, "Dict_int32_byte8array6");
+    declare_dict<int32_t, byte8array7>(m, "Dict_int32_byte8array7");
+    declare_dict<int32_t, byte8array8>(m, "Dict_int32_byte8array8");
+    declare_dict<int32_t, byte8array9>(m, "Dict_int32_byte8array9");
+    declare_dict<int32_t, byte8array10>(m, "Dict_int32_byte8array10");
+    declare_dict<int32_t, byte8array11>(m, "Dict_int32_byte8array11");
+    declare_dict<int32_t, byte8array12>(m, "Dict_int32_byte8array12");
+    declare_dict<int32_t, byte8array13>(m, "Dict_int32_byte8array13");
+    declare_dict<int32_t, byte8array14>(m, "Dict_int32_byte8array14");
+    declare_dict<int32_t, byte8array15>(m, "Dict_int32_byte8array15");
+    declare_dict<int32_t, byte8array16>(m, "Dict_int32_byte8array16");
     declare_dict<int64_t, std::array<char, 4>>(m, "Dict_int64_str4");
     declare_dict<int64_t, std::array<char, 8>>(m, "Dict_int64_str8");
-    declare_dict<int64_t, std::array<char, 16>>(m, "Dict_int64_str16");
-    declare_dict<int64_t, std::array<char, 32>>(m, "Dict_int64_str32");
     declare_dict<int64_t, uint8_t>(m, "Dict_int64_uint8");
     declare_dict<int64_t, uint16_t>(m, "Dict_int64_uint16");
     declare_dict<int64_t, uint32_t>(m, "Dict_int64_uint32");
@@ -529,20 +387,7 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<int64_t, int64_t>(m, "Dict_int64_int64");
     declare_dict_without_bitwise_operations<int64_t, float>(m, "Dict_int64_float32");
     declare_dict_without_bitwise_operations<int64_t, double>(m, "Dict_int64_float64");
-    declare_dict<int64_t, pair_str4_str4>(m, "Dict_int64_pair_str4_str4");
-    declare_dict<int64_t, pair_str8_str8>(m, "Dict_int64_pair_str8_str8");
-    declare_dict<int64_t, pair_str16_str16>(m, "Dict_int64_pair_str16_str16");
-    declare_dict<int64_t, pair_str32_str32>(m, "Dict_int64_pair_str32_str32");
-    declare_dict<int64_t, pair_uint8_uint8>(m, "Dict_int64_pair_uint8_uint8");
-    declare_dict<int64_t, pair_uint16_uint16>(m, "Dict_int64_pair_uint16_uint16");
-    declare_dict<int64_t, pair_uint32_uint32>(m, "Dict_int64_pair_uint32_uint32");
-    declare_dict<int64_t, pair_uint64_uint64>(m, "Dict_int64_pair_uint64_uint64");
-    declare_dict<int64_t, pair_int8_int8>(m, "Dict_int64_pair_int8_int8");
-    declare_dict<int64_t, pair_int16_int16>(m, "Dict_int64_pair_int16_int16");
-    declare_dict<int64_t, pair_int32_int32>(m, "Dict_int64_pair_int32_int32");
-    declare_dict<int64_t, pair_int64_int64>(m, "Dict_int64_pair_int64_int64");
-    declare_dict_without_bitwise_operations<int64_t, pair_float32_float32>(m, "Dict_int64_pair_float32_float32");
-    declare_dict_without_bitwise_operations<int64_t, pair_float64_float64>(m, "Dict_int64_pair_float64_float64");
+    declare_dict<int64_t, bytearray1>(m, "Dict_int64_bytearray1");
     declare_dict<int64_t, bytearray2>(m, "Dict_int64_bytearray2");
     declare_dict<int64_t, bytearray3>(m, "Dict_int64_bytearray3");
     declare_dict<int64_t, bytearray4>(m, "Dict_int64_bytearray4");
@@ -552,6 +397,11 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<int64_t, bytearray8>(m, "Dict_int64_bytearray8");
     declare_dict<int64_t, bytearray9>(m, "Dict_int64_bytearray9");
     declare_dict<int64_t, bytearray10>(m, "Dict_int64_bytearray10");
+    declare_dict<int64_t, bytearray11>(m, "Dict_int64_bytearray11");
+    declare_dict<int64_t, bytearray12>(m, "Dict_int64_bytearray12");
+    declare_dict<int64_t, bytearray13>(m, "Dict_int64_bytearray13");
+    declare_dict<int64_t, bytearray14>(m, "Dict_int64_bytearray14");
+    declare_dict<int64_t, bytearray15>(m, "Dict_int64_bytearray15");
     declare_dict<int64_t, bytearray16>(m, "Dict_int64_bytearray16");
     declare_dict<int64_t, bytearray20>(m, "Dict_int64_bytearray20");
     declare_dict<int64_t, bytearray30>(m, "Dict_int64_bytearray30");
@@ -560,7 +410,76 @@ PYBIND11_MODULE(_getpy, m) {
     declare_dict<int64_t, bytearray50>(m, "Dict_int64_bytearray50");
     declare_dict<int64_t, bytearray60>(m, "Dict_int64_bytearray60");
     declare_dict<int64_t, bytearray64>(m, "Dict_int64_bytearray64");
+    declare_dict<int64_t, bytearray70>(m, "Dict_int64_bytearray70");
     declare_dict<int64_t, bytearray80>(m, "Dict_int64_bytearray80");
+    declare_dict<int64_t, bytearray90>(m, "Dict_int64_bytearray90");
     declare_dict<int64_t, bytearray100>(m, "Dict_int64_bytearray100");
     declare_dict<int64_t, bytearray128>(m, "Dict_int64_bytearray128");
+    declare_dict<int64_t, byte8array1>(m, "Dict_int64_byte8array1");
+    declare_dict<int64_t, byte8array2>(m, "Dict_int64_byte8array2");
+    declare_dict<int64_t, byte8array3>(m, "Dict_int64_byte8array3");
+    declare_dict<int64_t, byte8array4>(m, "Dict_int64_byte8array4");
+    declare_dict<int64_t, byte8array5>(m, "Dict_int64_byte8array5");
+    declare_dict<int64_t, byte8array6>(m, "Dict_int64_byte8array6");
+    declare_dict<int64_t, byte8array7>(m, "Dict_int64_byte8array7");
+    declare_dict<int64_t, byte8array8>(m, "Dict_int64_byte8array8");
+    declare_dict<int64_t, byte8array9>(m, "Dict_int64_byte8array9");
+    declare_dict<int64_t, byte8array10>(m, "Dict_int64_byte8array10");
+    declare_dict<int64_t, byte8array11>(m, "Dict_int64_byte8array11");
+    declare_dict<int64_t, byte8array12>(m, "Dict_int64_byte8array12");
+    declare_dict<int64_t, byte8array13>(m, "Dict_int64_byte8array13");
+    declare_dict<int64_t, byte8array14>(m, "Dict_int64_byte8array14");
+    declare_dict<int64_t, byte8array15>(m, "Dict_int64_byte8array15");
+    declare_dict<int64_t, byte8array16>(m, "Dict_int64_byte8array16");
+
+    declare_set<std::array<char, 4>>(m, "Set_str4");
+    declare_set<std::array<char, 8>>(m, "Set_str8");
+    declare_set<uint32_t>(m, "Set_uint32");
+    declare_set<uint64_t>(m, "Set_uint64");
+    declare_set<int32_t>(m, "Set_int32");
+    declare_set<int64_t>(m, "Set_int64");
+    declare_set<bytearray1>(m, "Set_bytearray1");
+    declare_set<bytearray2>(m, "Set_bytearray2");
+    declare_set<bytearray3>(m, "Set_bytearray3");
+    declare_set<bytearray4>(m, "Set_bytearray4");
+    declare_set<bytearray5>(m, "Set_bytearray5");
+    declare_set<bytearray6>(m, "Set_bytearray6");
+    declare_set<bytearray7>(m, "Set_bytearray7");
+    declare_set<bytearray8>(m, "Set_bytearray8");
+    declare_set<bytearray9>(m, "Set_bytearray9");
+    declare_set<bytearray10>(m, "Set_bytearray10");
+    declare_set<bytearray11>(m, "Set_bytearray11");
+    declare_set<bytearray12>(m, "Set_bytearray12");
+    declare_set<bytearray13>(m, "Set_bytearray13");
+    declare_set<bytearray14>(m, "Set_bytearray14");
+    declare_set<bytearray15>(m, "Set_bytearray15");
+    declare_set<bytearray16>(m, "Set_bytearray16");
+    declare_set<bytearray20>(m, "Set_bytearray20");
+    declare_set<bytearray30>(m, "Set_bytearray30");
+    declare_set<bytearray32>(m, "Set_bytearray32");
+    declare_set<bytearray40>(m, "Set_bytearray40");
+    declare_set<bytearray50>(m, "Set_bytearray50");
+    declare_set<bytearray60>(m, "Set_bytearray60");
+    declare_set<bytearray64>(m, "Set_bytearray64");
+    declare_set<bytearray70>(m, "Set_bytearray70");
+    declare_set<bytearray80>(m, "Set_bytearray80");
+    declare_set<bytearray90>(m, "Set_bytearray90");
+    declare_set<bytearray100>(m, "Set_bytearray100");
+    declare_set<bytearray128>(m, "Set_bytearray128");
+    declare_set<byte8array1>(m, "Set_byte8array1");
+    declare_set<byte8array2>(m, "Set_byte8array2");
+    declare_set<byte8array3>(m, "Set_byte8array3");
+    declare_set<byte8array4>(m, "Set_byte8array4");
+    declare_set<byte8array5>(m, "Set_byte8array5");
+    declare_set<byte8array6>(m, "Set_byte8array6");
+    declare_set<byte8array7>(m, "Set_byte8array7");
+    declare_set<byte8array8>(m, "Set_byte8array8");
+    declare_set<byte8array9>(m, "Set_byte8array9");
+    declare_set<byte8array10>(m, "Set_byte8array10");
+    declare_set<byte8array11>(m, "Set_byte8array11");
+    declare_set<byte8array12>(m, "Set_byte8array12");
+    declare_set<byte8array13>(m, "Set_byte8array13");
+    declare_set<byte8array14>(m, "Set_byte8array14");
+    declare_set<byte8array15>(m, "Set_byte8array15");
+    declare_set<byte8array16>(m, "Set_byte8array16");
 }

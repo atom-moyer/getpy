@@ -3,14 +3,14 @@ import itertools
 import numpy as np
 
 
-bytearray_lengths = [2,3,4,5,6,7,8,9,10,16,20,30,32,40,50,60,64,80,100,128]
+bytearray_lengths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+                     20, 30, 32, 40, 50, 60, 64, 70, 80, 90, 100, 128]
+byte8array_lengths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
 
 basic_types = [
     'str4',
     'str8',
-    'str16',
-    'str32',
 
     'uint8',
     'uint16',
@@ -81,106 +81,102 @@ key_types = [
 ]
 
 
-value_types = [
-    *[basic_type for basic_type in basic_types],
+set_key_types = [
+    'str4',
+    'str8',
 
-    *[f'pair_{bt}_{bt}' for bt in basic_types],
+    'uint32',
+    'uint64',
+
+    'int32',
+    'int64',
 
     *[f'bytearray{i}' for i in bytearray_lengths],
+
+    *[f'byte8array{i}' for i in byte8array_lengths],
 ]
 
 
-assert all([type_ in value_types for type_ in key_types])
+value_types = [
+    *[basic_type for basic_type in basic_types],
+
+    *[f'bytearray{i}' for i in bytearray_lengths],
+
+    *[f'byte8array{i}' for i in byte8array_lengths],
+]
+
+
+assert all([type_ in value_types for type_ in key_types + set_key_types])
 
 
 cpp_types = {
     **{basic_type : basic_cpp_types[basic_type] for basic_type in basic_types},
 
-    **{f'pair_{bt}_{bt}' : f'pair_{bt}_{bt}' for bt in basic_types},
-
     **{f'bytearray{i}' : f'bytearray{i}' for i in bytearray_lengths},
+
+    **{f'byte8array{i}' : f'byte8array{i}' for i in byte8array_lengths},
 }
 
 
 np_types = {
     **{basic_type : basic_np_types[basic_type] for basic_type in basic_types},
 
-    **{f'pair_{bt}_{bt}' : {'names' : ['first', 'second'], 'formats' : [basic_np_types[bt], basic_np_types[bt]]} for bt in basic_types},
-
     **{f'bytearray{i}' : {'names' : ['bytearray'], 'formats' : [f'{i}u1']} for i in bytearray_lengths},
+
+    **{f'byte8array{i}' : {'names' : ['bytearray'], 'formats' : [f'{i}u8']} for i in byte8array_lengths},
 }
 
 
-struct_types = {
-    **{f'pair_{bt}_{bt}' : f'struct pair_{bt}_{bt} {{ {basic_cpp_types[bt]} first; {basic_cpp_types[bt]} second; }};' for bt in basic_types},
+generic_types = {
+    **{f'bytearray{i}' : f'using bytearray{i} = bytearray<uint8_t, {i}>;' for i in bytearray_lengths},
 
-    **{f'bytearray{i}' : f'struct bytearray{i} {{ std::array<uint8_t, {i}> bytearray; }};' for i in bytearray_lengths},
+    **{f'byte8array{i}' : f'using byte8array{i} = bytearray<uint64_t, {i}>;' for i in byte8array_lengths},
 }
 
 
-def create_class_name(key_type, value_type):
+def create_dict_class_name(key_type, value_type):
     return f'Dict_{key_type}_{value_type}'
 
 
+def create_set_class_name(key_type):
+    return f'Set_{key_type}'
+
+
 def write_dict_types_dict(getpy_file, key_type, value_type):
-    class_name = create_class_name(key_type, value_type)
+    class_name = create_dict_class_name(key_type, value_type)
     getpy_file.write(f"    (types['{key_type}'], types['{value_type}']) : _gp.{class_name},\n")
 
 
-def write_struct_types(getpy_file, type_):
-    getpy_file.write(f'{struct_types[type_]}\n')
+def write_set_types_dict(getpy_file, key_type):
+    class_name = create_set_class_name(key_type)
+    getpy_file.write(f"    (types['{key_type}']) : _gp.{class_name},\n")
 
 
-def write_struct_serialization(getpy_file, type_):
-    if type_.startswith('pair'):
-        getpy_file.write(f'template<class Archive> void serialize(Archive & archive, {type_} & pair) {{ archive( pair.first, pair.second ); }}\n')
-
-    elif type_.startswith('bytearray'):
-        getpy_file.write(f'template<class Archive> void serialize(Archive & archive, {type_} & bytearray) {{ archive( bytearray.bytearray ); }}\n')
-
-    else:
-        pass
-
-
-def write_struct_operators(getpy_file, type_):
-    if type_.startswith('pair'):
-        getpy_file.write(f'{type_} & operator += ( {type_} & a, {type_} b ) {{ a.first += b.first; a.second += b.second; }}\n')
-        getpy_file.write(f'{type_} & operator -= ( {type_} & a, {type_} b ) {{ a.first -= b.first; a.second -= b.second; }}\n')
-
-        if 'float' not in type_:
-            getpy_file.write(f'{type_} & operator |= ( {type_} & a, {type_} b ) {{ a.first |= b.first; a.second |= b.second; }}\n')
-            getpy_file.write(f'{type_} & operator &= ( {type_} & a, {type_} b ) {{ a.first &= b.first; a.second &= b.second; }}\n')
-        else:
-            pass
-
-    elif type_.startswith('bytearray'):
-        getpy_file.write(f'{type_} & operator += ( {type_} & a, {type_} b ) {{ a.bytearray += b.bytearray; }}\n')
-        getpy_file.write(f'{type_} & operator -= ( {type_} & a, {type_} b ) {{ a.bytearray -= b.bytearray; }}\n')
-        getpy_file.write(f'{type_} & operator |= ( {type_} & a, {type_} b ) {{ a.bytearray |= b.bytearray; }}\n')
-        getpy_file.write(f'{type_} & operator &= ( {type_} & a, {type_} b ) {{ a.bytearray &= b.bytearray; }}\n')
-
-    else:
-        pass
+def write_generic_types(getpy_file, type_):
+    getpy_file.write(f'{generic_types[type_]}\n')
 
 
 def write_numpy_dtype(getpy_file, type_):
-    if type_.startswith('pair'):
-        getpy_file.write(f'    PYBIND11_NUMPY_DTYPE({cpp_types[type_]}, first, second );\n')
-
-    elif type_.startswith('bytearray'):
-        getpy_file.write(f'    PYBIND11_NUMPY_DTYPE({cpp_types[type_]}, bytearray );\n')
+    if type_.startswith('bytearray') or type_.startswith('byte8array'):
+        getpy_file.write(f'    PYBIND11_NUMPY_DTYPE( {cpp_types[type_]}, bytearray );\n')
 
     else:
         pass
 
 
 def write_declare_dict(getpy_file, key_type, value_type):
-    class_name = create_class_name(key_type, value_type)
+    class_name = create_dict_class_name(key_type, value_type)
 
     if 'float' in value_type:
         getpy_file.write(f'    declare_dict_without_bitwise_operations<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "{class_name}");\n')
     else:
         getpy_file.write(f'    declare_dict<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "{class_name}");\n')
+
+
+def write_declare_set(getpy_file, key_type):
+    class_name = create_set_class_name(key_type)
+
+    getpy_file.write(f'    declare_set<{cpp_types[key_type]}>(m, "{class_name}");\n')
 
 
 def write_types_dict(getpy_file, type_):
@@ -200,11 +196,8 @@ def write_getpy_cpp(key_types, value_types):
 """)
 
         for type_ in value_types:
-            if type_ in struct_types:
-                write_struct_types(getpy_file, type_)
-                write_struct_serialization(getpy_file, type_)
-                write_struct_operators(getpy_file, type_)
-                getpy_file.write('\n')
+            if type_ in generic_types:
+                write_generic_types(getpy_file, type_)
             else:
                 pass
 
@@ -216,7 +209,7 @@ PYBIND11_MODULE(_getpy, m) {
 """)
 
         for type_ in value_types:
-            if type_ in struct_types:
+            if type_ in generic_types:
                 write_numpy_dtype(getpy_file, type_)
             else:
                 pass
@@ -225,6 +218,11 @@ PYBIND11_MODULE(_getpy, m) {
 
         for key_type, value_type in itertools.product(key_types, value_types):
             write_declare_dict(getpy_file, key_type, value_type)
+
+        getpy_file.write('\n')
+
+        for key_type in set_key_types:
+            write_declare_set(getpy_file, key_type)
 
         getpy_file.write("""\
 }
@@ -255,6 +253,19 @@ dict_types = {
 
         for key_type, value_type in itertools.product(key_types, value_types):
             write_dict_types_dict(getpy_file, key_type, value_type)
+
+        getpy_file.write("""\
+}
+""")
+
+
+        getpy_file.write("""\
+
+set_types = {
+""")
+
+        for key_type in set_key_types:
+            write_set_types_dict(getpy_file, key_type)
 
         getpy_file.write("""\
 }
