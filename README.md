@@ -93,8 +93,8 @@ values = np.packbits([np.array([1, 0, 1, 0, 1, 0, 1, 0,
                                 1, 1, 1, 1, 1, 1, 1, 1]*25, dtype=np.bool)]*200, axis=1).view(value_type)
 gp_dict[keys] = values
 
-# keys = [key for key in gp_dict]
-# keys_and_values = [(key, value) for key, value in gp_dict.items()]
+iterated_keys = [key for key in gp_dict]
+iterated_keys_and_values = [(key, value) for key, value in gp_dict.items()]
 
 select_keys = np.random.choice(keys, size=100)
 select_values = gp_dict[select_keys]
@@ -118,8 +118,8 @@ gp_dict_1 = sp.Dict(key_type, value_type)
 
 keys = np.random.randint(1000, size=10, dtype=key_type)
 values = np.random.randint(1000, size=10, dtype=value_type)
-gp_dict_1[keys] = values
 
+gp_dict_1[keys] = values
 gp_dict_1.dump('test/test.hashtable.bin')
 
 gp_dict_2 = gp.Dict(key_type, value_type)
