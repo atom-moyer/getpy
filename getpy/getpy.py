@@ -72,13 +72,22 @@ class Dict(MutableMapping):
         return self.__dict.__len__()
 
 
-    def __iter__(self):
-        for key, value in self.items():
-            yield key
+    def keys(self):
+        return self.__dict.keys()
+
+
+    def values(self):
+        return self.__dict.values()
 
 
     def items(self):
-        return self.__dict.items()
+        for key, value in zip(*self.__dict.items()):
+            yield (key, value)
+
+
+    def __iter__(self):
+        for key in self.keys():
+            yield key
 
 
     def dump(self, filename):
@@ -165,13 +174,13 @@ class Set(object):
         return self.__set.__len__()
 
 
-    def __iter__(self):
-        for key in self.items():
-            yield key
-
-
     def items(self):
         return self.__set.items()
+
+
+    def __iter__(self):
+        for item in self.items():
+            yield item
 
 
     def dump(self, filename):

@@ -216,6 +216,56 @@ struct Dict {
     }
 
 
+    py::array_t<Key> keys () {
+        auto result_array = py::array_t<Key>( __dict.size() );
+        py::buffer_info result_array_buffer = result_array.request();
+        auto * result_array_ptr = (Key *) result_array_buffer.ptr;
+
+        size_t idx = 0;
+        for ( auto & key_value : __dict ) {
+            result_array_ptr[idx] = key_value.first;
+            idx++;
+        }
+
+        return result_array;
+    }
+
+
+    py::array_t<Value> values () {
+        auto result_array = py::array_t<Value>( __dict.size() );
+        py::buffer_info result_array_buffer = result_array.request();
+        auto * result_array_ptr = (Value *) result_array_buffer.ptr;
+
+        size_t idx = 0;
+        for ( auto & key_value : __dict ) {
+            result_array_ptr[idx] = key_value.second;
+            idx++;
+        }
+
+        return result_array;
+    }
+
+
+    std::pair<py::array_t<Key>, py::array_t<Value>> items () {
+        auto key_result_array = py::array_t<Key>( __dict.size() );
+        py::buffer_info key_result_array_buffer = key_result_array.request();
+        auto * key_result_array_ptr = (Key *) key_result_array_buffer.ptr;
+
+        auto value_result_array = py::array_t<Value>( __dict.size() );
+        py::buffer_info value_result_array_buffer = value_result_array.request();
+        auto * value_result_array_ptr = (Value *) value_result_array_buffer.ptr;
+
+        size_t idx = 0;
+        for ( auto & key_value : __dict ) {
+            key_result_array_ptr[idx] = key_value.first;
+            value_result_array_ptr[idx] = key_value.second;
+            idx++;
+        }
+
+        return std::make_pair(key_result_array, value_result_array);
+    }
+
+
     void dump ( const std::string & filename ) {
         std::ofstream stream ( filename , std::ios::binary );
         cereal::BinaryOutputArchive oarchive ( stream );
@@ -306,6 +356,21 @@ struct Set {
     }
 
 
+    py::array_t<Key> items () {
+        auto result_array = py::array_t<Key>( __set.size() );
+        py::buffer_info result_array_buffer = result_array.request();
+        auto * result_array_ptr = (Key *) result_array_buffer.ptr;
+
+        size_t idx = 0;
+        for ( auto & key : __set ) {
+            result_array_ptr[idx] = key;
+            idx++;
+        }
+
+        return result_array;
+    }
+
+
     void dump ( const std::string & filename ) {
         std::ofstream stream ( filename , std::ios::binary );
         cereal::BinaryOutputArchive oarchive ( stream );
@@ -355,7 +420,11 @@ void declare_dict(const py::module& m, const std::string& class_name) {
       .def("dump", &Class::dump)
       .def("load", &Class::load)
 
-      .def("items", [](const Class &c) { return py::make_iterator(c.__dict.begin(), c.__dict.end()); }, py::keep_alive<0, 1>() )
+      .def("keys", &Class::keys)
+      .def("values", &Class::values)
+      .def("items", &Class::items)
+
+      // .def("items", [](const Class &c) { return py::make_iterator(c.__dict.begin(), c.__dict.end()); }, py::keep_alive<0, 1>() )
       .def("__len__", &Class::__len__);
 }
 
@@ -382,7 +451,9 @@ void declare_dict_without_bitwise_operations(const py::module& m, const std::str
         .def("dump", &Class::dump)
         .def("load", &Class::load)
 
-        .def("items", [](const Class &c) { return py::make_iterator(c.__dict.begin(), c.__dict.end()); }, py::keep_alive<0, 1>() )
+        .def("keys", &Class::keys)
+
+        // .def("items", [](const Class &c) { return py::make_iterator(c.__dict.begin(), c.__dict.end()); }, py::keep_alive<0, 1>() )
         .def("__len__", &Class::__len__);
 }
 
@@ -402,7 +473,9 @@ void declare_set(const py::module& m, const std::string& class_name) {
       .def("dump", &Class::dump)
       .def("load", &Class::load)
 
-      .def("items", [](const Class &c) { return py::make_iterator(c.__set.begin(), c.__set.end()); }, py::keep_alive<0, 1>() )
+      .def("items", &Class::items)
+
+      // .def("items", [](const Class &c) { return py::make_iterator(c.__set.begin(), c.__set.end()); }, py::keep_alive<0, 1>() )
       .def("__len__", &Class::__len__);
 }
 
