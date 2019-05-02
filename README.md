@@ -90,7 +90,10 @@ gp_dict = gp.Dict(key_type, value_type)
 
 keys = np.random.randint(1, 1000, size=200, dtype=key_type)
 values = np.packbits([np.array([1, 0, 1, 0, 1, 0, 1, 0,
-                                1, 1, 1, 1, 1, 1, 1, 1]*25, dtype=np.bool)]*200, axis=1).view(value_type)
+                                1, 1, 1, 1, 1, 1, 1, 1]*25, dtype=np.bool)]*200, axis=1)
+
+values = values.view(value_type)
+
 gp_dict[keys] = values
 
 iterated_keys = [key for key in gp_dict]
