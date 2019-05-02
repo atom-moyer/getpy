@@ -115,7 +115,7 @@ import numpy as np
 import getpy as gp
 
 key_type = np.dtype('u8')
-value_type = np.int64
+value_type = np.dtype('u8')
 
 gp_dict_1 = sp.Dict(key_type, value_type)
 
