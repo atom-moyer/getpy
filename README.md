@@ -51,9 +51,6 @@ mask_values = gp_dict[mask_keys]
 
 ### Simple Example With Default Value
 ```python
-import numpy as np
-import getpy as gp
-
 key_type = np.dtype('u8')
 value_type = np.dtype('u8')
 
@@ -111,9 +108,6 @@ mask_values = gp_dict[mask_keys]
 
 ### Serialization Example
 ```python
-import numpy as np
-import getpy as gp
-
 key_type = np.dtype('u8')
 value_type = np.dtype('u8')
 
