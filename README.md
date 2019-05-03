@@ -4,6 +4,8 @@ The goal of GetPy is filling the need for high performance python dictionary tha
 
 ## Installation
 `pip install git+https://github.com/atom-moyer/getpy.git`
+
+
 Warning: Currently about 16gb of memory is necessary for compilation. I am working on making a precompiled build for distribution.
 
 ## About
