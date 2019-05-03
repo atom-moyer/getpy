@@ -6,7 +6,7 @@ The goal of GetPy is filling the need for high performance python dictionary tha
 `pip install git+https://github.com/atom-moyer/getpy.git`
 
 
-Currently about 16gb of memory is necessary for compilation. I am working on making a precompiled build for distribution.
+Currently about 16gb of memory is necessary for compilation. I am working on distributing a precompiled build.
 
 ## About
 GetPy is a thin and robust binding to The Parallel Hashmap (https://github.com/greg7mdp/parallel-hashmap.git) which is the current state of the art for minimal memory overhead and fast runtime speed. The binding layer is supported by PyBind11 (https://github.com/pybind/pybind11.git) which is fast to compile and simple to extend. Serialization is handled by Cereal (https://github.com/USCiLab/cereal.git) which supports streaming binary serialization, a critical feature for the large hash maps this package is designed to support.
