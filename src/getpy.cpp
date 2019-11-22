@@ -493,26 +493,26 @@ struct std::hash<std::array<T, N>> {
 };
 
 
-template<typename T, size_t N>
-std::array<T, N> & operator += ( std::array<T, N> & a, std::array<T, N> b ) {
-    for (int i = 0 ; i < N ; ++i) {
-        a[i] = a[i] + b[i];
-    }
-}
-
-
-template<typename T, size_t N>
-std::array<T, N> & operator -= ( std::array<T, N> & a, std::array<T, N> b ) {
-    for (int i = 0 ; i < N ; ++i) {
-        a[i] = a[i] - b[i];
-    }
-}
+#template<typename T, size_t N>
+#std::array<T, N> & operator += ( std::array<T, N> & a, std::array<T, N> b ) {
+#    for (int i = 0 ; i < N ; ++i) {
+#        a[i] += b[i];
+#    }
+#}
+#
+#
+#template<typename T, size_t N>
+#std::array<T, N> & operator -= ( std::array<T, N> & a, std::array<T, N> b ) {
+#    for (int i = 0 ; i < N ; ++i) {
+#        a[i] -= b[i];
+#    }
+#}
 
 
 template<typename T, size_t N>
 std::array<T, N> & operator |= ( std::array<T, N> & a, std::array<T, N> b ) {
     for (int i = 0 ; i < N ; ++i) {
-        a[i] = a[i] | b[i];
+        a[i] |= b[i];
     }
 }
 
@@ -520,60 +520,15 @@ std::array<T, N> & operator |= ( std::array<T, N> & a, std::array<T, N> b ) {
 template<typename T, size_t N>
 std::array<T, N> & operator &= ( std::array<T, N> & a, std::array<T, N> b ) {
     for (int i = 0 ; i < N ; ++i) {
-        a[i] = a[i] & b[i];
+        a[i] &= b[i];
     }
 }
 
 
 template<typename T, size_t N>
-struct bytearray {
-    std::array<T, N> bytearray;
-
-    template <class Archive>
-    void serialize( Archive & archive ) {
-        archive( bytearray );
+std::array<T, N> & operator ^= ( std::array<T, N> & a, std::array<T, N> b ) {
+    for (int i = 0 ; i < N ; ++i) {
+        a[i] ^= b[i];
     }
-};
-
-
-template<typename T, size_t N>
-struct std::hash<bytearray<T, N>> {
-    size_t operator () ( const bytearray<T, N> & ba ) const {
-        size_t seed = N;
-        for(auto& value : ba.bytearray) {
-            seed ^= value + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-        }
-        // phmap::HashState().combine(seed, ba.bytearray);
-        return seed;
-    }
-};
-
-
-template<typename T, size_t N>
-bool operator == ( const bytearray<T, N> & a, const bytearray<T, N> & b ) {
-    return a.bytearray == b.bytearray;
 }
 
-
-template<typename T, size_t N>
-bytearray<T, N> & operator += ( bytearray<T, N> & a, bytearray<T, N> b ) {
-    a.bytearray += b.bytearray;
-}
-
-
-template<typename T, size_t N>
-bytearray<T, N> & operator -= ( bytearray<T, N> & a, bytearray<T, N> b ) {
-    a.bytearray -= b.bytearray;
-}
-
-
-template<typename T, size_t N>
-bytearray<T, N> & operator |= ( bytearray<T, N> & a, bytearray<T, N> b ) {
-    a.bytearray |= b.bytearray;
-}
-
-
-template<typename T, size_t N>
-bytearray<T, N> & operator &= ( bytearray<T, N> & a, bytearray<T, N> b ) {
-    a.bytearray &= b.bytearray;
-}
