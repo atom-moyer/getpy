@@ -3,8 +3,7 @@ import itertools
 import numpy as np
 
 
-bytearray_lengths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-                     20, 30, 32, 40, 50, 60, 64, 70, 80, 90, 100, 128]
+bytearray_lengths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 byte8array_lengths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
 
@@ -70,14 +69,8 @@ basic_np_types = {
 
 
 key_types = [
-    'str4',
-    'str8',
-
     'uint32',
     'uint64',
-
-    'int32',
-    'int64',
 ]
 
 
