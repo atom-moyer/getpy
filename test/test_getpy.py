@@ -5,11 +5,6 @@ import numpy as np
 import getpy as gp
 
 
-standard = pytest.mark.standard
-slow = pytest.mark.slow
-
-
-@standard
 def test_getpy_vectorized_methods():
     key_type = np.dtype('u8')
     value_type = np.dtype('u8')
@@ -48,7 +43,6 @@ def test_getpy_vectorized_methods():
     gp_dict.iand(keys, values)
 
 
-@standard
 def test_getpy_vectorized_methods_with_default():
     key_type = np.dtype('u8')
     value_type = np.dtype('u8')
@@ -84,16 +78,15 @@ def test_getpy_vectorized_methods_with_default():
     gp_dict.iand(random_keys, one_values)
 
 
-@standard
 def test_getpy_vectorized_methods_with_bytearray_dtype():
     key_type = np.dtype('u8')
-    value_type = gp.types['bytearray50']
+    value_type = gp.types['bytearray16']
 
     gp_dict = gp.Dict(key_type, value_type)
 
     keys = np.random.randint(1, 1000, size=200, dtype=key_type)
     values = np.packbits([np.array([1, 0, 1, 0, 1, 0, 1, 0,
-                                    1, 1, 1, 1, 1, 1, 1, 1]*25, dtype=np.bool)]*200, axis=1).view(value_type)
+                                    1, 1, 1, 1, 1, 1, 1, 1]*8, dtype=np.bool)]*200, axis=1).view(value_type)
     gp_dict[keys] = values
 
     iterated_keys = [key for key in gp_dict]
@@ -114,7 +107,6 @@ def test_getpy_vectorized_methods_with_bytearray_dtype():
     gp_dict.iand(keys, values)
 
 
-@standard
 def test_getpy_types():
     for key_type, value_type in gp.dict_types:
         gp_dict = gp.Dict(key_type, value_type)
@@ -134,7 +126,6 @@ def test_getpy_types():
     values = gp_dict[keys]
 
 
-@standard
 @pytest.mark.timeout(1)
 def test_getpy_dump_load():
     key_type = np.dtype('u8')
@@ -154,7 +145,6 @@ def test_getpy_dump_load():
     assert gp_dict_1 == gp_dict_2
 
 
-@standard
 @pytest.mark.timeout(1)
 def test_getpy_big_dict_uint32_uint32():
     key_type = np.dtype('u4')
@@ -169,7 +159,6 @@ def test_getpy_big_dict_uint32_uint32():
         gp_dict[keys] = values
 
 
-@standard
 @pytest.mark.timeout(1)
 def test_getpy_big_dict_uint64_uint64():
     key_type = np.dtype('u8')
@@ -199,7 +188,6 @@ def test_getpy_big_dict_uint64_bytearray8():
         gp_dict[keys] = values
 
 
-@standard
 @pytest.mark.timeout(1)
 def test_getpy_big_dict_uint64_lookup():
     key_type = np.dtype('u8')
@@ -216,7 +204,6 @@ def test_getpy_big_dict_uint64_lookup():
         values = gp_dict[keys]
 
 
-@standard
 @pytest.mark.timeout(5)
 def test_getpy_very_big_dict_uint32_uint32():
     key_type = np.dtype('u4')
@@ -231,7 +218,6 @@ def test_getpy_very_big_dict_uint32_uint32():
         gp_dict[keys] = values
 
 
-@standard
 @pytest.mark.timeout(5)
 def test_getpy_very_big_dict_uint64_uint64():
     key_type = np.dtype('u8')
@@ -246,7 +232,6 @@ def test_getpy_very_big_dict_uint64_uint64():
         gp_dict[keys] = values
 
 
-@standard
 @pytest.mark.timeout(5)
 def test_getpy_very_big_dict_uint64_bytearray8():
     key_type = np.dtype('u8')
@@ -262,7 +247,6 @@ def test_getpy_very_big_dict_uint64_bytearray8():
         gp_dict[keys] = values
 
 
-@standard
 @pytest.mark.timeout(5)
 def test_getpy_very_big_dict_uint64_bytearray16():
     key_type = np.dtype('u8')
@@ -278,11 +262,10 @@ def test_getpy_very_big_dict_uint64_bytearray16():
         gp_dict[keys] = values
 
 
-@standard
 @pytest.mark.timeout(5)
-def test_getpy_very_big_dict_uint64_bytearray32():
+def test_getpy_very_big_dict_uint64_byte8array4():
     key_type = np.dtype('u8')
-    value_type = gp.types['bytearray32']
+    value_type = gp.types['byte8array4']
 
     gp_dict = gp.Dict(key_type, value_type)
 
