@@ -61,7 +61,7 @@ key_types = [
 ]
 
 
-set_key_types = [
+set_types = [
     'uint32',
     'uint64',
 
@@ -83,7 +83,7 @@ value_types = [
 ]
 
 
-assert all([type_ in value_types for type_ in key_types + set_key_types])
+assert all([type_ in value_types for type_ in key_types + set_types])
 
 
 cpp_types = {
@@ -198,7 +198,7 @@ PYBIND11_MODULE(_getpy, m) {
 
         getpy_file.write('\n')
 
-        for key_type in set_key_types:
+        for key_type in set_types:
             write_declare_set(getpy_file, key_type)
 
         getpy_file.write("""\
@@ -241,7 +241,7 @@ dict_types = {
 set_types = {
 """)
 
-        for key_type in set_key_types:
+        for key_type in set_types:
             write_set_types_dict(getpy_file, key_type)
 
         getpy_file.write("""\

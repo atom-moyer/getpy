@@ -324,7 +324,6 @@ void declare_dict_default(const py::module& m, const std::string& class_name) {
       .def("values", &Class::values)
       .def("items", &Class::items)
 
-      // .def("items", [](const Class &c) { return py::make_iterator(c.__dict.begin(), c.__dict.end()); }, py::keep_alive<0, 1>() )
       .def("__len__", &Class::__len__);
 }
 
@@ -353,7 +352,6 @@ void declare_dict_bitwise(const py::module& m, const std::string& class_name) {
         .def("values", &Class::values)
         .def("items", &Class::items)
 
-        // .def("items", [](const Class &c) { return py::make_iterator(c.__dict.begin(), c.__dict.end()); }, py::keep_alive<0, 1>() )
         .def("__len__", &Class::__len__);
 }
 
@@ -467,7 +465,6 @@ void declare_set(const py::module& m, const std::string& class_name) {
 
       .def("items", &Class::items)
 
-      // .def("items", [](const Class &c) { return py::make_iterator(c.__set.begin(), c.__set.end()); }, py::keep_alive<0, 1>() )
       .def("__len__", &Class::__len__);
 }
 
