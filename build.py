@@ -3,14 +3,11 @@ import itertools
 import numpy as np
 
 
-bytearray_lengths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-byte8array_lengths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+bytearray_lengths = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+byte8array_lengths = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
 
 basic_types = [
-    'str4',
-    'str8',
-
     'uint8',
     'uint16',
     'uint32',
@@ -27,11 +24,6 @@ basic_types = [
 
 
 basic_cpp_types = {
-    'str4' : 'std::array<char, 4>',
-    'str8' : 'std::array<char, 8>',
-    'str16' : 'std::array<char, 16>',
-    'str32' : 'std::array<char, 32>',
-
     'int8' : 'int8_t',
     'int16' : 'int16_t',
     'int32' : 'int32_t',
@@ -48,11 +40,6 @@ basic_cpp_types = {
 
 
 basic_np_types = {
-    'str4' : 'U4',
-    'str8' : 'U8',
-    'str16' : 'U16',
-    'str32' : 'U32',
-
     'int8' : 'i1',
     'int16' : 'i2',
     'int32' : 'i4',
@@ -75,9 +62,6 @@ key_types = [
 
 
 set_key_types = [
-    'str4',
-    'str8',
-
     'uint32',
     'uint64',
 
@@ -160,10 +144,10 @@ def write_numpy_dtype(getpy_file, type_):
 def write_declare_dict(getpy_file, key_type, value_type):
     class_name = create_dict_class_name(key_type, value_type)
 
-    if 'float' in value_type:
-        getpy_file.write(f'    declare_dict_without_bitwise_operations<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "{class_name}");\n')
+    if 'bytearray' in value_type or 'byte8array' in value_type:
+        getpy_file.write(f'    declare_dict_bitwise<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "{class_name}");\n')
     else:
-        getpy_file.write(f'    declare_dict<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "{class_name}");\n')
+        getpy_file.write(f'    declare_dict_default<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "{class_name}");\n')
 
 
 def write_declare_set(getpy_file, key_type):

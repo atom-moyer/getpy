@@ -3,8 +3,6 @@ import numpy as np
 import _getpy as _gp
 
 types = {
-    'str4' : np.dtype('U4'),
-    'str8' : np.dtype('U8'),
     'uint8' : np.dtype('u1'),
     'uint16' : np.dtype('u2'),
     'uint32' : np.dtype('u4'),
@@ -15,7 +13,6 @@ types = {
     'int64' : np.dtype('i8'),
     'float32' : np.dtype('f4'),
     'float64' : np.dtype('f8'),
-    'bytearray1' : np.dtype({'names': ['bytearray'], 'formats': ['1u1']}),
     'bytearray2' : np.dtype({'names': ['bytearray'], 'formats': ['2u1']}),
     'bytearray3' : np.dtype({'names': ['bytearray'], 'formats': ['3u1']}),
     'bytearray4' : np.dtype({'names': ['bytearray'], 'formats': ['4u1']}),
@@ -31,7 +28,6 @@ types = {
     'bytearray14' : np.dtype({'names': ['bytearray'], 'formats': ['14u1']}),
     'bytearray15' : np.dtype({'names': ['bytearray'], 'formats': ['15u1']}),
     'bytearray16' : np.dtype({'names': ['bytearray'], 'formats': ['16u1']}),
-    'byte8array1' : np.dtype({'names': ['bytearray'], 'formats': ['1u8']}),
     'byte8array2' : np.dtype({'names': ['bytearray'], 'formats': ['2u8']}),
     'byte8array3' : np.dtype({'names': ['bytearray'], 'formats': ['3u8']}),
     'byte8array4' : np.dtype({'names': ['bytearray'], 'formats': ['4u8']}),
@@ -50,8 +46,6 @@ types = {
 }
 
 dict_types = {
-    (types['uint32'], types['str4']) : _gp.Dict_uint32_str4,
-    (types['uint32'], types['str8']) : _gp.Dict_uint32_str8,
     (types['uint32'], types['uint8']) : _gp.Dict_uint32_uint8,
     (types['uint32'], types['uint16']) : _gp.Dict_uint32_uint16,
     (types['uint32'], types['uint32']) : _gp.Dict_uint32_uint32,
@@ -62,7 +56,6 @@ dict_types = {
     (types['uint32'], types['int64']) : _gp.Dict_uint32_int64,
     (types['uint32'], types['float32']) : _gp.Dict_uint32_float32,
     (types['uint32'], types['float64']) : _gp.Dict_uint32_float64,
-    (types['uint32'], types['bytearray1']) : _gp.Dict_uint32_bytearray1,
     (types['uint32'], types['bytearray2']) : _gp.Dict_uint32_bytearray2,
     (types['uint32'], types['bytearray3']) : _gp.Dict_uint32_bytearray3,
     (types['uint32'], types['bytearray4']) : _gp.Dict_uint32_bytearray4,
@@ -78,7 +71,6 @@ dict_types = {
     (types['uint32'], types['bytearray14']) : _gp.Dict_uint32_bytearray14,
     (types['uint32'], types['bytearray15']) : _gp.Dict_uint32_bytearray15,
     (types['uint32'], types['bytearray16']) : _gp.Dict_uint32_bytearray16,
-    (types['uint32'], types['byte8array1']) : _gp.Dict_uint32_byte8array1,
     (types['uint32'], types['byte8array2']) : _gp.Dict_uint32_byte8array2,
     (types['uint32'], types['byte8array3']) : _gp.Dict_uint32_byte8array3,
     (types['uint32'], types['byte8array4']) : _gp.Dict_uint32_byte8array4,
@@ -94,8 +86,6 @@ dict_types = {
     (types['uint32'], types['byte8array14']) : _gp.Dict_uint32_byte8array14,
     (types['uint32'], types['byte8array15']) : _gp.Dict_uint32_byte8array15,
     (types['uint32'], types['byte8array16']) : _gp.Dict_uint32_byte8array16,
-    (types['uint64'], types['str4']) : _gp.Dict_uint64_str4,
-    (types['uint64'], types['str8']) : _gp.Dict_uint64_str8,
     (types['uint64'], types['uint8']) : _gp.Dict_uint64_uint8,
     (types['uint64'], types['uint16']) : _gp.Dict_uint64_uint16,
     (types['uint64'], types['uint32']) : _gp.Dict_uint64_uint32,
@@ -106,7 +96,6 @@ dict_types = {
     (types['uint64'], types['int64']) : _gp.Dict_uint64_int64,
     (types['uint64'], types['float32']) : _gp.Dict_uint64_float32,
     (types['uint64'], types['float64']) : _gp.Dict_uint64_float64,
-    (types['uint64'], types['bytearray1']) : _gp.Dict_uint64_bytearray1,
     (types['uint64'], types['bytearray2']) : _gp.Dict_uint64_bytearray2,
     (types['uint64'], types['bytearray3']) : _gp.Dict_uint64_bytearray3,
     (types['uint64'], types['bytearray4']) : _gp.Dict_uint64_bytearray4,
@@ -122,7 +111,6 @@ dict_types = {
     (types['uint64'], types['bytearray14']) : _gp.Dict_uint64_bytearray14,
     (types['uint64'], types['bytearray15']) : _gp.Dict_uint64_bytearray15,
     (types['uint64'], types['bytearray16']) : _gp.Dict_uint64_bytearray16,
-    (types['uint64'], types['byte8array1']) : _gp.Dict_uint64_byte8array1,
     (types['uint64'], types['byte8array2']) : _gp.Dict_uint64_byte8array2,
     (types['uint64'], types['byte8array3']) : _gp.Dict_uint64_byte8array3,
     (types['uint64'], types['byte8array4']) : _gp.Dict_uint64_byte8array4,
@@ -141,13 +129,10 @@ dict_types = {
 }
 
 set_types = {
-    (types['str4']) : _gp.Set_str4,
-    (types['str8']) : _gp.Set_str8,
     (types['uint32']) : _gp.Set_uint32,
     (types['uint64']) : _gp.Set_uint64,
     (types['int32']) : _gp.Set_int32,
     (types['int64']) : _gp.Set_int64,
-    (types['bytearray1']) : _gp.Set_bytearray1,
     (types['bytearray2']) : _gp.Set_bytearray2,
     (types['bytearray3']) : _gp.Set_bytearray3,
     (types['bytearray4']) : _gp.Set_bytearray4,
@@ -163,7 +148,6 @@ set_types = {
     (types['bytearray14']) : _gp.Set_bytearray14,
     (types['bytearray15']) : _gp.Set_bytearray15,
     (types['bytearray16']) : _gp.Set_bytearray16,
-    (types['byte8array1']) : _gp.Set_byte8array1,
     (types['byte8array2']) : _gp.Set_byte8array2,
     (types['byte8array3']) : _gp.Set_byte8array3,
     (types['byte8array4']) : _gp.Set_byte8array4,
