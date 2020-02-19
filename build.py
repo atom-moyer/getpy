@@ -58,6 +58,9 @@ basic_np_types = {
 key_types = [
     'uint32',
     'uint64',
+
+    'int32',
+    'int64',
 ]
 
 
