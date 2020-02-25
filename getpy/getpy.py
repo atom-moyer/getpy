@@ -1,10 +1,12 @@
+from collections.abc import MutableMapping, MutableSet
+
 import numpy as np
 
 from .getpy_types import types
 from .getpy_types import dict_types
 from .getpy_types import set_types
 
-class Dict(object):
+class Dict(MutableMapping):
     def __init__(self, key_type, value_type, default_value=None):
         self.__key_type = np.dtype(key_type)
         self.__value_type = np.dtype(value_type)
@@ -137,7 +139,7 @@ class Dict(object):
 
 
 
-class Set(object):
+class Set(MutableSet):
     def __init__(self, key_type):
         self.__key_type = np.dtype(key_type)
 

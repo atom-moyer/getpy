@@ -6,8 +6,8 @@ import getpy as gp
 
 
 def test_getpy_vectorized_methods():
-    key_type = np.dtype('u8')
-    value_type = np.dtype('u8')
+    key_type = gp.types['uint64']
+    value_type = gp.types['uint64']
 
     gp_dict = gp.Dict(key_type, value_type)
 
@@ -28,10 +28,10 @@ def test_getpy_vectorized_methods():
     assert len(gp_dict) == len(p_dict)
     assert sorted([(key, value) for key, value in gp_dict.items()]) == sorted(p_dict.items())
 
-    select_keys = np.random.choice(keys, size=100).astype(key_type)
+    select_keys = np.random.choice(keys, size=100)
     select_values = gp_dict[select_keys]
 
-    random_keys = np.random.randint(1, 1000, size=500).astype(key_type)
+    random_keys = np.random.randint(1, 1000, size=500, dtype=key_type)
     random_keys_mask = gp_dict.contains(random_keys)
 
     mask_keys = random_keys[random_keys_mask]
@@ -39,13 +39,11 @@ def test_getpy_vectorized_methods():
 
     gp_dict.iadd(keys, values)
     gp_dict.isub(keys, values)
-    gp_dict.ior(keys, values)
-    gp_dict.iand(keys, values)
 
 
 def test_getpy_vectorized_methods_with_default():
-    key_type = np.dtype('u8')
-    value_type = np.dtype('u8')
+    key_type = gp.types['uint64']
+    value_type = gp.types['uint64']
 
     gp_dict = gp.Dict(key_type, value_type, default_value=0)
 
@@ -74,19 +72,16 @@ def test_getpy_vectorized_methods_with_default():
 
     gp_dict.iadd(random_keys, one_values)
     gp_dict.isub(random_keys, one_values)
-    gp_dict.ior(random_keys, one_values)
-    gp_dict.iand(random_keys, one_values)
 
 
-def test_getpy_vectorized_methods_with_bytearray_dtype():
-    key_type = np.dtype('u8')
-    value_type = gp.types['bytearray16']
+def test_getpy_vectorized_methods_with_byteset():
+    key_type = gp.types['uint64']
+    value_type = gp.types['byteset8']
 
     gp_dict = gp.Dict(key_type, value_type)
 
-    keys = np.random.randint(1, 1000, size=200, dtype=key_type)
-    values = np.packbits([np.array([1, 0, 1, 0, 1, 0, 1, 0,
-                                    1, 1, 1, 1, 1, 1, 1, 1]*8, dtype=np.bool)]*200, axis=1).view(value_type)
+    keys = np.random.randint(1, 1000, size=10**2, dtype=key_type)
+    values = np.array([np.packbits(np.array([1, 0, 1, 0, 1, 0, 1, 0] * 8, dtype=np.bool)) for _ in range(10**2)]).view(value_type)
     gp_dict[keys] = values
 
     iterated_keys = [key for key in gp_dict]
@@ -101,8 +96,6 @@ def test_getpy_vectorized_methods_with_bytearray_dtype():
     mask_keys = random_keys[random_keys_mask]
     mask_values = gp_dict[mask_keys]
 
-    gp_dict.iadd(keys, values)
-    gp_dict.isub(keys, values)
     gp_dict.ior(keys, values)
     gp_dict.iand(keys, values)
 
@@ -111,44 +104,34 @@ def test_getpy_types():
     for key_type, value_type in gp.dict_types:
         gp_dict = gp.Dict(key_type, value_type)
 
-        if key_type.kind == 'U':
-            keys = np.array(['0123456789'*10 for i in range(10)], dtype=key_type)
-        else:
-            keys = np.array(range(10), dtype=key_type)
-
-        if value_type.kind == 'U':
-            values = np.array(['0123456789'*10 for i in range(10)], dtype=value_type)
-        else:
-            values = np.array(range(10), dtype=value_type)
+        keys = np.array(range(256), dtype=key_type)
+        values = np.array(range(256), dtype=value_type)
 
         gp_dict[keys] = values
 
     values = gp_dict[keys]
 
 
-@pytest.mark.timeout(1)
 def test_getpy_dump_load():
-    key_type = np.dtype('u8')
-    value_type = np.dtype('u8')
-
-    gp_dict_1 = gp.Dict(key_type, value_type)
+    key_type = gp.types['uint64']
+    value_type = gp.types['uint64']
 
     keys = np.random.randint(1, 1000, size=10**1, dtype=key_type)
     values = np.random.randint(1, 1000, size=10**1, dtype=value_type)
-    gp_dict_1[keys] = values
 
+    gp_dict_1 = gp.Dict(key_type, value_type)
+    gp_dict_1[keys] = values
     gp_dict_1.dump('test/test.hashtable.bin')
 
     gp_dict_2 = gp.Dict(key_type, value_type)
     gp_dict_2.load('test/test.hashtable.bin')
 
-    assert gp_dict_1 == gp_dict_2
+    assert len(gp_dict_1) == len(gp_dict_2)
 
 
-@pytest.mark.timeout(1)
 def test_getpy_big_dict_uint32_uint32():
-    key_type = np.dtype('u4')
-    value_type = np.dtype('u4')
+    key_type = gp.types['uint32']
+    value_type = gp.types['uint32']
 
     gp_dict = gp.Dict(key_type, value_type)
 
@@ -159,10 +142,9 @@ def test_getpy_big_dict_uint32_uint32():
         gp_dict[keys] = values
 
 
-@pytest.mark.timeout(1)
 def test_getpy_big_dict_uint64_uint64():
-    key_type = np.dtype('u8')
-    value_type = np.dtype('u8')
+    key_type = gp.types['uint64']
+    value_type = gp.types['uint64']
 
     gp_dict = gp.Dict(key_type, value_type)
 
@@ -174,24 +156,22 @@ def test_getpy_big_dict_uint64_uint64():
 
 
 @pytest.mark.timeout(1)
-def test_getpy_big_dict_uint64_bytearray8():
-    key_type = np.dtype('u8')
-    value_type = gp.types['bytearray8']
+def test_getpy_big_dict_uint64_byteset8():
+    key_type = gp.types['uint64']
+    value_type = gp.types['byteset8']
 
     gp_dict = gp.Dict(key_type, value_type)
 
-    values = np.packbits([np.array([1, 0, 1, 0, 1, 0, 1, 0,
-                                    1, 1, 1, 1, 1, 1, 1, 1]*4, dtype=np.bool)]*10**4, axis=1).view(value_type)
+    values = np.array([np.packbits(np.array([1, 0, 1, 0, 1, 0, 1, 0] * 8, dtype=np.bool)) for _ in range(10**4)]).view(value_type)
 
     for i in range(10**2):
         keys = np.random.randint(10**15, size=10**4, dtype=key_type)
         gp_dict[keys] = values
 
 
-@pytest.mark.timeout(1)
 def test_getpy_big_dict_uint64_lookup():
-    key_type = np.dtype('u8')
-    value_type = np.dtype('u8')
+    key_type = gp.types['uint64']
+    value_type = gp.types['uint64']
 
     gp_dict = gp.Dict(key_type, value_type)
 
@@ -204,10 +184,9 @@ def test_getpy_big_dict_uint64_lookup():
         values = gp_dict[keys]
 
 
-@pytest.mark.timeout(5)
 def test_getpy_very_big_dict_uint32_uint32():
-    key_type = np.dtype('u4')
-    value_type = np.dtype('u4')
+    key_type = gp.types['uint32']
+    value_type = gp.types['uint32']
 
     gp_dict = gp.Dict(key_type, value_type)
 
@@ -218,10 +197,9 @@ def test_getpy_very_big_dict_uint32_uint32():
         gp_dict[keys] = values
 
 
-@pytest.mark.timeout(5)
 def test_getpy_very_big_dict_uint64_uint64():
-    key_type = np.dtype('u8')
-    value_type = np.dtype('u8')
+    key_type = gp.types['uint64']
+    value_type = gp.types['uint64']
 
     gp_dict = gp.Dict(key_type, value_type)
 
@@ -232,45 +210,26 @@ def test_getpy_very_big_dict_uint64_uint64():
         gp_dict[keys] = values
 
 
-@pytest.mark.timeout(5)
-def test_getpy_very_big_dict_uint64_bytearray8():
-    key_type = np.dtype('u8')
-    value_type = gp.types['bytearray8']
+def test_getpy_very_big_dict_uint64_byteset8():
+    key_type = gp.types['uint64']
+    value_type = gp.types['byteset8']
 
     gp_dict = gp.Dict(key_type, value_type)
 
-    values = np.packbits([np.array([1, 0, 1, 0, 1, 0, 1, 0,
-                                    1, 1, 1, 1, 1, 1, 1, 1]*4, dtype=np.bool)]*10**5, axis=1).view(value_type)
+    values = np.array([np.packbits(np.array([1, 0, 1, 0, 1, 0, 1, 0] * 8, dtype=np.bool)) for _ in range(10**5)]).view(value_type)
 
     for i in range(10**2):
         keys = np.random.randint(10**15, size=10**5, dtype=key_type)
         gp_dict[keys] = values
 
 
-@pytest.mark.timeout(5)
-def test_getpy_very_big_dict_uint64_bytearray16():
-    key_type = np.dtype('u8')
-    value_type = gp.types['bytearray16']
+def test_getpy_very_big_dict_uint64_byteset16():
+    key_type = gp.types['uint64']
+    value_type = gp.types['byteset16']
 
     gp_dict = gp.Dict(key_type, value_type)
 
-    values = np.packbits([np.array([1, 0, 1, 0, 1, 0, 1, 0,
-                                    1, 1, 1, 1, 1, 1, 1, 1]*8, dtype=np.bool)]*10**5, axis=1).view(value_type)
-
-    for i in range(10**2):
-        keys = np.random.randint(10**15, size=10**5, dtype=key_type)
-        gp_dict[keys] = values
-
-
-@pytest.mark.timeout(5)
-def test_getpy_very_big_dict_uint64_byte8array4():
-    key_type = np.dtype('u8')
-    value_type = gp.types['byte8array4']
-
-    gp_dict = gp.Dict(key_type, value_type)
-
-    values = np.packbits([np.array([1, 0, 1, 0, 1, 0, 1, 0,
-                                    1, 1, 1, 1, 1, 1, 1, 1]*16, dtype=np.bool)]*10**5, axis=1).view(value_type)
+    values = np.array([np.packbits(np.array([1, 0, 1, 0, 1, 0, 1, 0] * 16, dtype=np.bool)) for _ in range(10**5)]).view(value_type)
 
     for i in range(10**2):
         keys = np.random.randint(10**15, size=10**5, dtype=key_type)

@@ -3,11 +3,21 @@ import itertools
 import numpy as np
 
 
-bytearray_lengths = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-byte8array_lengths = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+byteset_lengths = [4*(i+1) for i in range(8)]
 
 
-basic_types = [
+key_types = [
+    'uint32',
+    'uint64',
+
+    'int32',
+    'int64',
+
+    *[f'byteset{i}' for i in byteset_lengths],
+]
+
+
+value_types = [
     'uint8',
     'uint16',
     'uint32',
@@ -20,10 +30,12 @@ basic_types = [
 
     'float32',
     'float64',
+
+    *[f'byteset{i}' for i in byteset_lengths]
 ]
 
 
-basic_cpp_types = {
+cpp_types = {
     'int8' : 'int8_t',
     'int16' : 'int16_t',
     'int32' : 'int32_t',
@@ -36,10 +48,12 @@ basic_cpp_types = {
 
     'float32' : 'float',
     'float64' : 'double',
+
+    **{f'byteset{i}' : f'std::array<char,{i}>' for i in byteset_lengths},
 }
 
 
-basic_np_types = {
+np_types = {
     'int8' : 'i1',
     'int16' : 'i2',
     'int32' : 'i4',
@@ -52,118 +66,32 @@ basic_np_types = {
 
     'float32' : 'f4',
     'float64' : 'f8',
+
+    **{f'byteset{i}' : f'S{i}' for i in byteset_lengths},
 }
-
-
-key_types = [
-    'uint32',
-    'uint64',
-
-    'int32',
-    'int64',
-]
-
-
-set_types = [
-    'uint32',
-    'uint64',
-
-    'int32',
-    'int64',
-
-    *[f'bytearray{i}' for i in bytearray_lengths],
-
-    *[f'byte8array{i}' for i in byte8array_lengths],
-]
-
-
-value_types = [
-    *[basic_type for basic_type in basic_types],
-
-    *[f'bytearray{i}' for i in bytearray_lengths],
-
-    *[f'byte8array{i}' for i in byte8array_lengths],
-]
-
-
-assert all([type_ in value_types for type_ in key_types + set_types])
-
-
-cpp_types = {
-    **{basic_type : basic_cpp_types[basic_type] for basic_type in basic_types},
-
-    **{f'bytearray{i}' : f'bytearray{i}' for i in bytearray_lengths},
-
-    **{f'byte8array{i}' : f'byte8array{i}' for i in byte8array_lengths},
-}
-
-
-np_types = {
-    **{basic_type : basic_np_types[basic_type] for basic_type in basic_types},
-
-    **{f'bytearray{i}' : {'names' : ['bytearray'], 'formats' : [f'{i}u1']} for i in bytearray_lengths},
-
-    **{f'byte8array{i}' : {'names' : ['bytearray'], 'formats' : [f'{i}u8']} for i in byte8array_lengths},
-}
-
-
-generic_types = {
-    **{f'bytearray{i}' : f'using bytearray{i} = bytearray<uint8_t, {i}>;' for i in bytearray_lengths},
-
-    **{f'byte8array{i}' : f'using byte8array{i} = bytearray<uint64_t, {i}>;' for i in byte8array_lengths},
-}
-
-
-def create_dict_class_name(key_type, value_type):
-    return f'Dict_{key_type}_{value_type}'
-
-
-def create_set_class_name(key_type):
-    return f'Set_{key_type}'
 
 
 def write_dict_types_dict(getpy_file, key_type, value_type):
-    class_name = create_dict_class_name(key_type, value_type)
-    getpy_file.write(f"    (types['{key_type}'], types['{value_type}']) : _gp.{class_name},\n")
+    getpy_file.write(f"    (types['{key_type}'], types['{value_type}']) : _gp.Dict_{key_type}_{value_type},\n")
 
 
 def write_set_types_dict(getpy_file, key_type):
-    class_name = create_set_class_name(key_type)
-    getpy_file.write(f"    (types['{key_type}']) : _gp.{class_name},\n")
-
-
-def write_generic_types(getpy_file, type_):
-    getpy_file.write(f'{generic_types[type_]}\n')
-
-
-def write_numpy_dtype(getpy_file, type_):
-    if type_.startswith('bytearray') or type_.startswith('byte8array'):
-        getpy_file.write(f'    PYBIND11_NUMPY_DTYPE( {cpp_types[type_]}, bytearray );\n')
-
-    else:
-        pass
+    getpy_file.write(f"    (types['{key_type}']) : _gp.Set_{key_type},\n")
 
 
 def write_declare_dict(getpy_file, key_type, value_type):
-    class_name = create_dict_class_name(key_type, value_type)
-
-    if 'bytearray' in value_type or 'byte8array' in value_type:
-        getpy_file.write(f'    declare_dict_bitwise<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "{class_name}");\n')
+    if 'byteset' in value_type:
+        getpy_file.write(f'    declare_dict_bitwise<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "Dict_{key_type}_{value_type}");\n')
     else:
-        getpy_file.write(f'    declare_dict_default<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "{class_name}");\n')
+        getpy_file.write(f'    declare_dict_default<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "Dict_{key_type}_{value_type}");\n')
 
 
 def write_declare_set(getpy_file, key_type):
-    class_name = create_set_class_name(key_type)
-
-    getpy_file.write(f'    declare_set<{cpp_types[key_type]}>(m, "{class_name}");\n')
+    getpy_file.write(f'    declare_set<{cpp_types[key_type]}>(m, "Set_{key_type}");\n')
 
 
 def write_types_dict(getpy_file, type_):
-    if isinstance(np_types[type_], dict):
-        getpy_file.write(f"    '{type_}' : np.dtype({np_types[type_]}),\n")
-    else:
-        getpy_file.write(f"    '{type_}' : np.dtype('{np_types[type_]}'),\n")
+    getpy_file.write(f"    '{type_}' : np.dtype('{np_types[type_]}'),\n")
 
 
 def write_getpy_cpp(key_types, value_types):
@@ -173,35 +101,17 @@ def write_getpy_cpp(key_types, value_types):
 
 #include <pybind11/pybind11.h>
 
-""")
-
-        for type_ in value_types:
-            if type_ in generic_types:
-                write_generic_types(getpy_file, type_)
-            else:
-                pass
-
-        getpy_file.write("""\
-
 PYBIND11_MODULE(_getpy, m) {
     m.doc() = "A Fast and Memory Efficient Hash Map for Python";
 
 """)
-
-        for type_ in value_types:
-            if type_ in generic_types:
-                write_numpy_dtype(getpy_file, type_)
-            else:
-                pass
-
-        getpy_file.write('\n')
 
         for key_type, value_type in itertools.product(key_types, value_types):
             write_declare_dict(getpy_file, key_type, value_type)
 
         getpy_file.write('\n')
 
-        for key_type in set_types:
+        for key_type in key_types:
             write_declare_set(getpy_file, key_type)
 
         getpy_file.write("""\
@@ -244,7 +154,7 @@ dict_types = {
 set_types = {
 """)
 
-        for key_type in set_types:
+        for key_type in key_types:
             write_set_types_dict(getpy_file, key_type)
 
         getpy_file.write("""\

@@ -3,15 +3,9 @@
 #include <pybind11/stl.h>
 namespace py = pybind11;
 
-#include <parallel_hashmap/phmap_utils.h>
 #include <parallel_hashmap/phmap.h>
-
-#include <cereal/archives/binary.hpp>
-#include <cereal/types/utility.hpp>
-#include <cereal/types/array.hpp>
-#include <cereal/types/string.hpp>
-#include <cereal/types/vector.hpp>
-#include <fstream>
+#include <parallel_hashmap/phmap_utils.h>
+#include <parallel_hashmap/phmap_dump.h>
 
 #include <iostream>
 
@@ -107,7 +101,7 @@ struct Dict {
     }
 
 
-    long __len__ () {
+    size_t __len__ () {
         return __dict.size();
     }
 
@@ -163,24 +157,14 @@ struct Dict {
 
 
     void dump ( const std::string & filename ) {
-        std::ofstream stream ( filename , std::ios::binary );
-        cereal::BinaryOutputArchive oarchive ( stream );
-
-        for ( auto & key_value : __dict ) {
-            oarchive(key_value);
-        }
+        phmap::BinaryOutputArchive ar_out( filename.c_str() );
+        __dict.dump( ar_out );
     }
 
 
     void load ( const std::string & filename ) {
-        std::ifstream stream ( filename , std::ios::binary);
-        cereal::BinaryInputArchive iarchive ( stream );
-
-        std::pair<Key, Value> in_key_value;
-        while ( stream.peek() != EOF ) {
-            iarchive(in_key_value);
-            __dict.emplace(in_key_value.first, in_key_value.second);
-        }
+        phmap::BinaryInputArchive ar_in( filename.c_str() );
+        __dict.load( ar_in );
     }
 
 
@@ -402,7 +386,7 @@ struct Set {
     }
 
 
-    long __len__ () {
+    size_t __len__ () {
         return __set.size();
     }
 
@@ -423,24 +407,14 @@ struct Set {
 
 
     void dump ( const std::string & filename ) {
-        std::ofstream stream ( filename , std::ios::binary );
-        cereal::BinaryOutputArchive oarchive ( stream );
-
-        for ( auto & key : __set ) {
-            oarchive(key);
-        }
+        phmap::BinaryOutputArchive ar_out( filename.c_str() );
+        __set.dump( ar_out );
     }
 
 
     void load ( const std::string & filename ) {
-        std::ifstream stream ( filename , std::ios::binary);
-        cereal::BinaryInputArchive iarchive ( stream );
-
-        Key in_key;
-        while ( stream.peek() != EOF ) {
-            iarchive(in_key);
-            __set.emplace(in_key);
-        }
+        phmap::BinaryInputArchive ar_in( filename.c_str() );
+        __set.load(ar_in);
     }
 
 
@@ -470,57 +444,30 @@ void declare_set(const py::module& m, const std::string& class_name) {
 
 
 template<typename T, size_t N>
-struct bytearray {
-    std::array<T, N> bytearray;
-
-    template <class Archive>
-    void serialize( Archive & archive ) {
-        archive( bytearray );
-    }
-};
-
-
-template<typename T, size_t N>
-bool operator == ( const bytearray<T, N> & a, const bytearray<T, N> & b ) {
-    return a.bytearray == b.bytearray;
-}
-
-
-template<typename T, size_t N>
-bytearray<T, N> & operator |= ( bytearray<T, N> & a, bytearray<T, N> b ) {
-    for (int i = 0 ; i < N ; ++i) {
-        a.bytearray[i] |= b.bytearray[i];
-    }
-}
-
-
-template<typename T, size_t N>
-bytearray<T, N> & operator &= ( bytearray<T, N> & a, bytearray<T, N> b ) {
-    for (int i = 0 ; i < N ; ++i) {
-        a.bytearray[i] &= b.bytearray[i];
-    }
-}
-
-
-template<typename T, size_t N>
 struct std::hash<std::array<T, N>> {
     size_t operator () ( const std::array<T, N> & array ) const {
         size_t seed = N;
+
         for(auto& value : array) {
             seed ^= value + 0x9e3779b9 + (seed << 6) + (seed >> 2);
         }
+
         return seed;
     }
 };
 
 
 template<typename T, size_t N>
-struct std::hash<bytearray<T, N>> {
-    size_t operator () ( const bytearray<T, N> & array ) const {
-        size_t seed = N;
-        for(auto& value : array.bytearray) {
-            seed ^= value + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-        }
-        return seed;
+std::array<T, N> & operator &= ( std::array<T, N> & a, const std::array<T, N> b ) {
+    for (size_t i = 0 ; i < N ; ++i) {
+        a[i] &= b[i];
     }
-};
+}
+
+
+template<typename T, size_t N>
+std::array<T, N> & operator |= ( std::array<T, N> & a, const std::array<T, N> b ) {
+    for (size_t i = 0 ; i < N ; ++i) {
+        a[i] |= b[i];
+    }
+}
