@@ -8,7 +8,7 @@ The goal of GetPy is to provide a high performance python dictionary that integr
 Currently about 16gb of memory is necessary for compilation. I am working on distributing a precompiled build.
 
 ## About
-GetPy is a thin and robust binding to The Parallel Hashmap (https://github.com/greg7mdp/parallel-hashmap.git) which is the current state of the art for minimal memory overhead and fast runtime speed. The binding layer is supported by PyBind11 (https://github.com/pybind/pybind11.git) which is fast to compile and simple to extend.
+GetPy is a thin binding to The Parallel Hashmap (https://github.com/greg7mdp/parallel-hashmap.git) which is the current state of the art for minimal memory overhead and fast runtime speed. The binding layer is supported by PyBind11 (https://github.com/pybind/pybind11.git) which is fast to compile and simple to extend.
 
 ## How To Use
 The `gp.Dict` object and, the newly supported, `gp.Set` is designed to maintain a similar interface to the corresponding standard python objects. There are some key differences though, which are necessary for performance reasons.
