@@ -3,7 +3,7 @@ import itertools
 import numpy as np
 
 
-byteset_lengths = [4*(i+1) for i in range(16)]
+byteset_lengths = [4, 8, 12, 16, 20, 24, 28, 32]
 
 
 key_types = [
