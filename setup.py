@@ -5,7 +5,7 @@ import sys
 import setuptools
 import glob
 
-__version__ = '0.11.2'
+__version__ = '0.12.1'
 
 with open("README.md", "r") as readme_file:
     readme = readme_file.read()
