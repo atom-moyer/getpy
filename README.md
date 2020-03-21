@@ -3,9 +3,9 @@
 The goal of GetPy is to provide the highest performance python dict/set that integrates into the python scientific ecosystem.
 
 ## Installation
-`pip install git+https://github.com/atom-moyer/getpy.git`
+`pip install getpy`
 
-Currently about 16gb of memory is necessary for compilation. However, I would like to distribute a precompiled build.
+Currently, about 16gb of memory is necessary for installation. However, I would like to distribute a precompiled build. This is non-trivial. If you have experience distributing pybind11 projects via conda or pip, please get in contact.
 
 ## About
 GetPy is a thin binding to The Parallel Hashmap (https://github.com/greg7mdp/parallel-hashmap.git) which is the current state of the art unordered map/set with minimal memory overhead and fast runtime speed. The binding layer is supported by PyBind11 (https://github.com/pybind/pybind11.git) which is fast to compile and simple to extend.
