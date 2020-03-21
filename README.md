@@ -1,25 +1,23 @@
-# GetPy - A Simple, Fast, and Small Hash Map for Python
+# GetPy - A Fast and Small Python Dict/Set
 
-The goal of GetPy is to provide a high performance python dictionary that integrates into the NumPy ecosystem.
+The goal of GetPy is to provide the highest performance python dict/set that integrates into the NumPy/SciPy ecosystem.
 
 ## Installation
 `pip install git+https://github.com/atom-moyer/getpy.git`
 
-Currently about 16gb of memory is necessary for compilation. I am working on distributing a precompiled build.
+Currently about 16gb of memory is necessary for compilation. However, I would like to distribute a precompiled build.
 
 ## About
-GetPy is a thin binding to The Parallel Hashmap (https://github.com/greg7mdp/parallel-hashmap.git) which is the current state of the art for minimal memory overhead and fast runtime speed. The binding layer is supported by PyBind11 (https://github.com/pybind/pybind11.git) which is fast to compile and simple to extend.
+GetPy is a thin binding to The Parallel Hashmap (https://github.com/greg7mdp/parallel-hashmap.git) which is the current state of the art unordered map/set with minimal memory overhead and fast runtime speed. The binding layer is supported by PyBind11 (https://github.com/pybind/pybind11.git) which is fast to compile and simple to extend.
 
 ## How To Use
-The `gp.Dict` object and, the newly supported, `gp.Set` is designed to maintain a similar interface to the corresponding standard python objects. There are some key differences though, which are necessary for performance reasons.
+The `gp.Dict` and `gp.Set` objects are designed to maintain a similar interface to the corresponding standard python objects. There are some key differences though, which are necessary for vectorization and other performance considerations.
 
-1) `gp.Dict.__init__` has three arguments `key_type`, `value_type`, and `default_value`. The type arguments are define which compiled data structure will be used under the hood, and the full list of preset combinations of `np.dtype`s is found with `gp.dict_types`. Most of the future work on getpy will be expanding this list of supported types. You can also specify a `default_value` at construction which must be castable to the `value_type`. This is the value returned by the dictionary if a key is not found.
+1) `gp.Dict.__init__` has three arguments `key_type`, `value_type`, and `default_value`. The type arguments are define which compiled data structure will be used under the hood, and the full list of preset combinations of `np.dtype`s is found with `gp.dict_types`. You can also specify a `default_value` at construction which must be castable to the `value_type`. This is the value returned by the dictionary if a key is not found.
 
 2) All of `getpy.Dict` methods only support a vectorized interface. Therefore, methods like `gp.Dict.__getitem__`, `gp.Dict.__setitem__`, and `gp.Dict.__delitem__` must be performed with an `np.ndarray`.  That allows the performance critical for-loop to happen within the compiled c++. If you arguments are not `np.ndarray`s or their `dtype` does not match the defined `dtype` of the dict, you will be thrown a type error. GetPy will never implicitly cast any arguments. Note that some dunder methods cannot be vectorized such as `__contains__`. Therefore, some keywords like `in` do not behave as expected. Those methods are renamed without the double underscores to note their deviation from the standard interface.
 
 3) `gp.Dict.__getitem__` will throw an error if you attempt to retrieve a key that does not exist, and you have not specified a `default_value` at construction. Instead, you should first run `gp.contains` on your key/array of keys, and then retrieve values corresponding to keys that exist. This is necessary for the vectorization support.
-
-4) There are special generic data types which are named `byteset`s. These data structures are meant to be a generic data containers. They are designed be integrated with the numpy view casting.
 
 ## Examples
 
