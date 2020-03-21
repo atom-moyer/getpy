@@ -1,6 +1,6 @@
 # GetPy - A Fast and Small Python Dict/Set
 
-The goal of GetPy is to provide the highest performance python dict/set that integrates into the NumPy/SciPy ecosystem.
+The goal of GetPy is to provide the highest performance python dict/set that integrates into the python scientific ecosystem.
 
 ## Installation
 `pip install git+https://github.com/atom-moyer/getpy.git`
