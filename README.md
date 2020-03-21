@@ -161,13 +161,5 @@ types = {
     'byteset24' : np.dtype('S24'),
     'byteset28' : np.dtype('S28'),
     'byteset32' : np.dtype('S32'),
-    'byteset36' : np.dtype('S36'),
-    'byteset40' : np.dtype('S40'),
-    'byteset44' : np.dtype('S44'),
-    'byteset48' : np.dtype('S48'),
-    'byteset52' : np.dtype('S52'),
-    'byteset56' : np.dtype('S56'),
-    'byteset60' : np.dtype('S60'),
-    'byteset64' : np.dtype('S64'),
 }
 ```
