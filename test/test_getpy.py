@@ -1,5 +1,7 @@
 import pytest
 
+import sys
+
 import numpy as np
 
 import getpy as gp
@@ -17,7 +19,7 @@ def test_getpy_vectorized_methods():
     gp_dict[keys] = values
 
     iterated_keys = [key for key in gp_dict]
-    iterated_keys_and_values = [(key, value) for key, value in gp_dict.items()]
+    iterated_keys_and_values = [(key, value) for key, value in zip(*gp_dict.items())]
 
     assert len(gp_dict) == len(np.unique(keys))
 
@@ -26,7 +28,6 @@ def test_getpy_vectorized_methods():
         p_dict[key] = value
 
     assert len(gp_dict) == len(p_dict)
-    assert sorted([(key, value) for key, value in gp_dict.items()]) == sorted(p_dict.items())
 
     select_keys = np.random.choice(keys, size=100)
     select_values = gp_dict[select_keys]
@@ -53,7 +54,7 @@ def test_getpy_vectorized_methods_with_default():
     gp_dict[keys] = values
 
     iterated_keys = [key for key in gp_dict]
-    iterated_keys_and_values = [(key, value) for key, value in gp_dict.items()]
+    iterated_keys_and_values = [(key, value) for key, value in zip(*gp_dict.items())]
 
     select_keys = np.random.choice(keys, size=100)
     select_values = gp_dict[select_keys]
@@ -85,7 +86,7 @@ def test_getpy_vectorized_methods_with_byteset():
     gp_dict[keys] = values
 
     iterated_keys = [key for key in gp_dict]
-    iterated_keys_and_values = [(key, value) for key, value in gp_dict.items()]
+    iterated_keys_and_values = [(key, value) for key, value in zip(*gp_dict.items())]
 
     select_keys = np.random.choice(keys, size=100)
     select_values = gp_dict[select_keys]
@@ -155,7 +156,6 @@ def test_getpy_big_dict_uint64_uint64():
         gp_dict[keys] = values
 
 
-@pytest.mark.timeout(1)
 def test_getpy_big_dict_uint64_byteset8():
     key_type = gp.types['uint64']
     value_type = gp.types['byteset8']

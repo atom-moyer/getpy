@@ -7,7 +7,26 @@ namespace py = pybind11;
 #include <parallel_hashmap/phmap_utils.h>
 #include <parallel_hashmap/phmap_dump.h>
 
+#include <type_traits>
 #include <iostream>
+
+
+template<typename T>
+struct get_swap_type {
+    typedef T type;
+};
+
+
+template<>
+struct get_swap_type<float> {
+    typedef uint32_t type;
+};
+
+
+template<>
+struct get_swap_type<double> {
+    typedef uint64_t type;
+};
 
 
 template <typename Key, typename Value>
@@ -16,18 +35,6 @@ struct Dict {
 
 
     Dict ( Value default_value ) : default_value ( default_value ) {}
-
-
-    Dict ( py::array_t<Value> complex_default_value ) {
-        py::buffer_info complex_default_value_buffer = complex_default_value.request();
-
-        if ( complex_default_value_buffer.ndim != 1 | complex_default_value_buffer.shape[0] != 1 )
-            throw std::runtime_error("The default value for complex dtypes must be set with one value.");
-
-        auto * complex_default_value_ptr = (Value *) complex_default_value_buffer.ptr;
-
-        default_value = complex_default_value_ptr[0];
-    }
 
 
     py::array_t<Value> __getitem__ ( py::array_t<Key> & key_array ) {
@@ -76,6 +83,116 @@ struct Dict {
 
         for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++)
             __dict.erase( key_array_ptr[idx] );
+    }
+
+
+    void iadd ( py::array_t<Key> & key_array, py::array_t<Value> & value_array ) {
+        py::buffer_info key_array_buffer = key_array.request();
+        auto * key_array_ptr = (Key *) key_array_buffer.ptr;
+
+        py::buffer_info value_array_buffer = value_array.request();
+        auto * value_array_ptr = (Value *) value_array_buffer.ptr;
+
+        if (key_array_buffer.shape[0] != value_array_buffer.shape[0])
+            throw std::runtime_error("The size of the first dimension for the key and value must match.");
+
+        for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++) {
+            auto search = this->__dict.find( key_array_ptr[idx] );
+
+            if ( search != this->__dict.end() ) {
+                search->second += value_array_ptr[idx];
+            } else if ( this->default_value )  {
+                Value value = *(this->default_value);
+                value += value_array_ptr[idx];
+                this->__dict.insert_or_assign( key_array_ptr[idx], value);
+            } else {
+                throw std::runtime_error("Key Error: Key not found and default value is not defined.");
+            }
+        }
+    }
+
+
+    void isub ( py::array_t<Key> & key_array, py::array_t<Value> & value_array ) {
+        py::buffer_info key_array_buffer = key_array.request();
+        auto * key_array_ptr = (Key *) key_array_buffer.ptr;
+
+        py::buffer_info value_array_buffer = value_array.request();
+        auto * value_array_ptr = (Value *) value_array_buffer.ptr;
+
+        if (key_array_buffer.shape[0] != value_array_buffer.shape[0])
+            throw std::runtime_error("The size of the first dimension for the key and value must match.");
+
+        for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++) {
+            auto search = this->__dict.find( key_array_ptr[idx] );
+
+            if ( search != this->__dict.end() ) {
+                search->second -= value_array_ptr[idx];
+            } else if ( this->default_value )  {
+                Value value = *(this->default_value);
+                value -= value_array_ptr[idx];
+                this->__dict.insert_or_assign( key_array_ptr[idx], value);
+            } else {
+                throw std::runtime_error("Key Error: Key not found and default value is not defined.");
+            }
+        }
+    }
+
+
+    void ior ( py::array_t<Key> & key_array, py::array_t<Value> & value_array ) {
+        typedef typename get_swap_type<Value>::type tp;
+
+        py::buffer_info key_array_buffer = key_array.request();
+        auto * key_array_ptr = (Key *) key_array_buffer.ptr;
+
+        py::buffer_info value_array_buffer = value_array.request();
+        auto * value_array_ptr = (Value *) value_array_buffer.ptr;
+
+        if (key_array_buffer.shape[0] != value_array_buffer.shape[0])
+            throw std::runtime_error("The size of the first dimension for the key and value must match.");
+
+        for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++) {
+            auto search = this->__dict.find( key_array_ptr[idx] );
+
+            if ( search != this->__dict.end() ) {
+                tp value = (tp &) search->second | (tp &) value_array_ptr[idx];
+                this->__dict.insert_or_assign( key_array_ptr[idx], (Value &) value);
+            } else if ( this->default_value )  {
+                Value temp = *(this->default_value);
+                tp value = (tp &) temp | (tp &) value_array_ptr[idx];
+                this->__dict.insert_or_assign( key_array_ptr[idx], (Value &) value);
+            } else {
+                throw std::runtime_error("Key Error: Key not found and default value is not defined.");
+            }
+        }
+    }
+
+
+    void iand ( py::array_t<Key> & key_array, py::array_t<Value> & value_array ) {
+        typedef typename get_swap_type<Value>::type tp;
+
+        py::buffer_info key_array_buffer = key_array.request();
+        auto * key_array_ptr = (Key *) key_array_buffer.ptr;
+
+        py::buffer_info value_array_buffer = value_array.request();
+        auto * value_array_ptr = (Value *) value_array_buffer.ptr;
+
+        if (key_array_buffer.shape[0] != value_array_buffer.shape[0])
+            throw std::runtime_error("The size of the first dimension for the key and value must match.");
+
+        for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++) {
+            auto search = this->__dict.find( key_array_ptr[idx] );
+
+            if ( search != this->__dict.end() ) {
+                tp value = (tp &) search->second & (tp &) value_array_ptr[idx];
+                this->__dict.insert_or_assign( key_array_ptr[idx], (Value &) value);
+            } else if ( this->default_value )  {
+                Value temp = *(this->default_value);
+                tp value = (tp &) temp & (tp &) value_array_ptr[idx];
+                this->__dict.insert_or_assign( key_array_ptr[idx], (Value &) value);
+            } else {
+                throw std::runtime_error("Key Error: Key not found and default value is not defined.");
+            }
+        }
     }
 
 
@@ -173,124 +290,13 @@ struct Dict {
 };
 
 
-template <typename Key, typename Value>
-struct Dict_Default : Dict<Key, Value> {
-    void iadd ( py::array_t<Key> & key_array, py::array_t<Value> & value_array ) {
-        py::buffer_info key_array_buffer = key_array.request();
-        auto * key_array_ptr = (Key *) key_array_buffer.ptr;
-
-        py::buffer_info value_array_buffer = value_array.request();
-        auto * value_array_ptr = (Value *) value_array_buffer.ptr;
-
-        if (key_array_buffer.shape[0] != value_array_buffer.shape[0])
-            throw std::runtime_error("The size of the first dimension for the key and value must match.");
-
-        for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++) {
-            auto search = this->__dict.find( key_array_ptr[idx] );
-
-            if ( search != this->__dict.end() ) {
-                search->second += value_array_ptr[idx];
-            } else if ( this->default_value )  {
-                Value value = *(this->default_value);
-                value += value_array_ptr[idx];
-                this->__dict.insert_or_assign( key_array_ptr[idx], value);
-            } else {
-                throw std::runtime_error("Key Error: Key not found and default value is not defined.");
-            }
-        }
-    }
-
-
-    void isub ( py::array_t<Key> & key_array, py::array_t<Value> & value_array ) {
-        py::buffer_info key_array_buffer = key_array.request();
-        auto * key_array_ptr = (Key *) key_array_buffer.ptr;
-
-        py::buffer_info value_array_buffer = value_array.request();
-        auto * value_array_ptr = (Value *) value_array_buffer.ptr;
-
-        if (key_array_buffer.shape[0] != value_array_buffer.shape[0])
-            throw std::runtime_error("The size of the first dimension for the key and value must match.");
-
-        for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++) {
-            auto search = this->__dict.find( key_array_ptr[idx] );
-
-            if ( search != this->__dict.end() ) {
-                search->second -= value_array_ptr[idx];
-            } else if ( this->default_value )  {
-                Value value = *(this->default_value);
-                value -= value_array_ptr[idx];
-                this->__dict.insert_or_assign( key_array_ptr[idx], value);
-            } else {
-                throw std::runtime_error("Key Error: Key not found and default value is not defined.");
-            }
-        }
-    }
-};
-
-
-template <typename Key, typename Value>
-struct Dict_Bitwise : Dict<Key, Value> {
-    void ior ( py::array_t<Key> & key_array, py::array_t<Value> & value_array ) {
-        py::buffer_info key_array_buffer = key_array.request();
-        auto * key_array_ptr = (Key *) key_array_buffer.ptr;
-
-        py::buffer_info value_array_buffer = value_array.request();
-        auto * value_array_ptr = (Value *) value_array_buffer.ptr;
-
-        if (key_array_buffer.shape[0] != value_array_buffer.shape[0])
-            throw std::runtime_error("The size of the first dimension for the key and value must match.");
-
-        for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++) {
-            auto search = this->__dict.find( key_array_ptr[idx] );
-
-            if ( search != this->__dict.end() ) {
-                search->second |= value_array_ptr[idx];
-            } else if ( this->default_value )  {
-                Value value = *(this->default_value);
-                value |= value_array_ptr[idx];
-                this->__dict.insert_or_assign( key_array_ptr[idx], value);
-            } else {
-                throw std::runtime_error("Key Error: Key not found and default value is not defined.");
-            }
-        }
-    }
-
-
-    void iand ( py::array_t<Key> & key_array, py::array_t<Value> & value_array ) {
-        py::buffer_info key_array_buffer = key_array.request();
-        auto * key_array_ptr = (Key *) key_array_buffer.ptr;
-
-        py::buffer_info value_array_buffer = value_array.request();
-        auto * value_array_ptr = (Value *) value_array_buffer.ptr;
-
-        if (key_array_buffer.shape[0] != value_array_buffer.shape[0])
-            throw std::runtime_error("The size of the first dimension for the key and value must match.");
-
-        for (size_t idx = 0; idx < key_array_buffer.shape[0]; idx++) {
-            auto search = this->__dict.find( key_array_ptr[idx] );
-
-            if ( search != this->__dict.end() ) {
-                search->second &= value_array_ptr[idx];
-            } else if ( this->default_value )  {
-                Value value = *(this->default_value);
-                value &= value_array_ptr[idx];
-                this->__dict.insert_or_assign( key_array_ptr[idx], value);
-            } else {
-                throw std::runtime_error("Key Error: Key not found and default value is not defined.");
-            }
-        }
-    }
-};
-
-
 template<typename Key, typename Value>
-void declare_dict_default(const py::module& m, const std::string& class_name) {
-  using Class = Dict_Default<Key, Value>;
+void declare_dict(const py::module& m, const std::string& class_name) {
+  using Class = Dict<Key, Value>;
 
   py::class_<Class>(m, class_name.c_str())
       .def(py::init<>())
       .def(py::init<Value &>())
-      .def(py::init<py::array_t<Value> &>())
 
       .def("__getitem__", &Class::__getitem__)
       .def("__setitem__", &Class::__setitem__)
@@ -301,6 +307,9 @@ void declare_dict_default(const py::module& m, const std::string& class_name) {
       .def("iadd", &Class::iadd)
       .def("isub", &Class::isub)
 
+      .def("ior", &Class::ior)
+      .def("iand", &Class::iand)
+
       .def("dump", &Class::dump)
       .def("load", &Class::load)
 
@@ -309,34 +318,6 @@ void declare_dict_default(const py::module& m, const std::string& class_name) {
       .def("items", &Class::items)
 
       .def("__len__", &Class::__len__);
-}
-
-
-template<typename Key, typename Value>
-void declare_dict_bitwise(const py::module& m, const std::string& class_name) {
-    using Class = Dict_Bitwise<Key, Value>;
-
-    py::class_<Class>(m, class_name.c_str())
-        .def(py::init<>())
-        .def(py::init<const Value &>())
-
-        .def("__getitem__", &Class::__getitem__)
-        .def("__setitem__", &Class::__setitem__)
-        .def("__delitem__", &Class::__delitem__)
-
-        .def("contains", &Class::contains)
-
-        .def("ior", &Class::ior)
-        .def("iand", &Class::iand)
-
-        .def("dump", &Class::dump)
-        .def("load", &Class::load)
-
-        .def("keys", &Class::keys)
-        .def("values", &Class::values)
-        .def("items", &Class::items)
-
-        .def("__len__", &Class::__len__);
 }
 
 
@@ -458,16 +439,88 @@ struct std::hash<std::array<T, N>> {
 
 
 template<typename T, size_t N>
-std::array<T, N> & operator &= ( std::array<T, N> & a, const std::array<T, N> b ) {
-    for (size_t i = 0 ; i < N ; ++i) {
-        a[i] &= b[i];
-    }
-}
-
-
-template<typename T, size_t N>
 std::array<T, N> & operator |= ( std::array<T, N> & a, const std::array<T, N> b ) {
     for (size_t i = 0 ; i < N ; ++i) {
         a[i] |= b[i];
     }
+
+    return a;
+}
+
+
+template<typename T, size_t N>
+std::array<T, N> & operator &= ( std::array<T, N> & a, const std::array<T, N> b ) {
+    for (size_t i = 0 ; i < N ; ++i) {
+        a[i] &= b[i];
+    }
+
+    return a;
+}
+
+
+template<typename T, size_t N>
+std::array<T, N> operator | ( const std::array<T, N> & a, const std::array<T, N> b ) {
+    std::array<T, N> c;
+
+    for (size_t i = 0 ; i < N ; ++i) {
+        c[i] = a[i] | b[i];
+    }
+
+    return c;
+}
+
+
+template<typename T, size_t N>
+std::array<T, N> operator & ( const std::array<T, N> & a, const std::array<T, N> b ) {
+    std::array<T, N> c;
+
+    for (size_t i = 0 ; i < N ; ++i) {
+        c[i] = a[i] & b[i];
+    }
+
+    return c;
+}
+
+
+template<typename T, size_t N>
+std::array<T, N> & operator += ( std::array<T, N> & a, const std::array<T, N> b ) {
+    for (size_t i = 0 ; i < N ; ++i) {
+        a[i] += b[i];
+    }
+
+    return a;
+}
+
+
+template<typename T, size_t N>
+std::array<T, N> & operator -= ( std::array<T, N> & a, const std::array<T, N> b ) {
+    for (size_t i = 0 ; i < N ; ++i) {
+        a[i] -= b[i];
+    }
+
+    return a;
+}
+
+
+template<typename T, size_t N>
+std::array<T, N> operator + ( const std::array<T, N> & a, const std::array<T, N> b ) {
+    std::array<T, N> c;
+
+    for (size_t i = 0 ; i < N ; ++i) {
+        c[i] = a[i] + b[i];
+    }
+
+    return c;
+}
+
+
+template<typename T, size_t N>
+std::array<T, N> operator - ( const std::array<T, N> & a, const std::array<T, N> b ) {
+    std::array<T, N> c;
+
+    for (size_t i = 0 ; i < N ; ++i) {
+        c[i] = a[i] - b[i];
+    }
+
+    return c;
 }

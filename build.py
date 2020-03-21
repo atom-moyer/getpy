@@ -3,7 +3,7 @@ import itertools
 import numpy as np
 
 
-byteset_lengths = [4*(i+1) for i in range(8)]
+byteset_lengths = [4*(i+1) for i in range(16)]
 
 
 key_types = [
@@ -80,10 +80,7 @@ def write_set_types_dict(getpy_file, key_type):
 
 
 def write_declare_dict(getpy_file, key_type, value_type):
-    if 'byteset' in value_type:
-        getpy_file.write(f'    declare_dict_bitwise<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "Dict_{key_type}_{value_type}");\n')
-    else:
-        getpy_file.write(f'    declare_dict_default<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "Dict_{key_type}_{value_type}");\n')
+    getpy_file.write(f'    declare_dict<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "Dict_{key_type}_{value_type}");\n')
 
 
 def write_declare_set(getpy_file, key_type):
