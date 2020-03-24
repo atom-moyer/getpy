@@ -26,105 +26,71 @@ The `gp.Dict` and `gp.Set` objects are designed to maintain a similar interface 
 import numpy as np
 import getpy as gp
 
-key_type = gp.types['uint64']
-value_type = gp.types['uint64']
-
-gp_dict = gp.Dict(key_type, value_type)
-
-keys = np.random.randint(1, 1000, size=200, dtype=key_type)
-values = np.random.randint(1, 1000, size=200, dtype=value_type)
-
-gp_dict[keys] = values
-
-iterated_keys = [key for key in gp_dict]
-iterated_keys_and_values = [(key, value) for key, value in zip(*gp_dict.items())]
-
-assert len(gp_dict) == len(np.unique(keys))
-
-p_dict = dict()
-for key, value in zip(keys, values):
-    p_dict[key] = value
-
-assert len(gp_dict) == len(p_dict)
-
-select_keys = np.random.choice(keys, size=100)
-select_values = gp_dict[select_keys]
-
-random_keys = np.random.randint(1, 1000, size=500, dtype=key_type)
-random_keys_mask = gp_dict.contains(random_keys)
-
-mask_keys = random_keys[random_keys_mask]
-mask_values = gp_dict[mask_keys]
-
-gp_dict.iadd(keys, values)
-gp_dict.isub(keys, values)
-```
-
-### Example With Default Value
-```python
-key_type = gp.types['uint64']
-value_type = gp.types['uint64']
-
-gp_dict = gp.Dict(key_type, value_type, default_value=0)
-
-keys = np.random.randint(1, 1000, size=200, dtype=key_type)
-values = np.random.randint(1, 1000, size=200, dtype=value_type)
-
-gp_dict[keys] = values
-
-iterated_keys = [key for key in gp_dict]
-iterated_keys_and_values = [(key, value) for key, value in zip(*gp_dict.items())]
-
-select_keys = np.random.choice(keys, size=100)
-select_values = gp_dict[select_keys]
-
-random_keys = np.random.randint(1, 1000, size=500, dtype=key_type)
-random_keys_mask = gp_dict.contains(random_keys)
-random_values_with_defaults = gp_dict[random_keys]
-
-for random_key_mask, random_value in zip(random_keys_mask, random_values_with_defaults):
-    if not random_key_mask:
-        assert random_value == 0
-    else:
-        assert random_value != 0
-
-one_values = np.ones(500, dtype=value_type)
-
-gp_dict.iadd(random_keys, one_values)
-gp_dict.isub(random_keys, one_values)
-```
-
-### Example With a Byteset dtype
-```python
-key_type = gp.types['uint64']
-value_type = gp.types['byteset8']
-
-gp_dict = gp.Dict(key_type, value_type)
+key_type = np.dtype('u8')
+value_type = np.dtype('u8')
 
 keys = np.random.randint(1, 1000, size=10**2, dtype=key_type)
-values = np.array([np.packbits(np.array([1, 0, 1, 0, 1, 0, 1, 0] * 8, dtype=np.bool)) for _ in range(10**2)]).view(value_type)
+values = np.random.randint(1, 1000, size=10**2, dtype=value_type)
+
+gp_dict = gp.Dict(key_type, value_type)
+gp_dict[keys] = values
+```
+
+### Default Example
+```python
+import numpy as np
+import getpy as gp
+
+key_type = np.dtype('u8')
+value_type = np.dtype('u8')
+
+keys = np.random.randint(1, 1000, size=10**2, dtype=key_type)
+values = np.random.randint(1, 1000, size=10**2, dtype=value_type)
+
+gp_dict = gp.Dict(key_type, value_type, default_value=0)
 gp_dict[keys] = values
 
-iterated_keys = [key for key in gp_dict]
-iterated_keys_and_values = [(key, value) for key, value in zip(*gp_dict.items())]
-
-select_keys = np.random.choice(keys, size=100)
-select_values = gp_dict[select_keys]
-
 random_keys = np.random.randint(1, 1000, size=500, dtype=key_type)
-random_keys_mask = gp_dict.contains(random_keys)
+random_values = gp_dict[random_keys]
+```
 
-mask_keys = random_keys[random_keys_mask]
-mask_values = gp_dict[mask_keys]
+### Byteset Example
+```python
+import numpy as np
+import getpy as gp
 
-gp_dict.ior(keys, values)
-gp_dict.iand(keys, values)
+key_type = np.dtype('S8')
+value_type = np.dtype('S8')
+
+keys = np.array([np.random.bytes(8) for i in range(10**2)], dtype=key_type)
+values = np.array([np.random.bytes(8) for i in range(10**2)], dtype=value_type)
+
+gp_dict = gp.Dict(key_type, value_type)
+gp_dict[keys] = values
+```
+
+### Multidimensional Example
+```python
+import numpy as np
+import getpy as gp
+
+key_type = np.dtype('u8')
+value_type = np.dtype('u8')
+
+keys = np.random.randint(1, 1000, size=10**2, dtype=key_type).reshape(10,10)
+values = np.random.randint(1, 1000, size=10**2, dtype=value_type).reshape(10,10)
+
+gp_dict = gp.Dict(key_type, value_type)
+gp_dict[keys] = values
 ```
 
 ### Serialization Example
 ```python
-key_type = gp.types['uint64']
-value_type = gp.types['uint64']
+import numpy as np
+import getpy as gp
+
+key_type = np.dtype('u8')
+value_type = np.dtype('u8')
 
 keys = np.random.randint(1, 1000, size=10**1, dtype=key_type)
 values = np.random.randint(1, 1000, size=10**1, dtype=value_type)
@@ -135,31 +101,93 @@ gp_dict_1.dump('test/test.hashtable.bin')
 
 gp_dict_2 = gp.Dict(key_type, value_type)
 gp_dict_2.load('test/test.hashtable.bin')
-
-assert len(gp_dict_1) == len(gp_dict_2)
 ```
 
 ## Supported Data Types
 
 ```python
-types = {
-    'uint8' : np.dtype('u1'),
-    'uint16' : np.dtype('u2'),
-    'uint32' : np.dtype('u4'),
-    'uint64' : np.dtype('u8'),
-    'int8' : np.dtype('i1'),
-    'int16' : np.dtype('i2'),
-    'int32' : np.dtype('i4'),
-    'int64' : np.dtype('i8'),
-    'float32' : np.dtype('f4'),
-    'float64' : np.dtype('f8'),
-    'byteset4' : np.dtype('S4'),
-    'byteset8' : np.dtype('S8'),
-    'byteset12' : np.dtype('S12'),
-    'byteset16' : np.dtype('S16'),
-    'byteset20' : np.dtype('S20'),
-    'byteset24' : np.dtype('S24'),
-    'byteset28' : np.dtype('S28'),
-    'byteset32' : np.dtype('S32'),
+dict_types = {
+    (np.dtype('u4'), np.dtype('u1')) : _gp.Dict_u4_u1,
+    (np.dtype('u4'), np.dtype('u2')) : _gp.Dict_u4_u2,
+    (np.dtype('u4'), np.dtype('u4')) : _gp.Dict_u4_u4,
+    (np.dtype('u4'), np.dtype('u8')) : _gp.Dict_u4_u8,
+    (np.dtype('u4'), np.dtype('i1')) : _gp.Dict_u4_i1,
+    (np.dtype('u4'), np.dtype('i2')) : _gp.Dict_u4_i2,
+    (np.dtype('u4'), np.dtype('i4')) : _gp.Dict_u4_i4,
+    (np.dtype('u4'), np.dtype('i8')) : _gp.Dict_u4_i8,
+    (np.dtype('u4'), np.dtype('f4')) : _gp.Dict_u4_f4,
+    (np.dtype('u4'), np.dtype('f8')) : _gp.Dict_u4_f8,
+    (np.dtype('u4'), np.dtype('S8')) : _gp.Dict_u4_S8,
+    (np.dtype('u4'), np.dtype('S16')) : _gp.Dict_u4_S16,
+    (np.dtype('u8'), np.dtype('u1')) : _gp.Dict_u8_u1,
+    (np.dtype('u8'), np.dtype('u2')) : _gp.Dict_u8_u2,
+    (np.dtype('u8'), np.dtype('u4')) : _gp.Dict_u8_u4,
+    (np.dtype('u8'), np.dtype('u8')) : _gp.Dict_u8_u8,
+    (np.dtype('u8'), np.dtype('i1')) : _gp.Dict_u8_i1,
+    (np.dtype('u8'), np.dtype('i2')) : _gp.Dict_u8_i2,
+    (np.dtype('u8'), np.dtype('i4')) : _gp.Dict_u8_i4,
+    (np.dtype('u8'), np.dtype('i8')) : _gp.Dict_u8_i8,
+    (np.dtype('u8'), np.dtype('f4')) : _gp.Dict_u8_f4,
+    (np.dtype('u8'), np.dtype('f8')) : _gp.Dict_u8_f8,
+    (np.dtype('u8'), np.dtype('S8')) : _gp.Dict_u8_S8,
+    (np.dtype('u8'), np.dtype('S16')) : _gp.Dict_u8_S16,
+    (np.dtype('i4'), np.dtype('u1')) : _gp.Dict_i4_u1,
+    (np.dtype('i4'), np.dtype('u2')) : _gp.Dict_i4_u2,
+    (np.dtype('i4'), np.dtype('u4')) : _gp.Dict_i4_u4,
+    (np.dtype('i4'), np.dtype('u8')) : _gp.Dict_i4_u8,
+    (np.dtype('i4'), np.dtype('i1')) : _gp.Dict_i4_i1,
+    (np.dtype('i4'), np.dtype('i2')) : _gp.Dict_i4_i2,
+    (np.dtype('i4'), np.dtype('i4')) : _gp.Dict_i4_i4,
+    (np.dtype('i4'), np.dtype('i8')) : _gp.Dict_i4_i8,
+    (np.dtype('i4'), np.dtype('f4')) : _gp.Dict_i4_f4,
+    (np.dtype('i4'), np.dtype('f8')) : _gp.Dict_i4_f8,
+    (np.dtype('i4'), np.dtype('S8')) : _gp.Dict_i4_S8,
+    (np.dtype('i4'), np.dtype('S16')) : _gp.Dict_i4_S16,
+    (np.dtype('i8'), np.dtype('u1')) : _gp.Dict_i8_u1,
+    (np.dtype('i8'), np.dtype('u2')) : _gp.Dict_i8_u2,
+    (np.dtype('i8'), np.dtype('u4')) : _gp.Dict_i8_u4,
+    (np.dtype('i8'), np.dtype('u8')) : _gp.Dict_i8_u8,
+    (np.dtype('i8'), np.dtype('i1')) : _gp.Dict_i8_i1,
+    (np.dtype('i8'), np.dtype('i2')) : _gp.Dict_i8_i2,
+    (np.dtype('i8'), np.dtype('i4')) : _gp.Dict_i8_i4,
+    (np.dtype('i8'), np.dtype('i8')) : _gp.Dict_i8_i8,
+    (np.dtype('i8'), np.dtype('f4')) : _gp.Dict_i8_f4,
+    (np.dtype('i8'), np.dtype('f8')) : _gp.Dict_i8_f8,
+    (np.dtype('i8'), np.dtype('S8')) : _gp.Dict_i8_S8,
+    (np.dtype('i8'), np.dtype('S16')) : _gp.Dict_i8_S16,
+    (np.dtype('S8'), np.dtype('u1')) : _gp.Dict_S8_u1,
+    (np.dtype('S8'), np.dtype('u2')) : _gp.Dict_S8_u2,
+    (np.dtype('S8'), np.dtype('u4')) : _gp.Dict_S8_u4,
+    (np.dtype('S8'), np.dtype('u8')) : _gp.Dict_S8_u8,
+    (np.dtype('S8'), np.dtype('i1')) : _gp.Dict_S8_i1,
+    (np.dtype('S8'), np.dtype('i2')) : _gp.Dict_S8_i2,
+    (np.dtype('S8'), np.dtype('i4')) : _gp.Dict_S8_i4,
+    (np.dtype('S8'), np.dtype('i8')) : _gp.Dict_S8_i8,
+    (np.dtype('S8'), np.dtype('f4')) : _gp.Dict_S8_f4,
+    (np.dtype('S8'), np.dtype('f8')) : _gp.Dict_S8_f8,
+    (np.dtype('S8'), np.dtype('S8')) : _gp.Dict_S8_S8,
+    (np.dtype('S8'), np.dtype('S16')) : _gp.Dict_S8_S16,
+    (np.dtype('S16'), np.dtype('u1')) : _gp.Dict_S16_u1,
+    (np.dtype('S16'), np.dtype('u2')) : _gp.Dict_S16_u2,
+    (np.dtype('S16'), np.dtype('u4')) : _gp.Dict_S16_u4,
+    (np.dtype('S16'), np.dtype('u8')) : _gp.Dict_S16_u8,
+    (np.dtype('S16'), np.dtype('i1')) : _gp.Dict_S16_i1,
+    (np.dtype('S16'), np.dtype('i2')) : _gp.Dict_S16_i2,
+    (np.dtype('S16'), np.dtype('i4')) : _gp.Dict_S16_i4,
+    (np.dtype('S16'), np.dtype('i8')) : _gp.Dict_S16_i8,
+    (np.dtype('S16'), np.dtype('f4')) : _gp.Dict_S16_f4,
+    (np.dtype('S16'), np.dtype('f8')) : _gp.Dict_S16_f8,
+    (np.dtype('S16'), np.dtype('S8')) : _gp.Dict_S16_S8,
+    (np.dtype('S16'), np.dtype('S16')) : _gp.Dict_S16_S16,
 }
+
+set_types = {
+    np.dtype('u4') : _gp.Set_u4,
+    np.dtype('u8') : _gp.Set_u8,
+    np.dtype('i4') : _gp.Set_i4,
+    np.dtype('i8') : _gp.Set_i8,
+    np.dtype('S8') : _gp.Set_S8,
+    np.dtype('S16') : _gp.Set_S16,
+}
+
 ```
