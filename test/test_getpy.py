@@ -56,8 +56,8 @@ def test_getpy_methods_with_multidim_and_strings():
     key_type = np.dtype('S8')
     value_type = np.dtype('S8')
 
-    keys = np.array([np.random.bytes(8) for i in range(10**2)], dtype=key_type).reshape(10,10)
-    values = np.array([np.random.bytes(8) for i in range(10**2)], dtype=value_type).reshape(10,10)
+    keys = np.array([np.random.bytes(4) for i in range(10**2)], dtype=key_type).reshape(10,10)
+    values = np.array([np.random.bytes(4) for i in range(10**2)], dtype=value_type).reshape(10,10)
 
     gp_dict = gp.Dict(key_type, value_type)
     gp_dict[keys] = values
@@ -75,14 +75,33 @@ def test_getpy_methods_with_default():
     keys = np.random.randint(1, 1000, size=10**2, dtype=key_type)
     values = np.random.randint(1, 1000, size=10**2, dtype=value_type)
 
-    gp_dict = gp.Dict(key_type, value_type, default_value=0)
+    default_value = 4242
+    gp_dict = gp.Dict(key_type, value_type, default_value=default_value)
     gp_dict[keys] = values
 
     random_keys = np.random.randint(1, 1000, size=500, dtype=key_type)
     random_values = gp_dict[random_keys]
 
-    assert np.all(random_values[np.where(gp_dict.contains(random_keys))] != 0)
-    assert np.all(random_values[np.where(np.logical_not(gp_dict.contains(random_keys)))] == 0)
+    assert np.all(random_values[np.where(gp_dict.contains(random_keys))] != default_value)
+    assert np.all(random_values[np.where(np.logical_not(gp_dict.contains(random_keys)))] == default_value)
+
+
+def test_getpy_methods_with_default_and_strings():
+    key_type = np.dtype('S8')
+    value_type = np.dtype('S8')
+
+    keys = np.array([np.random.bytes(8) for i in range(10**2)], dtype=key_type)
+    values = np.array([np.random.bytes(8) for i in range(10**2)], dtype=value_type)
+
+    default_value = np.random.bytes(8)
+    gp_dict = gp.Dict(key_type, value_type, default_value=default_value)
+    gp_dict[keys] = values
+
+    random_keys = np.array([np.random.bytes(8) for i in range(10**3)], dtype=key_type)
+    random_values = gp_dict[random_keys]
+
+    assert np.all(random_values[np.where(gp_dict.contains(random_keys))] != default_value)
+    assert np.all(random_values[np.where(np.logical_not(gp_dict.contains(random_keys)))] == default_value)
 
 
 def test_getpy_types():

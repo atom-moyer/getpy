@@ -46,14 +46,12 @@ struct Dict {
         auto * result_array_ptr = (Value *) result_array_buffer.ptr;
 
         for ( size_t idx = 0; idx < key_array.size(); idx++ ) {
-            auto search = __dict.find( key_array_ptr[idx] );
+            auto search = dict.find( key_array_ptr[idx] );
 
-            if ( search != __dict.end() ) {
+            if ( search != dict.end() ) {
                 result_array_ptr[idx] = search->second;
-            } else if ( default_value )  {
-                result_array_ptr[idx] = *default_value;
             } else {
-                throw std::runtime_error("Key Error: Key not found and default value is not defined.");
+                result_array_ptr[idx] = default_value;
             }
         }
 
@@ -61,7 +59,7 @@ struct Dict {
     }
 
 
-    void __setitem__ ( py::array_t <Key> & key_array, py::array_t <Value> & value_array ) {
+    void setitem__ ( py::array_t <Key> & key_array, py::array_t <Value> & value_array ) {
         py::buffer_info key_array_buffer = key_array.request();
         auto * key_array_ptr = (Key *) key_array_buffer.ptr;
 
@@ -72,7 +70,7 @@ struct Dict {
             throw std::runtime_error("The size of the key and value must match.");
 
         for ( size_t idx = 0; idx < key_array.size(); idx++ ) {
-            __dict.insert_or_assign( key_array_ptr[idx], value_array_ptr[idx] );
+            dict.insert_or_assign( key_array_ptr[idx], value_array_ptr[idx] );
         }
     }
 
@@ -82,7 +80,7 @@ struct Dict {
         auto * key_array_ptr = (Key *) key_array_buffer.ptr;
 
         for ( size_t idx = 0; idx < key_array.size(); idx++ )
-            __dict.erase( key_array_ptr[idx] );
+            dict.erase( key_array_ptr[idx] );
     }
 
 
@@ -97,16 +95,12 @@ struct Dict {
             throw std::runtime_error("The size of the key and value must match.");
 
         for ( size_t idx = 0; idx < key_array.size(); idx++ ) {
-            auto search = this->__dict.find( key_array_ptr[idx] );
+            auto search = dict.find( key_array_ptr[idx] );
 
-            if ( search != this->__dict.end() ) {
+            if ( search != dict.end() ) {
                 search->second += value_array_ptr[idx];
-            } else if ( this->default_value )  {
-                Value value = *(this->default_value);
-                value += value_array_ptr[idx];
-                this->__dict.insert_or_assign( key_array_ptr[idx], value);
             } else {
-                throw std::runtime_error("Key Error: Key not found and default value is not defined.");
+                dict.insert_or_assign( key_array_ptr[idx], default_value + value_array_ptr[idx]);
             }
         }
     }
@@ -123,16 +117,12 @@ struct Dict {
             throw std::runtime_error("The size of the key and value must match.");
 
         for ( size_t idx = 0; idx < key_array.size(); idx++ ) {
-            auto search = this->__dict.find( key_array_ptr[idx] );
+            auto search = dict.find( key_array_ptr[idx] );
 
-            if ( search != this->__dict.end() ) {
+            if ( search != dict.end() ) {
                 search->second -= value_array_ptr[idx];
-            } else if ( this->default_value )  {
-                Value value = *(this->default_value);
-                value -= value_array_ptr[idx];
-                this->__dict.insert_or_assign( key_array_ptr[idx], value);
             } else {
-                throw std::runtime_error("Key Error: Key not found and default value is not defined.");
+                dict.insert_or_assign( key_array_ptr[idx], default_value - value_array_ptr[idx]);
             }
         }
     }
@@ -151,17 +141,14 @@ struct Dict {
             throw std::runtime_error("The size of the key and value must match.");
 
         for ( size_t idx = 0; idx < key_array.size(); idx++ ) {
-            auto search = this->__dict.find( key_array_ptr[idx] );
+            auto search = dict.find( key_array_ptr[idx] );
 
-            if ( search != this->__dict.end() ) {
+            if ( search != dict.end() ) {
                 tp value = (tp &) search->second | (tp &) value_array_ptr[idx];
-                this->__dict.insert_or_assign( key_array_ptr[idx], (Value &) value);
-            } else if ( this->default_value )  {
-                Value temp = *(this->default_value);
-                tp value = (tp &) temp | (tp &) value_array_ptr[idx];
-                this->__dict.insert_or_assign( key_array_ptr[idx], (Value &) value);
+                dict.insert_or_assign( key_array_ptr[idx], (Value &) value);
             } else {
-                throw std::runtime_error("Key Error: Key not found and default value is not defined.");
+                tp value = (tp &) default_value | (tp &) value_array_ptr[idx];
+                dict.insert_or_assign( key_array_ptr[idx], (Value &) value);
             }
         }
     }
@@ -180,17 +167,14 @@ struct Dict {
             throw std::runtime_error("The size of the key and value must match.");
 
         for ( size_t idx = 0; idx < key_array.size(); idx++ ) {
-            auto search = this->__dict.find( key_array_ptr[idx] );
+            auto search = dict.find( key_array_ptr[idx] );
 
-            if ( search != this->__dict.end() ) {
+            if ( search != dict.end() ) {
                 tp value = (tp &) search->second & (tp &) value_array_ptr[idx];
-                this->__dict.insert_or_assign( key_array_ptr[idx], (Value &) value);
-            } else if ( this->default_value )  {
-                Value temp = *(this->default_value);
-                tp value = (tp &) temp & (tp &) value_array_ptr[idx];
-                this->__dict.insert_or_assign( key_array_ptr[idx], (Value &) value);
+                dict.insert_or_assign( key_array_ptr[idx], (Value &) value);
             } else {
-                throw std::runtime_error("Key Error: Key not found and default value is not defined.");
+                tp value = (tp &) default_value & (tp &) value_array_ptr[idx];
+                dict.insert_or_assign( key_array_ptr[idx], (Value &) value);
             }
         }
     }
@@ -206,9 +190,9 @@ struct Dict {
         auto * result_array_ptr = (bool *) result_array_buffer.ptr;
 
         for ( size_t idx = 0; idx < key_array.size(); idx++ ) {
-            auto search = __dict.find( key_array_ptr[idx] );
+            auto search = dict.find( key_array_ptr[idx] );
 
-            if ( search != __dict.end() ) {
+            if ( search != dict.end() ) {
                 result_array_ptr[idx] = true;
             } else {
                 result_array_ptr[idx] = false;
@@ -220,18 +204,18 @@ struct Dict {
 
 
     size_t __len__ () {
-        return __dict.size();
+        return dict.size();
     }
 
 
     py::array_t <Key> keys () {
-        auto result_array = py::array_t <Key>( __dict.size() );
+        auto result_array = py::array_t <Key>( dict.size() );
 
         py::buffer_info result_array_buffer = result_array.request();
         auto * result_array_ptr = (Key *) result_array_buffer.ptr;
 
         size_t idx = 0;
-        for ( auto & key_value : __dict ) {
+        for ( auto & key_value : dict ) {
             result_array_ptr[idx] = key_value.first;
             idx++;
         }
@@ -241,13 +225,13 @@ struct Dict {
 
 
     py::array_t <Value> values () {
-        auto result_array = py::array_t <Value>( __dict.size() );
+        auto result_array = py::array_t <Value>( dict.size() );
 
         py::buffer_info result_array_buffer = result_array.request();
         auto * result_array_ptr = (Value *) result_array_buffer.ptr;
 
         size_t idx = 0;
-        for ( auto & key_value : __dict ) {
+        for ( auto & key_value : dict ) {
             result_array_ptr[idx] = key_value.second;
             idx++;
         }
@@ -257,18 +241,18 @@ struct Dict {
 
 
     std::pair<py::array_t <Key>, py::array_t <Value>> items () {
-        auto key_result_array = py::array_t <Key>( __dict.size() );
+        auto key_result_array = py::array_t <Key>( dict.size() );
 
         py::buffer_info key_result_array_buffer = key_result_array.request();
         auto * key_result_array_ptr = (Key *) key_result_array_buffer.ptr;
 
-        auto value_result_array = py::array_t <Value>( __dict.size() );
+        auto value_result_array = py::array_t <Value>( dict.size() );
 
         py::buffer_info value_result_array_buffer = value_result_array.request();
         auto * value_result_array_ptr = (Value *) value_result_array_buffer.ptr;
 
         size_t idx = 0;
-        for ( auto & key_value : __dict ) {
+        for ( auto & key_value : dict ) {
             key_result_array_ptr[idx] = key_value.first;
             value_result_array_ptr[idx] = key_value.second;
             idx++;
@@ -280,18 +264,18 @@ struct Dict {
 
     void dump ( const std::string & filename ) {
         phmap::BinaryOutputArchive ar_out( filename.c_str() );
-        __dict.dump( ar_out );
+        dict.dump( ar_out );
     }
 
 
     void load ( const std::string & filename ) {
         phmap::BinaryInputArchive ar_in( filename.c_str() );
-        __dict.load( ar_in );
+        dict.load( ar_in );
     }
 
 
-    std::optional<Value> default_value;
-    phmap::parallel_flat_hash_map<Key, Value> __dict;
+    Value default_value;
+    phmap::parallel_flat_hash_map<Key, Value> dict;
 };
 
 
@@ -304,7 +288,7 @@ void declare_dict(const py::module& m, const std::string& class_name) {
       .def(py::init<Value &>())
 
       .def("__getitem__", &Class::__getitem__)
-      .def("__setitem__", &Class::__setitem__)
+      .def("setitem__", &Class::setitem__)
       .def("__delitem__", &Class::__delitem__)
 
       .def("contains", &Class::contains)
@@ -336,7 +320,7 @@ struct Set {
         auto * key_array_ptr = (Key *) key_array_buffer.ptr;
 
         for ( size_t idx = 0; idx < key_array.size(); idx++ ) {
-            __set.emplace( key_array_ptr[idx] );
+            set.emplace( key_array_ptr[idx] );
         }
     }
 
@@ -346,7 +330,7 @@ struct Set {
         auto * key_array_ptr = (Key *) key_array_buffer.ptr;
 
         for ( size_t idx = 0; idx < key_array.size(); idx++ )
-            __set.erase( key_array_ptr[idx] );
+            set.erase( key_array_ptr[idx] );
     }
 
 
@@ -360,9 +344,9 @@ struct Set {
         auto * result_array_ptr = (bool *) result_array_buffer.ptr;
 
         for ( size_t idx = 0; idx < key_array.size(); idx++ ) {
-            auto search = __set.find( key_array_ptr[idx] );
+            auto search = set.find( key_array_ptr[idx] );
 
-            if ( search != __set.end() ) {
+            if ( search != set.end() ) {
                 result_array_ptr[idx] = true;
             } else {
                 result_array_ptr[idx] = false;
@@ -374,18 +358,18 @@ struct Set {
 
 
     size_t __len__ () {
-        return __set.size();
+        return set.size();
     }
 
 
     py::array_t <Key> items () {
-        auto result_array = py::array_t <Key>( __set.size() );
+        auto result_array = py::array_t <Key>( set.size() );
 
         py::buffer_info result_array_buffer = result_array.request();
         auto * result_array_ptr = (Key *) result_array_buffer.ptr;
 
         size_t idx = 0;
-        for ( auto & key : __set ) {
+        for ( auto & key : set ) {
             result_array_ptr[idx] = key;
             idx++;
         }
@@ -396,17 +380,17 @@ struct Set {
 
     void dump ( const std::string & filename ) {
         phmap::BinaryOutputArchive ar_out( filename.c_str() );
-        __set.dump( ar_out );
+        set.dump( ar_out );
     }
 
 
     void load ( const std::string & filename ) {
         phmap::BinaryInputArchive ar_in( filename.c_str() );
-        __set.load(ar_in);
+        set.load(ar_in);
     }
 
 
-    phmap::flat_hash_set<Key> __set;
+    phmap::flat_hash_set<Key> set;
 };
 
 
