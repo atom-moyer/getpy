@@ -3,6 +3,7 @@
 #include <pybind11/pybind11.h>
 
 PYBIND11_MODULE(_getpy, m) {
+    declare_multidict<uint64_t, uint64_t>(m, "MultiDict_u8_u8");
 
     declare_dict<uint32_t, uint8_t>(m, "Dict_u4_u1");
     declare_dict<uint32_t, uint16_t>(m, "Dict_u4_u2");

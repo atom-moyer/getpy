@@ -125,10 +125,10 @@ def test_getpy_dump_load():
 
     gp_dict_1 = gp.Dict(key_type, value_type)
     gp_dict_1[keys] = values
-    gp_dict_1.dump('test/test.hashtable.bin')
+    gp_dict_1.dump('test/test.bin')
 
     gp_dict_2 = gp.Dict(key_type, value_type)
-    gp_dict_2.load('test/test.hashtable.bin')
+    gp_dict_2.load('test/test.bin')
 
     assert len(gp_dict_1) == len(gp_dict_2)
 

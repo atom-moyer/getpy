@@ -84,3 +84,7 @@ set_types = {
     np.dtype('S8') : _gp.Set_S8,
     np.dtype('S16') : _gp.Set_S16,
 }
+
+multidict_types = {
+    (np.dtype('u8'), np.dtype('u8')) : _gp.MultiDict_u8_u8,
+}

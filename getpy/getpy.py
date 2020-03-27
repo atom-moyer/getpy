@@ -2,18 +2,22 @@ from collections.abc import MutableMapping, MutableSet
 
 from .getpy_types import dict_types
 from .getpy_types import set_types
+from .getpy_types import multidict_types
 
 
 class Dict(MutableMapping):
-    def __init__(self, key_type, value_type, default_value=None, safe_mode=False):
+    def __init__(self, key_type, value_type, default_value=None, filename=None, safe_mode=False):
         self.__key_type = key_type
         self.__value_type = value_type
-        self.__dict_type = dict_types[(self.__key_type, self.__value_type)]
+        self.__dict_type = dict_types[(key_type, value_type)]
 
         if default_value is None:
             self.__dict = self.__dict_type()
         else:
             self.__dict = self.__dict_type(default_value)
+
+        if filename is not None:
+            self.__dict.load(filename)
 
         self.__safe_mode = safe_mode
 
@@ -93,11 +97,14 @@ class Dict(MutableMapping):
 
 
 class Set(MutableSet):
-    def __init__(self, key_type, safe_mode=False):
+    def __init__(self, key_type, filename=None, safe_mode=False):
         self.__key_type = key_type
-        self.__set_type = set_types[self.__key_type]
+        self.__set_type = set_types[key_type]
 
         self.__set = self.__set_type()
+
+        if filename is not None:
+            self.__set.load(filename)
 
         self.__safe_mode = safe_mode
 
@@ -141,3 +148,74 @@ class Set(MutableSet):
 
     def load(self, filename):
         return self.__set.load(filename)
+
+
+class MultiDict(MutableMapping):
+    def __init__(self, key_type, value_type, default_value=None, filename=None, safe_mode=False):
+        self.__key_type = key_type
+        self.__value_type = value_type
+        self.__dict_type = multidict_types[(key_type, value_type)]
+
+        if default_value is None:
+            self.__dict = self.__dict_type()
+        else:
+            self.__dict = self.__dict_type(default_value)
+
+        if filename is not None:
+            self.__dict.load(filename)
+
+        self.__safe_mode = safe_mode
+
+
+    def __repr__(self):
+        return '{' + ', '.join(['{key} : {value}'.format(**vars()) for key, value in zip(*self.items())]) + '}'
+
+
+    def __getitem__(self, key):
+        if self.__safe_mode: assert key.dtype == self.__key_type, (key.dtype,)
+        return self.__dict.__getitem__(key)
+
+
+    def __setitem__(self, key, value):
+        if self.__safe_mode: assert key.dtype == self.__key_type and value.dtype == self.__value_type, (key.dtype, value.dtype)
+        self.__dict.__setitem__(key, value)
+
+
+    def __delitem__(self, key):
+        if self.__safe_mode: assert key.dtype == self.__key_type, (key.dtype,)
+        return self.__dict.__delitem__(key)
+
+
+    def contains(self, key):
+        if self.__safe_mode: assert key.dtype == self.__key_type, (key.dtype,)
+        return self.__dict.contains(key)
+    __contains__ = contains
+
+
+    def __len__(self):
+        return self.__dict.__len__()
+
+
+    def keys(self):
+        return self.__dict.keys()
+
+
+    def values(self):
+        return self.__dict.values()
+
+
+    def items(self):
+        return self.__dict.items()
+
+
+    def __iter__(self):
+        for key in self.keys():
+            yield key
+
+
+    # def dump(self, filename):
+    #     return self.__dict.dump(filename)
+    #
+    #
+    # def load(self, filename):
+    #     return self.__dict.load(filename)
