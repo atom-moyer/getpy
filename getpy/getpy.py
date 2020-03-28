@@ -213,9 +213,9 @@ class MultiDict(MutableMapping):
             yield key
 
 
-    # def dump(self, filename):
-    #     return self.__dict.dump(filename)
-    #
-    #
-    # def load(self, filename):
-    #     return self.__dict.load(filename)
+    def dump(self, filename):
+        return self.__dict.dump(filename)
+
+
+    def load(self, filename):
+        return self.__dict.load(filename)

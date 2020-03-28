@@ -36,13 +36,13 @@ struct Dict {
     Dict ( Value default_value ) : default_value ( default_value ) {}
 
 
-    Dict ( py::array_t <Value> default_value ) : default_value ( ( (Value *) default_value.request().ptr )[0] ) {}
+    Dict ( py::array_t<Value> default_value ) : default_value ( ( (Value *) default_value.request().ptr )[0] ) {}
 
 
-    py::array_t <Value> __getitem__ ( py::array_t <Key> & key_array ) {
+    py::array_t<Value> __getitem__ ( py::array_t<Key> & key_array ) {
         auto * key_array_ptr = (Key *) key_array.request().ptr;
 
-        auto result_array = py::array_t <Value> ( key_array.request().shape );
+        auto result_array = py::array_t<Value> ( key_array.request().shape );
         auto * result_array_ptr = (Value *) result_array.request().ptr;
 
         for ( size_t idx = 0; idx < key_array.size(); idx++ ) {
@@ -59,7 +59,7 @@ struct Dict {
     }
 
 
-    void __setitem__ ( py::array_t <Key> & key_array, py::array_t <Value> & value_array ) {
+    void __setitem__ ( py::array_t<Key> & key_array, py::array_t<Value> & value_array ) {
         auto * key_array_ptr = (Key *) key_array.request().ptr;
         auto * value_array_ptr = (Value *) value_array.request().ptr;
 
@@ -72,7 +72,7 @@ struct Dict {
     }
 
 
-    void __delitem__ ( py::array_t <Key> & key_array ) {
+    void __delitem__ ( py::array_t<Key> & key_array ) {
         auto * key_array_ptr = (Key *) key_array.request().ptr;
 
         for ( size_t idx = 0; idx < key_array.size(); idx++ )
@@ -80,7 +80,7 @@ struct Dict {
     }
 
 
-    void iadd ( py::array_t <Key> & key_array, py::array_t <Value> & value_array ) {
+    void iadd ( py::array_t<Key> & key_array, py::array_t<Value> & value_array ) {
         auto * key_array_ptr = (Key *) key_array.request().ptr;
         auto * value_array_ptr = (Value *) value_array.request().ptr;
 
@@ -100,7 +100,7 @@ struct Dict {
     }
 
 
-    void isub ( py::array_t <Key> & key_array, py::array_t <Value> & value_array ) {
+    void isub ( py::array_t<Key> & key_array, py::array_t<Value> & value_array ) {
         auto * key_array_ptr = (Key *) key_array.request().ptr;
         auto * value_array_ptr = (Value *) value_array.request().ptr;
 
@@ -120,7 +120,7 @@ struct Dict {
     }
 
 
-    void ior ( py::array_t <Key> & key_array, py::array_t <Value> & value_array ) {
+    void ior ( py::array_t<Key> & key_array, py::array_t<Value> & value_array ) {
         typedef typename get_swap_type<Value>::type tp;
 
         auto * key_array_ptr = (Key *) key_array.request().ptr;
@@ -143,7 +143,7 @@ struct Dict {
     }
 
 
-    void iand ( py::array_t <Key> & key_array, py::array_t <Value> & value_array ) {
+    void iand ( py::array_t<Key> & key_array, py::array_t<Value> & value_array ) {
         typedef typename get_swap_type<Value>::type tp;
 
         auto * key_array_ptr = (Key *) key_array.request().ptr;
@@ -166,7 +166,7 @@ struct Dict {
     }
 
 
-    py::array_t<bool> contains ( py::array_t <Key> & key_array ) {
+    py::array_t<bool> contains ( py::array_t<Key> & key_array ) {
         auto * key_array_ptr = (Key *) key_array.request().ptr;
 
         auto result_array = py::array_t<bool>( key_array.request().shape );
@@ -191,8 +191,8 @@ struct Dict {
     }
 
 
-    py::array_t <Key> keys () {
-        auto result_array = py::array_t <Key>( dict.size() );
+    py::array_t<Key> keys () {
+        auto result_array = py::array_t<Key>( dict.size() );
         auto * result_array_ptr = (Key *) result_array.request().ptr;
 
         size_t idx = 0;
@@ -205,8 +205,8 @@ struct Dict {
     }
 
 
-    py::array_t <Value> values () {
-        auto result_array = py::array_t <Value>( dict.size() );
+    py::array_t<Value> values () {
+        auto result_array = py::array_t<Value>( dict.size() );
         auto * result_array_ptr = (Value *) result_array.request().ptr;
 
         size_t idx = 0;
@@ -219,11 +219,11 @@ struct Dict {
     }
 
 
-    std::pair<py::array_t <Key>, py::array_t <Value>> items () {
-        auto key_result_array = py::array_t <Key>( dict.size() );
+    std::pair<py::array_t<Key>, py::array_t<Value>> items () {
+        auto key_result_array = py::array_t<Key>( dict.size() );
         auto * key_result_array_ptr = (Key *) key_result_array.request().ptr;
 
-        auto value_result_array = py::array_t <Value>( dict.size() );
+        auto value_result_array = py::array_t<Value>( dict.size() );
         auto * value_result_array_ptr = (Value *) value_result_array.request().ptr;
 
         size_t idx = 0;
@@ -261,7 +261,7 @@ void declare_dict(const py::module& m, const std::string& class_name) {
   py::class_<Class>(m, class_name.c_str())
       .def(py::init<>())
       .def(py::init<Value &>())
-      .def(py::init<py::array_t <Value> &>())
+      .def(py::init<py::array_t<Value> &>())
 
       .def("__getitem__", &Class::__getitem__)
       .def("__setitem__", &Class::__setitem__)
@@ -291,7 +291,7 @@ struct Set {
     Set () {}
 
 
-    void add ( py::array_t <Key> & key_array ) {
+    void add ( py::array_t<Key> & key_array ) {
         auto * key_array_ptr = (Key *) key_array.request().ptr;
 
         for ( size_t idx = 0; idx < key_array.size(); idx++ ) {
@@ -300,7 +300,7 @@ struct Set {
     }
 
 
-    void discard ( py::array_t <Key> & key_array ) {
+    void discard ( py::array_t<Key> & key_array ) {
         auto * key_array_ptr = (Key *) key_array.request().ptr;
 
         for ( size_t idx = 0; idx < key_array.size(); idx++ )
@@ -308,7 +308,7 @@ struct Set {
     }
 
 
-    py::array_t<bool> contains ( py::array_t <Key> & key_array ) {
+    py::array_t<bool> contains ( py::array_t<Key> & key_array ) {
         auto * key_array_ptr = (Key *) key_array.request().ptr;
 
         auto result_array = py::array_t<bool>( key_array.request().shape );
@@ -333,8 +333,8 @@ struct Set {
     }
 
 
-    py::array_t <Key> items () {
-        auto result_array = py::array_t <Key>( set.size() );
+    py::array_t<Key> items () {
+        auto result_array = py::array_t<Key>( set.size() );
         auto * result_array_ptr = (Key *) result_array.request().ptr;
 
         size_t idx = 0;
@@ -355,7 +355,7 @@ struct Set {
 
     void load ( const std::string & filename ) {
         phmap::BinaryInputArchive ar_in( filename.c_str() );
-        set.load(ar_in);
+        set.load( ar_in );
     }
 
 
@@ -405,15 +405,15 @@ struct MultiDict {
                 result = default_value;
             }
 
-            py::array_t<Value> result_array = py::cast( std::vector<Value> ( result.begin(), result.end() ) );
-            result_list.push_back( result_array );
+            std::vector<Value> result_array( result.begin(), result.end() );
+            result_list.push_back( py::cast( result_array ) );
         }
 
         return result_list;
     }
 
 
-    void __setitem__ ( py::array_t <Key> & key_array, py::array_t <Value> & value_array ) {
+    void __setitem__ ( py::array_t<Key> & key_array, py::array_t<Value> & value_array ) {
         auto * key_array_ptr = (Key *) key_array.request().ptr;
         auto * value_array_ptr = (Value *) value_array.request().ptr;
 
@@ -437,7 +437,7 @@ struct MultiDict {
     }
 
 
-    void __delitem__ ( py::array_t <Key> & key_array ) {
+    void __delitem__ ( py::array_t<Key> & key_array ) {
         auto * key_array_ptr = (Key *) key_array.request().ptr;
 
         for ( size_t idx = 0; idx < key_array.size(); idx++ )
@@ -445,7 +445,7 @@ struct MultiDict {
     }
 
 
-    py::array_t<bool> contains ( py::array_t <Key> & key_array ) {
+    py::array_t<bool> contains ( py::array_t<Key> & key_array ) {
         auto * key_array_ptr = (Key *) key_array.request().ptr;
 
         auto result_array = py::array_t<bool>( key_array.request().shape );
@@ -470,14 +470,13 @@ struct MultiDict {
     }
 
 
-    py::array_t <Key> keys () {
-        auto result_array = py::array_t <Key>( dict.size() );
+    py::array_t<Key> keys () {
+        auto result_array = py::array_t<Key>( dict.size() );
         auto * result_array_ptr = (Key *) result_array.request().ptr;
 
         size_t idx = 0;
-        for ( auto & key_value : dict ) {
-            result_array_ptr[idx] = key_value.first;
-            idx++;
+        for ( const auto & [k, v] : dict ) {
+            result_array_ptr[idx] = k; idx++;
         }
 
         return result_array;
@@ -487,9 +486,8 @@ struct MultiDict {
     std::vector<py::array_t<Value>> values () {
         std::vector<py::array_t<Value>> result_list;
 
-        for ( auto & key_value : dict ) {
-            py::array_t<Value> result = py::cast( std::vector<Value> ( key_value.second.begin(), key_value.second.end() ) );
-            result_list.push_back( result );
+        for ( const auto & [k, v] : dict ) {
+            result_list.push_back( py::cast( std::vector<Value> ( v.begin(), v.end() ) ) );
         }
 
         return result_list;
@@ -503,29 +501,45 @@ struct MultiDict {
         std::vector<py::array_t<Value>> value_result_list;
 
         size_t idx = 0;
-        for ( auto & key_value : dict ) {
-            key_result_array_ptr[idx] = key_value.first;
+        for ( const auto & [k, v] : dict ) {
+            key_result_array_ptr[idx] = k; idx++;
 
-            py::array_t<Value> result = py::cast( std::vector<Value> ( key_value.second.begin(), key_value.second.end() ) );
-            value_result_list.push_back( result );
-
-            idx++;
+            value_result_list.push_back( py::cast( std::vector<Value> ( v.begin(), v.end() ) ) );
         }
 
         return std::make_pair(key_result_array, value_result_list);
     }
 
 
-    // void dump ( const std::string & filename ) {
-    //     phmap::BinaryOutputArchive ar_out( filename.c_str() );
-    //     dict.dump( ar_out );
-    // }
-    //
-    //
-    // void load ( const std::string & filename ) {
-    //     phmap::BinaryInputArchive ar_in( filename.c_str() );
-    //     dict.load( ar_in );
-    // }
+    void dump ( const std::string & filename ) {
+        phmap::BinaryOutputArchive ar_out ( filename.c_str() );
+
+        ar_out.dump( dict.size() );
+
+        for ( auto & [k, v] : dict ) {
+            ar_out.dump( k );
+            v.dump( ar_out );
+        }
+    }
+
+
+    void load ( const std::string & filename ) {
+        phmap::BinaryInputArchive ar_in ( filename.c_str() );
+
+        size_t size;
+
+        ar_in.load( & size );
+        dict.reserve( size );
+
+        for ( size_t idx = 0; idx < size; idx++ ) {
+            Key k; phmap::flat_hash_set<Value> v;
+
+            ar_in.load( & k );
+            v.load( ar_in );
+
+            dict.insert_or_assign( std::move( k ), std::move( v ) );
+        }
+    }
 
 
     phmap::flat_hash_set<Value> default_value;
@@ -546,8 +560,8 @@ void declare_multidict(const py::module& m, const std::string& class_name) {
 
       .def("contains", &Class::contains)
 
-      // .def("dump", &Class::dump)
-      // .def("load", &Class::load)
+      .def("dump", &Class::dump)
+      .def("load", &Class::load)
 
       .def("keys", &Class::keys)
       .def("values", &Class::values)

@@ -3,8 +3,8 @@ import itertools
 import numpy as np
 
 
-byteset_lengths = [4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64]
-
+# byteset_lengths = [4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64]
+byteset_lengths = [8, 16]
 
 key_types = [
     'u4',
@@ -61,12 +61,20 @@ def write_set_types_dict(getpy_file, key_type):
     getpy_file.write(f"    np.dtype('{key_type}') : _gp.Set_{key_type},\n")
 
 
+def write_multidict_types_dict(getpy_file, key_type, value_type):
+    getpy_file.write(f"    (np.dtype('{key_type}'), np.dtype('{value_type}')) : _gp.MultiDict_{key_type}_{value_type},\n")
+
+
 def write_declare_dict(getpy_file, key_type, value_type):
     getpy_file.write(f'    declare_dict<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "Dict_{key_type}_{value_type}");\n')
 
 
 def write_declare_set(getpy_file, key_type):
     getpy_file.write(f'    declare_set<{cpp_types[key_type]}>(m, "Set_{key_type}");\n')
+
+
+def write_declare_multidict(getpy_file, key_type, value_type):
+    getpy_file.write(f'    declare_multidict<{cpp_types[key_type]}, {cpp_types[value_type]}>(m, "MultiDict_{key_type}_{value_type}");\n')
 
 
 def write_getpy_cpp(key_types, value_types):
@@ -87,6 +95,11 @@ PYBIND11_MODULE(_getpy, m) {
 
         for key_type in key_types:
             write_declare_set(getpy_file, key_type)
+
+        getpy_file.write('\n')
+
+        for key_type, value_type in itertools.product(key_types, key_types):
+            write_declare_multidict(getpy_file, key_type, value_type)
 
         getpy_file.write("""\
 }
@@ -114,6 +127,15 @@ set_types = {
 
         for key_type in key_types:
             write_set_types_dict(getpy_file, key_type)
+
+        getpy_file.write("""\
+}
+
+multidict_types = {
+""")
+
+        for key_type, value_type in itertools.product(key_types, key_types):
+            write_multidict_types_dict(getpy_file, key_type, value_type)
 
         getpy_file.write("""\
 }

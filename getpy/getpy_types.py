@@ -1,4 +1,5 @@
 import numpy as np
+
 import _getpy as _gp
 
 dict_types = {
@@ -86,5 +87,40 @@ set_types = {
 }
 
 multidict_types = {
+    (np.dtype('u4'), np.dtype('u4')) : _gp.MultiDict_u4_u4,
+    (np.dtype('u4'), np.dtype('u8')) : _gp.MultiDict_u4_u8,
+    (np.dtype('u4'), np.dtype('i4')) : _gp.MultiDict_u4_i4,
+    (np.dtype('u4'), np.dtype('i8')) : _gp.MultiDict_u4_i8,
+    (np.dtype('u4'), np.dtype('S8')) : _gp.MultiDict_u4_S8,
+    (np.dtype('u4'), np.dtype('S16')) : _gp.MultiDict_u4_S16,
+    (np.dtype('u8'), np.dtype('u4')) : _gp.MultiDict_u8_u4,
     (np.dtype('u8'), np.dtype('u8')) : _gp.MultiDict_u8_u8,
+    (np.dtype('u8'), np.dtype('i4')) : _gp.MultiDict_u8_i4,
+    (np.dtype('u8'), np.dtype('i8')) : _gp.MultiDict_u8_i8,
+    (np.dtype('u8'), np.dtype('S8')) : _gp.MultiDict_u8_S8,
+    (np.dtype('u8'), np.dtype('S16')) : _gp.MultiDict_u8_S16,
+    (np.dtype('i4'), np.dtype('u4')) : _gp.MultiDict_i4_u4,
+    (np.dtype('i4'), np.dtype('u8')) : _gp.MultiDict_i4_u8,
+    (np.dtype('i4'), np.dtype('i4')) : _gp.MultiDict_i4_i4,
+    (np.dtype('i4'), np.dtype('i8')) : _gp.MultiDict_i4_i8,
+    (np.dtype('i4'), np.dtype('S8')) : _gp.MultiDict_i4_S8,
+    (np.dtype('i4'), np.dtype('S16')) : _gp.MultiDict_i4_S16,
+    (np.dtype('i8'), np.dtype('u4')) : _gp.MultiDict_i8_u4,
+    (np.dtype('i8'), np.dtype('u8')) : _gp.MultiDict_i8_u8,
+    (np.dtype('i8'), np.dtype('i4')) : _gp.MultiDict_i8_i4,
+    (np.dtype('i8'), np.dtype('i8')) : _gp.MultiDict_i8_i8,
+    (np.dtype('i8'), np.dtype('S8')) : _gp.MultiDict_i8_S8,
+    (np.dtype('i8'), np.dtype('S16')) : _gp.MultiDict_i8_S16,
+    (np.dtype('S8'), np.dtype('u4')) : _gp.MultiDict_S8_u4,
+    (np.dtype('S8'), np.dtype('u8')) : _gp.MultiDict_S8_u8,
+    (np.dtype('S8'), np.dtype('i4')) : _gp.MultiDict_S8_i4,
+    (np.dtype('S8'), np.dtype('i8')) : _gp.MultiDict_S8_i8,
+    (np.dtype('S8'), np.dtype('S8')) : _gp.MultiDict_S8_S8,
+    (np.dtype('S8'), np.dtype('S16')) : _gp.MultiDict_S8_S16,
+    (np.dtype('S16'), np.dtype('u4')) : _gp.MultiDict_S16_u4,
+    (np.dtype('S16'), np.dtype('u8')) : _gp.MultiDict_S16_u8,
+    (np.dtype('S16'), np.dtype('i4')) : _gp.MultiDict_S16_i4,
+    (np.dtype('S16'), np.dtype('i8')) : _gp.MultiDict_S16_i8,
+    (np.dtype('S16'), np.dtype('S8')) : _gp.MultiDict_S16_S8,
+    (np.dtype('S16'), np.dtype('S16')) : _gp.MultiDict_S16_S16,
 }
