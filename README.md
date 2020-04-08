@@ -17,7 +17,9 @@ The `gp.Dict` and `gp.Set` objects are designed to maintain a similar interface 
 
 2) All of `getpy.Dict` methods support a vectorized interface. Therefore, methods like `gp.Dict.__getitem__`, `gp.Dict.__setitem__`, and `gp.Dict.__delitem__` can be performed with an `np.ndarray`.  That allows the performance critical for-loop to happen within the compiled c++. Note that some dunder methods cannot be vectorized such as `__contains__`. Therefore, some keywords like `in` do not behave as expected. Those methods are renamed without the double underscores to note their deviation from the standard interface.
 
-3) If a key does not exist, `gp.Dict.__getitem__` will return the `default_value`. You can specify the `default_value`, or it will default to the default constructor of your data type (generally, full 0 bits). If you would like to know the difference between a key that does not exist and a key that returns the default value, you should first run `gp.contains` on your key/array of keys, and then retrieve values corresponding to keys that exist.
+3) If a key does not exist, `gp.Dict.__getitem__` will return the `default_value`. If you do not specify the `default_value`, it will default to the default constructor of your data type (all 0 bits). If you would like to know the difference between a key that does not exist and a key that returns the default value, you should first run `gp.contains` on your key/array of keys, and then retrieve values corresponding to keys that exist.
+
+4) There is also a `gp.MultiDict` object. This object stores multiple unique values per key.
 
 ## Examples
 
