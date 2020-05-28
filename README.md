@@ -1,4 +1,4 @@
-# GetPy - A Fast and Small Python Dict/Set
+# GetPy - A Vectorized Python Dict/Set
 
 The goal of GetPy is to provide the highest performance python dict/set that integrates into the python scientific ecosystem.
 
