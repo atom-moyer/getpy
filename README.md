@@ -49,7 +49,7 @@ value_type = np.dtype('u8')
 keys = np.random.randint(1, 1000, size=10**2, dtype=key_type)
 values = np.random.randint(1, 1000, size=10**2, dtype=value_type)
 
-gp_dict = gp.Dict(key_type, value_type, default_value=0)
+gp_dict = gp.Dict(key_type, value_type, default_value=42)
 gp_dict[keys] = values
 
 random_keys = np.random.randint(1, 1000, size=500, dtype=key_type)
