@@ -11,9 +11,9 @@ with open("README.md", "r") as readme_file:
     readme = readme_file.read()
 
 extra_compile_args_dict = {
-    'linux' : ['-w', '-ftemplate-backtrace-limit=0', '-std=c++17'],
-    'linux2' : ['-w', '-ftemplate-backtrace-limit=0', '-std=c++17'],
-    'darwin' : ['-w', '-ftemplate-backtrace-limit=0', '-std=c++17', '-stdlib=libc++'],
+    'linux' : ['-w', '-std=c++17'],
+    'linux2' : ['-w', '-std=c++17'],
+    'darwin' : ['-w', '-std=c++17', '-stdlib=libc++'],
 }
 
 ext_modules = [
@@ -23,7 +23,7 @@ ext_modules = [
     include_dirs = ['lib/parallel-hashmap', 'lib/pybind11/include'],
     language = 'c++',
     extra_compile_args = extra_compile_args_dict[sys.platform],
-    extra_link_args = ['-lz'],
+    extra_link_args = [],
     define_macros = [('DOCTEST_CONFIG_DISABLE', None)]
   )
 ]
@@ -33,7 +33,7 @@ setup(
     version = __version__,
     author = 'Adam Moyer',
     author_email = 'atom.moyer@gmail.com',
-    description = 'A Simple, Fast, and Small Hash Map for Python',
+    description = 'A Vectorized Dictionary for Python',
     packages = ['getpy'],
     package_dir={'getpy': 'getpy'},
     package_data={},
