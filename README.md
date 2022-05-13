@@ -99,6 +99,8 @@ values = np.random.randint(1, 1000, size=(10**2)/2, dtype=np.dtype('u4')).reshap
 
 gp_dict = gp.Dict(key_type, value_type)
 gp_dict[keys] = values
+
+unpacked_values = gp_dict[keys].view(np.dtype('u4'))
 ```
 
 ### Serialization Example
