@@ -86,6 +86,21 @@ gp_dict = gp.Dict(key_type, value_type)
 gp_dict[keys] = values
 ```
 
+### Bitpack Example
+```python
+import numpy as np
+import getpy as gp
+
+key_type = np.dtype('u8')
+value_type = np.dtype('u8')
+
+keys = np.random.randint(1, 1000, size=10**2, dtype=np.dtype('u2')).reshape(25,4).view(key_type)
+values = np.random.randint(1, 1000, size=10**2, dtype=np.dtype('u4')).reshape(50,2).view(value_type)
+
+gp_dict = gp.Dict(key_type, value_type)
+gp_dict[keys] = values
+```
+
 ### Serialization Example
 ```python
 import numpy as np
