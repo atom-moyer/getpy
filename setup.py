@@ -14,6 +14,7 @@ extra_compile_args_dict = {
     'linux' : ['-w', '-std=c++17'],
     'linux2' : ['-w', '-std=c++17'],
     'darwin' : ['-w', '-std=c++17', '-stdlib=libc++'],
+    'win32' : ['-w', '/std:c++17'],
 }
 
 ext_modules = [

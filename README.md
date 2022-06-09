@@ -5,7 +5,7 @@ The goal of GetPy is to provide the highest performance python dict/set that int
 ## Installation
 `pip install getpy`
 
-If you have issues, feel free to make an issue. You can also build the package from source by cloning the repository and running `python setup.py install`.
+Note only a linux build is currently distributed. If you would like to build the package from source you can clone the repo and run `python setup.py install`. Compilation will require 16gb of ram. I am working on getting that down.
 
 ## About
 GetPy is a thin binding to the Parallel Hashmap (https://github.com/greg7mdp/parallel-hashmap.git) which is the current state of the art unordered map/set with minimal memory overhead and fast runtime speed. The binding layer is supported by PyBind11 (https://github.com/pybind/pybind11.git) which is fast to compile and simple to extend.
@@ -84,6 +84,23 @@ values = np.random.randint(1, 1000, size=10**2, dtype=value_type).reshape(10,10)
 
 gp_dict = gp.Dict(key_type, value_type)
 gp_dict[keys] = values
+```
+
+### Bitpack Example
+```python
+import numpy as np
+import getpy as gp
+
+key_type = np.dtype('u8')
+value_type = np.dtype('u8')
+
+keys = np.random.randint(1, 1000, size=10**2, dtype=np.dtype('u2')).reshape(25,4).view(key_type)
+values = np.random.randint(1, 1000, size=(10**2)/2, dtype=np.dtype('u4')).reshape(25,2).view(value_type)
+
+gp_dict = gp.Dict(key_type, value_type)
+gp_dict[keys] = values
+
+unpacked_values = gp_dict[keys].view(np.dtype('u4'))
 ```
 
 ### Serialization Example
