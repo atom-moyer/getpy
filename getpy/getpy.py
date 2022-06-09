@@ -96,6 +96,21 @@ class Dict(MutableMapping):
         return self.__dict.load(filename)
 
 
+    @property
+    def key_type(self):
+        return self.__key_type
+
+
+    @property
+    def value_type(self):
+        return self.__value_type
+
+
+    @property
+    def dict_type(self):
+        return self.__dict_type
+
+
 class Set(MutableSet):
     def __init__(self, key_type, filename=None, safe_mode=False):
         self.__key_type = key_type
@@ -150,6 +165,16 @@ class Set(MutableSet):
         return self.__set.load(filename)
 
 
+    @property
+    def key_type(self):
+        return self.__key_type
+
+
+    @property
+    def set_type(self):
+        return self.__set_type
+
+
 class MultiDict(MutableMapping):
     def __init__(self, key_type, value_type, default_value=None, filename=None, safe_mode=False):
         self.__key_type = key_type
@@ -168,7 +193,7 @@ class MultiDict(MutableMapping):
 
 
     def __repr__(self):
-        return '{' + ', '.join(['{key} : {value}'.format(**vars()) for key, value in zip(*self.items())]) + '}'
+        return '' # '{' + ', '.join(['{key} : {value}'.format(**vars()) for key, value in zip(*self.items())]) + '}'
 
 
     def __getitem__(self, key):
@@ -219,3 +244,18 @@ class MultiDict(MutableMapping):
 
     def load(self, filename):
         return self.__dict.load(filename)
+
+
+    @property
+    def key_type(self):
+        return self.__key_type
+
+
+    @property
+    def value_type(self):
+        return self.__value_type
+
+
+    @property
+    def dict_type(self):
+        return self.__dict_type

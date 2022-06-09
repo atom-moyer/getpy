@@ -405,8 +405,15 @@ struct MultiDict {
                 result = default_value;
             }
 
-            std::vector<Value> result_array( result.begin(), result.end() );
-            result_list.push_back( py::cast( result_array ) );
+            auto result_array = py::array_t <Value> ( result.size() );
+            auto * result_array_ptr = (Value *) result_array.request().ptr;
+
+            size_t _idx = 0;
+            for ( const auto & v : result ) {
+              result_array_ptr[_idx] = v; _idx++;
+            }
+
+            result_list.push_back( result_array );
         }
 
         return result_list;
@@ -487,7 +494,15 @@ struct MultiDict {
         std::vector<py::array_t<Value>> result_list;
 
         for ( const auto & [k, v] : dict ) {
-            result_list.push_back( py::cast( std::vector<Value> ( v.begin(), v.end() ) ) );
+            auto result_array = py::array_t <Value> ( v.size() );
+            auto * result_array_ptr = (Value *) result_array.request().ptr;
+
+            size_t idx = 0;
+            for ( const auto & v_ : v ) {
+              result_array_ptr[idx] = v_; idx++;
+            }
+
+            result_list.push_back( result_array );
         }
 
         return result_list;
@@ -498,13 +513,21 @@ struct MultiDict {
         auto key_result_array = py::array_t<Key>( dict.size() );
         auto * key_result_array_ptr = (Key *) key_result_array.request().ptr;
 
-        std::vector<py::array_t<Value>> value_result_list;
+        std::vector< py::array_t < Value > > value_result_list;
 
         size_t idx = 0;
         for ( const auto & [k, v] : dict ) {
             key_result_array_ptr[idx] = k; idx++;
 
-            value_result_list.push_back( py::cast( std::vector<Value> ( v.begin(), v.end() ) ) );
+            auto value_result_array = py::array_t <Value> ( v.size() );
+            auto * value_result_array_ptr = (Value *) value_result_array.request().ptr;
+
+            size_t idx = 0;
+            for ( const auto & v_ : v ) {
+              value_result_array_ptr[idx] = v_; idx++;
+            }
+
+            value_result_list.push_back( value_result_array );
         }
 
         return std::make_pair(key_result_array, value_result_list);

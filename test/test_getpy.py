@@ -3,10 +3,25 @@ import pytest
 import numpy as np
 import getpy as gp
 
+from time import perf_counter
+
+class timer:
+    def __init__(self, name):
+        self.name = name
+
+    def __enter__(self):
+        self.time = perf_counter()
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.time = perf_counter() - self.time
+        print(f'{self.name}: {self.time:.3f} s')
+
 
 def test_getpy_methods():
-    key_type = np.dtype('u8')
-    value_type = np.dtype('u8')
+    with timer('test_getpy_methods'):
+        key_type = np.dtype('u8')
+        value_type = np.dtype('u8')
 
     keys = np.random.randint(1, 1000, size=10**2, dtype=key_type)
     values = np.random.randint(1, 1000, size=10**2, dtype=value_type)
@@ -113,7 +128,8 @@ def test_getpy_types():
 
         gp_dict[keys] = values
 
-    values = gp_dict[keys]
+        assert gp_dict.key_type == key_type
+        assert gp_dict.value_type == value_type
 
 
 def test_getpy_dump_load():
@@ -125,10 +141,10 @@ def test_getpy_dump_load():
 
     gp_dict_1 = gp.Dict(key_type, value_type)
     gp_dict_1[keys] = values
-    gp_dict_1.dump('test/test.bin')
+    gp_dict_1.dump('test.bin')
 
     gp_dict_2 = gp.Dict(key_type, value_type)
-    gp_dict_2.load('test/test.bin')
+    gp_dict_2.load('test.bin')
 
     assert len(gp_dict_1) == len(gp_dict_2)
 
@@ -187,6 +203,21 @@ def test_getpy_big_dict_u8_u8_lookup():
         values = gp_dict[keys]
 
 
+def test_getpy_big_multidict_u8_u8_lookup():
+    key_type = np.dtype('u8')
+    value_type = np.dtype('u8')
+
+    gp_dict = gp.MultiDict(key_type, value_type)
+
+    keys = np.random.randint(10**5, size=10**5, dtype=key_type)
+    values = np.random.randint(10**15, size=10**5, dtype=value_type)
+
+    gp_dict[keys] = values
+
+    for i in range(10**2):
+        values = gp_dict[keys]
+
+
 def test_getpy_very_big_dict_u4_u4():
     key_type = np.dtype('u4')
     value_type = np.dtype('u4')
@@ -213,6 +244,19 @@ def test_getpy_very_big_dict_u8_u8():
         gp_dict[keys] = values
 
 
+def test_getpy_very_big_multidict_u8_u8():
+    key_type = np.dtype('u8')
+    value_type = np.dtype('u8')
+
+    gp_dict = gp.MultiDict(key_type, value_type)
+
+    values = np.random.randint(10**15, size=10**5, dtype=value_type)
+
+    for i in range(10**2):
+        keys = np.random.randint(10**5, size=10**5, dtype=key_type)
+        gp_dict[keys] = values
+
+
 def test_getpy_very_big_dict_u8_S8():
     key_type = np.dtype('u8')
     value_type = np.dtype('S8')
@@ -226,6 +270,19 @@ def test_getpy_very_big_dict_u8_S8():
         gp_dict[keys] = values
 
 
+def test_getpy_very_big_multidict_u8_S8():
+    key_type = np.dtype('u8')
+    value_type = np.dtype('S8')
+
+    gp_dict = gp.MultiDict(key_type, value_type)
+
+    values = np.array([np.random.bytes(8) for i in range(10**5)], dtype=value_type)
+
+    for i in range(10**2):
+        keys = np.random.randint(10**15, size=10**5, dtype=key_type)
+        gp_dict[keys] = values
+        gp_dict[keys]
+
 def test_getpy_very_big_dict_u8_S16():
     key_type = np.dtype('u8')
     value_type = np.dtype('S16')
@@ -237,3 +294,17 @@ def test_getpy_very_big_dict_u8_S16():
     for i in range(10**2):
         keys = np.random.randint(10**15, size=10**5, dtype=key_type)
         gp_dict[keys] = values
+
+
+def test_getpy_very_big_multidict_u8_S16():
+    key_type = np.dtype('u8')
+    value_type = np.dtype('S16')
+
+    gp_dict = gp.MultiDict(key_type, value_type)
+
+    values = np.array([np.random.bytes(16) for i in range(10**5)], dtype=value_type)
+
+    for i in range(10**2):
+        keys = np.random.randint(10**15, size=10**5, dtype=key_type)
+        gp_dict[keys] = values
+

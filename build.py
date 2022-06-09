@@ -4,7 +4,7 @@ import numpy as np
 
 
 # byteset_lengths = [4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64]
-byteset_lengths = [8, 16]
+byteset_lengths = [8, 16, 32, 64, 128, 256]
 
 key_types = [
     'u4',
