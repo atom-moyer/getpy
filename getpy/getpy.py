@@ -9,7 +9,7 @@ class Dict(MutableMapping):
     def __init__(self, key_type, value_type, default_value=None, filename=None, safe_mode=False):
         self.__key_type = key_type
         self.__value_type = value_type
-        self.__dict_type = dict_types[(key_type, value_type)]
+        self.__dict_type = dict_types[np.dtype(key_type), np.dtype(value_type)]
 
         if default_value is None:
             self.__dict = self.__dict_type()
